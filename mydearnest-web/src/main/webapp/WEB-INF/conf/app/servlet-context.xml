@@ -1,28 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+<beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+	
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>/WEB-INF/messages/error</value>
+				<value>/WEB-INF/messages/lang</value>
+			</list>
+		</property>
+		<property name="cacheSeconds" value="360"/>
+	</bean>
+	
+<!-- 	메일세팅  -->
+<!-- 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"> -->
+<!-- 		<property name="username" value="leader@mixoncorp.com" /> -->
+<!--     	<property name="password" value="10540123" /> -->
+<!--     	<property name="javaMailProperties"> -->
+<!-- 		    <props> -->
+<!-- 		        <prop key="mail.smtp.host">ns1.mixon.co.kr</prop> -->
+<!-- 		        <prop key="mail.smtp.port">25</prop> -->
+<!-- 		        <prop key="mail.smtp.auth">true</prop> -->
+<!-- 		        <prop key="mail.smtp.starttls.enable">false</prop> -->
+<!-- 		    </props> -->
+<!-- 	    </property> -->
+<!-- 	</bean> -->
+		
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<constructor-arg value="256"/>
+	</bean>
+	
+	<!-- StringHttpMessageConverter UTF-8 -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<value>text/plain;charset=UTF-8</value>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
-
-	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-	<resources mapping="/resources/**" location="/resources/" />
-
-	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
-	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<beans:property name="prefix" value="/WEB-INF/views/" />
-		<beans:property name="suffix" value=".jsp" />
-	</beans:bean>
+	<mvc:annotation-driven />
 	
-	<context:component-scan base-package="com.osquare.mydearnest.statics.web" />
+<!-- 	<mvc:interceptors> -->
+<!-- 		<mvc:interceptor> -->
+<!-- 			<mvc:mapping path="/**" /> -->
+<!-- 			<bean class="kr.co.osqure.cyh.util.handler.RequestInterceptor"> -->
+<!-- 				<property name="excludeParams"> -->
+<!-- 					<map> -->
+<!-- 						<entry key="fb" value="y" /> -->
+<!-- 					</map> -->
+<!-- 				</property> -->
+<!-- 				<property name="excludePathes"> -->
+<!-- 					<list> -->
+<!-- 						<value>*.html</value> -->
+<!-- 						<value>*.json</value> -->
+<!-- 						<value>*.do</value> -->
+<!-- 						<value>/admin*</value> -->
+<!-- 						<value>/auth/*</value> -->
+<!-- 						<value>/social/*</value> -->
+<!-- 						<value>/</value> -->
+<!-- 						<value>/add-item*</value> -->
+<!-- 						<value>/favicon.ico</value> -->
+<!-- 						<value>/resources/**</value> -->
+<!-- 						<value>/stylesheets/**</value> -->
+<!-- 						<value>/scripts/**</value> -->
+<!-- 						<value>/images/**</value> -->
+<!-- 						<value>/user-image/**</value> -->
+<!-- 					</list> -->
+<!-- 				</property> -->
+<!-- 			</bean> -->
+<!-- 		</mvc:interceptor> -->
+<!--     </mvc:interceptors> -->
+     	
 	
+	<!-- Resolves views selected for rendering by @Controllers to .vm resources in the /WEB-INF/views directory -->
+	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="/WEB-INF/views/"/>
+		<property name="velocityProperties">
+			<props>
+				<prop key="input.encoding">UTF-8</prop>
+				<prop key="output.encoding">UTF-8</prop>
+				<prop key="toolboxConfigLocation">/WEB-INF/conf/tools.xml</prop>
+			</props>
+		</property>
+	</bean>
 	
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="resourceLoaderPath" value="/WEB-INF/views/"></property>
+	    <property name="velocityPropertiesMap">
+	        <map>
+	            <entry key="resource.loader" value="file"></entry>
+	            <entry key="input.encoding" value="utf-8"></entry>
+	            <entry key="output.encoding" value="utf-8"></entry>
+	        </map>
+	    </property>
+	</bean>
 	
-</beans:beans>
+	<bean id="veloSecUserDetails" class="com.junglebird.webframe.views.VelocitySecUser"/>
+	<bean id="veloStringUtils" class="com.junglebird.webframe.common.StringUtils"/>
+	<bean id="viewResolver" class="com.junglebird.webframe.views.VelocityMultipleLayoutViewResolver">
+		<property name="cache" value="true"/>
+		<property name="suffix" value=".vm"/>
+		<property name="contentType" value="text/html; charset=UTF-8"/>
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="viewClass" value="com.junglebird.webframe.views.VelocityToolboxView"></property>
+		<property name="toolboxConfigLocation" value="/WEB-INF/conf/tools.xml" />
+		<property name="attributesMap">
+			<map>
+    			<entry key="sec"><ref bean="veloSecUserDetails"/></entry>
+    			<entry key="str"><ref bean="veloStringUtils"/></entry>
+    		</map>
+		</property>
+		<property name="mappings">
+			<map>
+				<entry key="admin/*" value="shared/layout.admin.vm" />
+				<entry key="*" value="shared/layout.default.vm" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Imports user-defined @Controller beans that process client requests -->
+	<import resource="controllers.xml" />
+	
+</beans>

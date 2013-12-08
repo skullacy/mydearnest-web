@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tools>
+	<toolbox scope="application">
+		<tool key="numberTool" class="org.apache.velocity.tools.generic.NumberTool"/>
+		<tool key="dateTool" class="org.apache.velocity.tools.generic.DateTool"/>
+		<tool key="esc" class="org.apache.velocity.tools.generic.EscapeTool"/>
+		<tool key="math" class="org.apache.velocity.tools.generic.MathTool"/>
+	</toolbox> 
+</tools>
