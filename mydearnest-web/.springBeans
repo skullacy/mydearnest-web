@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[3.4.0.201310051539-RELEASE]]></pluginVersion>
+	<pluginVersion><![CDATA[2.5.0.201010141000-RC1]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
-		<config>src/main/webapp/WEB-INF/conf/root-context.xml</config>
-		<config>src/main/webapp/WEB-INF/conf/security.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
