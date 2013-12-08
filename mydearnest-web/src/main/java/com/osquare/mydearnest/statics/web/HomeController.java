@@ -1,4 +1,4 @@
-package com.osquare.mydearnest;
+package com.osquare.mydearnest.statics.web;
 
 import java.text.DateFormat;
 import java.util.Date;
