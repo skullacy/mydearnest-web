@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<query name="getNotificationsByLastId">
+		<![CDATA[
+		SELECT 
+			noti.id as id,
+			account as account, 
+			post as post, 
+			noti.postMode as postMode, 
+			noti.createdAt as createdAt
+		FROM Notification noti 
+			LEFT JOIN noti.account account 
+			LEFT OUTER JOIN noti.post post 
+		WHERE
+			(2 >= :id or noti.id > :id)
+		ORDER BY
+			noti.createdAt DESC
+		]]>
+	</query>
+	
+	<query name="getNotificationHistoriesCount">
+		<![CDATA[
+		SELECT 
+			COUNT(*)
+		FROM Notification noti 
+		WHERE
+			(noti.postWriter.id = :account_id OR noti.follower.id = :account_id)
+			AND (noti.account.id != :account_id)
+			AND noti.confirmedAt IS NULL
+		ORDER BY
+			noti.createdAt DESC
+		]]>
+	</query>
+	
+	<query name="getNotificationHistories">
+		<![CDATA[
+		SELECT 
+			noti.id as id,
+			account as account, 
+			post as post, 
+			noti.postMode as postMode, 
+			postWriter as postWriter, 
+			noti.createdAt as createdAt, 
+			noti.confirmedAt as confirmedAt
+		FROM Notification noti 
+			LEFT JOIN noti.account account 
+			LEFT OUTER JOIN noti.post post 
+			LEFT OUTER JOIN noti.postWriter postWriter 
+		WHERE
+			(noti.postWriter.id = :account_id OR noti.follower.id = :account_id)
+			AND (noti.account.id != :account_id)
+		ORDER BY
+			noti.createdAt DESC
+		]]>
+	</query>
+	
+	<query name="updateNotificationHistories">
+		<![CDATA[
+		UPDATE Notification noti 
+		SET
+			noti.confirmedAt=:now
+		WHERE
+			(noti.postWriter.id = :account_id OR noti.follower.id = :account_id)
+			AND (noti.account.id != :account_id)
+		ORDER BY
+			noti.createdAt DESC
+		]]>
+	</query>
+	
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<query name="findAccountInfo">
+		<![CDATA[
+		select 
+			account as account, 
+			(
+				select count(*) from Post as post
+				where post.account.id = account.id
+			) as findCount,
+			(
+				select count(*) from PostComment as postComment
+				where postComment.account.id = account.id
+				and postComment.post is not null
+				and postComment.post.deletedOn is null
+			) as commentCount
+		from 
+			Account as account
+		where 
+			account.id = :userId
+		]]>
+	</query>
+	
+	<query name="findAccountInfoByfacebook">
+		<![CDATA[
+		select 
+			account as account, 
+			(
+				select count(*) from Post as post
+				where post.account.id = account.id
+			) as findCount,
+			(
+				select count(*) from PostComment as postComment
+				where postComment.account.id = account.id
+			) as commentCount
+		from 
+			Account as account
+		where 
+			account.facebookId = :userId
+		]]>
+	</query>
+	
+</hibernate-mapping>

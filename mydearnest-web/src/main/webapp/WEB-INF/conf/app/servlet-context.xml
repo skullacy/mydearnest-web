@@ -22,18 +22,18 @@
 	</bean>
 	
 <!-- 	메일세팅  -->
-<!-- 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"> -->
-<!-- 		<property name="username" value="leader@mixoncorp.com" /> -->
-<!--     	<property name="password" value="10540123" /> -->
-<!--     	<property name="javaMailProperties"> -->
-<!-- 		    <props> -->
-<!-- 		        <prop key="mail.smtp.host">ns1.mixon.co.kr</prop> -->
-<!-- 		        <prop key="mail.smtp.port">25</prop> -->
-<!-- 		        <prop key="mail.smtp.auth">true</prop> -->
-<!-- 		        <prop key="mail.smtp.starttls.enable">false</prop> -->
-<!-- 		    </props> -->
-<!-- 	    </property> -->
-<!-- 	</bean> -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="username" value="leader@mixoncorp.com" />
+    	<property name="password" value="10540123" />
+    	<property name="javaMailProperties">
+		    <props>
+		        <prop key="mail.smtp.host">ns1.mixon.co.kr</prop>
+		        <prop key="mail.smtp.port">25</prop>
+		        <prop key="mail.smtp.auth">true</prop>
+		        <prop key="mail.smtp.starttls.enable">false</prop>
+		    </props>
+	    </property>
+	</bean>
 		
 	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
 		<constructor-arg value="256"/>

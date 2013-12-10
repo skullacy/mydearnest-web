@@ -10,5 +10,64 @@
 		http://www.springframework.org/schema/security/spring-security-3.1.xsd
 		http://www.springframework.org/schema/util 
 		http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+		
+	
+<!-- 	<beans:bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices"> -->
+<!--         <beans:property name="alwaysRemember" value="true"/> -->
+<!--         <beans:property name="parameter" value="j_remember_me"/> -->
+<!--         <beans:property name="tokenValiditySeconds" value="151221"/> -->
+<!--         <beans:property name="cookieName" value="tt"/> -->
+<!--         <beans:property name="userDetailsService" ref="userDetailsService"/> -->
+<!--         <beans:property name="key" value="findfashion"/> -->
+<!--     </beans:bean> -->
+    
+<!-- 	<http auto-config='true'> -->
+<!-- 	    <remember-me key="findfashion"  services-ref="rememberMeServices" /> -->
+<!-- 	    <form-login login-page="/auth/failure-to-login" login-processing-url="/session/create"  -->
+<!-- 	    	authentication-success-handler-ref="authorizeSuccessHandler" -->
+<!-- 	    	authentication-failure-handler-ref="authorizeFailureHandler" /> -->
+	    
+<!-- 	    <logout logout-url="/session/destroy" invalidate-session="true" logout-success-url="/" /> -->
+
+<!-- 	    <intercept-url pattern="/admin*" access="ROLE_ADMIN" requires-channel="any" />	     -->
+<!-- 	    <intercept-url pattern="/admin/**" access="ROLE_ADMIN" requires-channel="any" /> -->
+<!-- 	    <intercept-url pattern="/mypage*" access="ROLE_USER" requires-channel="any" /> -->
+<!-- 	    <intercept-url pattern="/mypage/*" access="ROLE_USER" requires-channel="any" /> -->
+<!-- 	    <intercept-url pattern="/auth/modify" access="ROLE_USER" requires-channel="any" /> -->
+	    
+<!-- 	</http> -->
+	
+<!-- 	<beans:bean id="authorizeSuccessHandler" class="kr.co.mixon.webframe.auth.handler.AuthorizeSuccessHandler"> -->
+<!-- 		<beans:property name="defaultTargetUrl" value="/auth/success-to-redirect" /> -->
+<!-- 		<beans:property name="alwaysUseDefaultTargetUrl" value="true" /> -->
+<!-- 	</beans:bean> -->
+
+<!-- 	<beans:bean id="authorizeFailureHandler" class="kr.co.mixon.webframe.auth.handler.AuthorizeFailureHandler"> -->
+<!-- 		<beans:property name="defaultFailureUrl" value="/auth/login?error=failed" /> -->
+<!-- 	</beans:bean> -->
+	
+	<beans:bean id="userDetailsService" class="com.osquare.mydearnest.account.service.MemberDetailsServiceImpl">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+<!-- 	<beans:bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"> -->
+<!-- 		<beans:property name="userDetailsService" ref="userDetailsService"/> -->
+<!--     </beans:bean> -->
+
+<!--     <beans:bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager"> -->
+<!--         <beans:property name="providers"> -->
+<!--             <beans:list> -->
+<!--                 <beans:ref local="daoAuthenticationProvider" /> -->
+<!--             </beans:list> -->
+<!--         </beans:property> -->
+<!--     </beans:bean> -->
+	
+	
+	
+	<authentication-manager>
+		<authentication-provider user-service-ref="userDetailsService">
+			<password-encoder hash="sha-256"/>
+		</authentication-provider>
+	</authentication-manager>		
 
 </beans:beans>

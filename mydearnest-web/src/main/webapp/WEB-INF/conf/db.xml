@@ -14,11 +14,24 @@
 		<property name="location" value="classpath:hibernate.properties" />
 	</bean>
 
-	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName">
-			<value>java:comp/env/${hibernate.connection.datasource}</value>
-		</property>
+<!-- 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> -->
+<!-- 		<property name="jndiName"> -->
+<!-- 			<value>java:comp/env/${hibernate.connection.datasource}</value> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/testdb" />
+		<property name="username" value="root" />
+		<property name="password" value="testskullacy" />
+		
+			
+		
 	</bean>
+
+
+	
 	
 	<bean id="hibernateProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -62,22 +75,22 @@
 	</bean>
 	
 	<!-- Specify our ORM vendor -->
-<!-- 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> -->
-<!-- 		<property name="dataSource" ref="dataSource" /> -->
-<!-- 		<property name="hibernateProperties" ref="hibernateProperties" /> -->
-<!-- 		<property name="packagesToScan" value="kr.co.osqure.cyh.entity"></property> -->
-<!-- 		<property name="mappingDirectoryLocations"> -->
-<!-- 			<list> -->
-<!-- 				<value>classpath:queries</value> -->
-<!-- 			</list> -->
-<!-- 		</property> -->
-<!-- 	</bean> -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties" ref="hibernateProperties" />
+		<property name="packagesToScan" value="com.osquare.mydearnest.entity"></property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:queries</value>
+			</list>
+		</property>
+	</bean>
 
-<!-- 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"> -->
-<!-- 		<property name="sessionFactory" ref="sessionFactory" /> -->
-<!-- 	</bean> -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 
-<!-- 	<tx:annotation-driven transaction-manager="transactionManager" /> -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
 	
 
 </beans>

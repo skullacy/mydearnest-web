@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="" path="/">
+    <ResourceLink global="jdbc/mydearnest" 
+    	name="jdbc/mydearnest" 
+    	type="javax.sql.DataSource"
+    	driverClassName="com.mysql.jdbc.Driver"
+    	url="jdbc:mysql://localhost:3306/dbtest"
+    	user="root"
+    	password="testskullacy" />
+</Context>
