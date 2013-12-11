@@ -54,7 +54,7 @@ public class Category implements Serializable {
 		this.group = group;
 	}
 
-	@Column(name = "`CONTENT`", nullable = false)
+	@Column(name = "CONTENT", nullable = false)
 	public String getContent() {
 		return content;
 	}

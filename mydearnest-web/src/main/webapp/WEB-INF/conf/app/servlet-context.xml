@@ -11,6 +11,11 @@
 	
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 	
+	<bean id="propertiesManager" class="com.junglebird.webframe.common.PropertiesManager">
+	    <property name="path" value="webapps.properties" />
+	</bean>
+	
+	
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
