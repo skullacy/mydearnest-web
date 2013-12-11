@@ -1,0 +1,51 @@
+<style>
+	.wrap	{ width:980px; }
+</style>
+
+<div class="body_title wrap">
+	<img src="$request.contextPath/images/mypage/title_message.png" />
+</div>
+
+<div class="wrap">
+	<input type="hidden" id="selectRoom" value="$!sendUser" />
+	<div class="body_content" style="position:relative; min-height:600px;">
+		
+		<div class="dialog_lst">
+			#if ($sendUser)
+			<ul id="rooms" data-url="$request.contextPath/mypage/message/rooms.ajax?new=$sendUser"></ul>
+			#else
+			<ul id="rooms" data-url="$request.contextPath/mypage/message/rooms.ajax"></ul>
+			#end
+		</div>
+		
+		<div class="message_form none" style="margin-bottom:81px;">
+			<img src="$request.contextPath/images/mypage/bg_dialog_none.png" id="no_chat" class="none_img" style="display:none;" />
+			<div class="message_lst_div"><ul class="message_lst" id="chat_list" style="display:none;"></ul></div>
+		</div>	
+		<div class="message_write">
+			<form id="frm_write" action="$request.contextPath/mypage/message/write.ajax" method="post">
+			<div style="position:relative;">
+				<div class="thumb">
+					#if ($imageId)
+					<img src="$request.contextPath/user-image/thumb/$imageId?w=48&h=48&t=crop" />
+					#else
+					<img src="$request.contextPath/images/profile/profile_none_img.png" />
+					#end
+				</div>
+				<div class="btn">
+					<input type="image" src="$request.contextPath/images/mypage/btn_send.png" />
+				</div>
+				<div class="message">
+					<div class="arr">
+						<img class="me" src="$request.contextPath/images/mypage/arr_message_me.png" />
+					</div>
+					<textarea id="content" name="content" class="textbox"></textarea>
+				</div>
+			</div>		
+			</form>
+		</div>	
+	</div>	
+	
+</div>
+
+<script type="text/javascript"> MXB.procScript("chat.js"); </script>

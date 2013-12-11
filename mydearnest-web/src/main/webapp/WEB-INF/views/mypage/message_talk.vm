@@ -1,0 +1,31 @@
+#foreach($message in $messages)
+
+#if ($message.account.id == $accountId)
+#set($layoutClass = "opposite")
+#else
+#set($layoutClass = "me")
+#end
+<li data-id="$message.id">
+	<div class="$layoutClass">
+		<div class="thumb">
+			#if($message.account.imageId)
+			<img src="$request.contextPath/user-image/thumb/${message.account.imageId}?w=48&h=48&t=crop" />
+			#else
+			<img src="$request.contextPath/images/profile/profile_none_img.png" />
+			#end
+		</div>
+		<div class="message">
+			<div class="arr">
+				<img class="me" src="$request.contextPath/images/mypage/arr_message_me.png" />
+				<img class="op" src="$request.contextPath/images/mypage/arr_message_oppsit.png" />
+			</div>
+			<h5>$message.account.name</h5>
+			<p style="word-break:break-all;">
+				$message.content
+			</p>
+		</div>
+		<p class="timer">$dateTool.format("yyyy-MM-dd", $message.createdAt)</p>
+	</div>
+</li>
+
+#end

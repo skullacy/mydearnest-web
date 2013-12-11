@@ -1,0 +1,27 @@
+받은메세지
+
+<!-- UI Object -->
+	<fieldset>
+		<legend>Legend</legend>
+		<div class="form_table">
+		<table border="1" cellspacing="0" summary="표의 요약을 반드시 넣어 주세요">
+		<tbody>
+		<tr>
+		<th scope="row">받은메세지</th>
+		<td>
+			<div class="item">
+				<input type="text" name="receiveAccountid" id="receiveAccountid" title="레이블 텍스트" class="i_text">
+			</div>
+		</td>
+		</tr>
+		#foreach( $messagelist in $list)
+		 <li>보낸사람:$messagelist.sendAccountid.name </br>
+		 받은사람:$messagelist.receiveAccountid.name</br>
+		 보낸날짜:$messagelist.sendAt</br>
+		 보낸내용:$messagelist.content</li></br>
+		 #end
+		</tbody>
+		</table>
+	</div>
+	</fieldset>
+<!-- //UI Object -->

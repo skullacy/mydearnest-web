@@ -1,0 +1,5 @@
+<script type="text/javascript">
+	alert("성공적으로 Find 되었습니다.");
+	parent.MXB.reloadMode = true;
+	parent.location.hash = "#" + context_path + "/index";
+</script>

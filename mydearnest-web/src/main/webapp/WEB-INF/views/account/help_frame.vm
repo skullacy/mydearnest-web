@@ -1,0 +1,8 @@
+#set($layout = './shared/layout.blank.vm')
+<div class="popup_frame" style="max-width:298px;">
+	<div class="header_area">
+		<div class="close ui-widget-mxb-close"><img src="$request.contextPath/images/common/popup_close.png" /></div>
+	</div>
+	<iframe frameborder="0" width="100%" height="310" scrollbar="no" style="overflow:hidden;" src="$request.contextPath/auth/help">
+	</iframe>
+</div>

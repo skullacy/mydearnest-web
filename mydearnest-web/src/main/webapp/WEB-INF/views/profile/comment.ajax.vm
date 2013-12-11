@@ -1,0 +1,26 @@
+#foreach($comment in $comments)
+<li>
+	<div class="thumb">
+		<a href="$request.contextPath/show/$comment.id">
+			<img src="$request.contextPath/user-image/thumb/$comment.imageId?w=48&h=48&t=crop&p=$comment.id">
+		</a>
+	</div>
+	<div class="cont">
+		<p class="location">
+			<a class="name" href="$request.contextPath/profile/$comment.userId">$comment.name</a>님의 <a class="item" href="$request.contextPath/show/$comment.id">$comment.title</a>
+		</p>
+		<p>
+			$comment.text
+			#if ($comment.count > 1)
+				#set($cc = $comment.count - 1)
+				외 ${cc}건 
+			#end
+			<span class="date">$dateTool.format("yyyy-MM-dd", $comment.createdAt)</span>
+		</p>
+	</div>
+</li>
+#end
+
+#if(${comments.size()} < 30)
+<li class="paging_close" style="display:none;"></li>
+#end

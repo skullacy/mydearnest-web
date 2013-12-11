@@ -1,0 +1,50 @@
+#if ($newuser) 
+<li data-room-flag="$newuser.id">
+	<div class="thumb">
+		#if ($newuser.imageSource.id > 0)
+		<img src="$request.contextPath/user-image/thumb/$!{$newuser.imageSource.id}?w=48&h=48&t=crop" />
+		#else
+		<img src="$request.contextPath/images/profile/profile_none_img.png" />
+		#end
+	</div>
+	<div class="cont">
+		<span>&nbsp;</span>
+		<h5>$newuser.name</h5>
+		<p>&nbsp;</p>
+	</div>
+</li>
+
+
+#end
+
+#foreach($room in $rooms)
+
+#set($username = "")
+#set($userimage = 0)
+#set($targetId = 0)
+
+#if($accountId == $room.accountId)
+	#set($username = $room.receiverName)
+	#set($userimage = $room.receiverImage)
+	#set($targetId = $room.receiverId)
+#else
+	#set($username = $room.accountName)
+	#set($userimage = $room.accountImage)
+	#set($targetId = $room.accountId)
+#end
+
+<li data-room-flag="$targetId">
+	<div class="thumb">
+		#if ($userimage > 0)
+		<img src="$request.contextPath/user-image/thumb/$!{userimage}?w=48&h=48&t=crop" />
+		#else
+		<img src="$request.contextPath/images/profile/profile_none_img.png" />
+		#end
+	</div>
+	<div class="cont">
+		<span>$dateTool.format("yyyy-MM-dd", $room.createdAt)</span>
+		<h5>$username</h5>
+		<p style="overflow:hidden;">$room.content</p>
+	</div>
+</li>
+#end

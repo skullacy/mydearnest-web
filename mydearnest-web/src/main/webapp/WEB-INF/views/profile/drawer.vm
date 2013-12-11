@@ -1,0 +1,36 @@
+<style type="text/css"> .wrap { max-width:900px; } </style>
+<div class="wrap" style="max-width:912px;">
+
+	#parse("./profile/user_info.vm")
+
+	<div class="body_content" style="overflow:hidden;">
+		<ul class="folder_lst">
+			
+			#foreach($folderItem in $folderItems)
+			<li>
+				<a href="$request.contextPath/profile/$user.id/drawer/$folderItem.folder.id">
+				<div class="thumb">
+					#if($folderItem.imageSources)
+						#foreach($imageSource in $folderItem.imageSources)
+						<img src="$request.contextPath/user-image/thumb/$imageSource.id?w=80&h=80&t=crop" />
+						#end
+					#end
+				</div>
+				<div class="cont">
+					$folderItem.folder.name
+					(${folderItem.folder.count})
+				</div>
+				</a>
+			</li>				
+			#end 
+			
+		</ul>
+		<div class="clear"></div>
+	</div>
+	
+	<div class="clear">
+	</div>
+</div>
+<script type="text/javascript"> 
+	MXB.procScript("profile.js"); 
+</script>

@@ -1,0 +1,9 @@
+#set( $layout = "shared/layout.blank.vm" )
+<html>
+<head>
+<script type="text/javascript">
+	alert("$!message");
+	location.href="$!href";
+</script>
+</head>
+</html>

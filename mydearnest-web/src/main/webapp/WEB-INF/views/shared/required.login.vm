@@ -1,0 +1,7 @@
+#set( $layout = "shared/layout.blank.vm" )
+<script type="text/javascript">
+	if(MXB.modal)
+		MXB.modal.loginByRequired();
+	else
+		alert("로그인 후 재시도해주세요.");
+</script>

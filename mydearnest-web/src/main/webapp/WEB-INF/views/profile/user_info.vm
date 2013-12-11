@@ -1,0 +1,56 @@
+
+<div class="user_info" style="margin:0px auto 20px;">
+	<img src="$request.contextPath/images/profile/temp_bg.png" style="width:100%; min-height:100%;" />
+	<div class="user_thumb">
+		#if($user.imageId)
+			<img src="$request.contextPath/user-image/thumb/$user.imageId?w=120&h=120&t=crop">
+		#else
+			<img src="$request.contextPath/images/profile/profile_none_img.png" width="120" height="120" class="img" />
+		#end
+	</div>
+	
+	<div class="user_desc">
+		
+		<div class="title">
+			<h5>$user.name</h5>
+			<p>$user.region</p>
+			#if ($profile_owner)
+				<a href="$request.contextPath/mypage/modify"><img src="$request.contextPath/images/profile/edit_button.png" alt="개인정보수정" align="absmiddle" /></a>
+			#end
+			<div class="clear">
+			</div>
+		</div>
+		<p class="bio">
+			$!str.replaceCrLf($user.bio)
+		</p>
+		
+	</div>
+
+</div>
+
+<div class="user_tab">
+	<ul>
+		<li#if($snb_code == 'index') class="selected"#end>
+			<a href="$request.contextPath/profile/$user.id">
+			<img src="$request.contextPath/images/profile/menu_uploaded_on.png" class="on" />
+			<img src="$request.contextPath/images/profile/menu_uploaded_off.png" />
+			</a>
+		</li>
+		<li class="gap">&nbsp;</li>
+		<li#if($snb_code == 'drawer') class="selected"#end>
+			<a href="$request.contextPath/profile/$user.id/drawer">
+			<img src="$request.contextPath/images/profile/menu_folder_on.png" class="on" />
+			<img src="$request.contextPath/images/profile/menu_folder_off.png" />
+			</a>
+		</li>
+		<li class="gap">&nbsp;</li>
+		<li#if($snb_code == 'love') class="selected"#end>
+			<a href="$request.contextPath/profile/$user.id/love">
+			<img src="$request.contextPath/images/profile/menu_love_on.png" class="on" />
+			<img src="$request.contextPath/images/profile/menu_love_off.png" />
+			</a>
+		</li>
+	</ul>
+</div>
+
+

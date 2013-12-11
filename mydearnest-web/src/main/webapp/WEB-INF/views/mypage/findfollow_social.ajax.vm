@@ -1,0 +1,91 @@
+#if ($items)
+	#foreach($data in $items)
+	<li>
+		<div class="fl">
+			<div class="thumb">
+				#if($data.imageUri)
+				<img src="$data.imageUri" />
+				#else
+				<img src="$request.contextPath/images/profile/profile_none_img.png" />
+				#end
+			</div>
+			<div class="cont">
+				<h5>
+					#if ($data.user)
+					<a href="$request.contextPath/profile/$data.user.account.userId">$data.username</a>
+					#else
+						#if($data.newWindow) 
+						<span href="$data.voteUri" data-width="550" data-height="300" onclick="popup(this);return false;" style="cursor:pointer;">$data.username</span>
+						#else
+						<a href="$data.voteUri" target="_blank">$data.username</a>
+						#end
+					#end
+				</h5>
+				#if ($data.user)
+				<p>$!data.user.account.bio</p>
+				#end
+
+			</div>
+		</div>
+		<div class="info">
+			<div>
+				#if ($data.user)
+				<p class="count good">$data.user.findCount</p>
+				<p class="count following">$data.user.followingCount</p>
+				<p class="count follower">$data.user.followerCount</p>
+				<p class="count comment">$data.user.commentCount</p>
+				<p class="count" style="padding:3px 0px; margin-right:5px;">
+					<span class="btn_pack large none">
+						<a>관리</a>
+					</span>
+				</p>
+				<p class="count" style="padding:3px 0px; font-weight:normal; margin-right:0px;">
+					<span class="btn_pack large black icon" data-user="$data.user.account.userId" data-mode="follow" data-value="follow" #if($data.user.isFollow == 1) style="display:none;"#end>
+						<span class="check"></span>
+						<a>&nbsp;팔로우&nbsp;</a>
+					</span>
+					<span class="follow_ctrl" data-user="$data.user.account.userId" data-mode="follow" data-value="unfollow" #if($data.user.isFollow == 0) style="display:none;"#end>
+						<span class="btn_pack large blue none">
+							<a>&nbsp;&nbsp;&nbsp;&nbsp;팔로잉&nbsp;&nbsp;&nbsp;</a>
+						</span>
+						<span class="btn_pack large red hover">
+							<a>&nbsp;언팔로우&nbsp;</a>
+						</span>
+					</span>
+				</p>
+				#else
+				<p class="count" style="padding:3px 0px; font-weight:normal; margin-right:0px;">
+					<span class="btn_pack large black icon">
+						<span class="check"></span>
+						<a href="$data.voteUri" target="_blank"#if($data.newWindow) data-width="550" data-height="300" onclick="popup(this);return false;"#end>&nbsp;초대하기&nbsp;</a>
+					</span>
+				</p>
+				#end
+			</div>
+		</div>
+		
+	</li>
+	#end
+	#if(${items.size()} < $limitSize)
+	<li class="paging_close" style="display:none;"></li>
+	#end
+#else
+	<div style="text-align:center; margin:50px;">
+		<img src="$request.contextPath/images/mypage/findsns_noneimg.png" style="margin-bottom:50px;" /><br />
+		#if ($auth_action == "twitter")
+		<a onclick="inAppScript.clickSocial(this);void(0);" data-social="twitter" data-url="/social/twitter?mode=modify" data-width="650" data-height="620">	
+			<img src="$request.contextPath/images/mypage/btn_findsns.png" />
+		</a>
+		#elseif ($auth_action == "facebook")
+		<a onclick="inAppScript.clickSocial(this);void(0);" data-social="facebook" data-url="/social/facebook?mode=modify" data-width="650" data-height="320">	
+			<img src="$request.contextPath/images/mypage/btn_findsns.png" />
+		</a>
+		#elseif ($auth_action == "me2day")
+		<a onclick="inAppScript.clickSocial(this);void(0);" data-social="me2day" data-url="/social/me2day?mode=modify" data-width="1000" data-height="700">	
+			<img src="$request.contextPath/images/mypage/btn_findsns.png" />
+		</a>
+		#end
+	</div>
+	
+	<li class="paging_close" style="display:none;"></li>
+#end

@@ -1,0 +1,6 @@
+
+<script type="text/javascript">
+	alert("정보수정이 완료되었습니다..");
+	parent.location.hash = "#$request.contextPath/profile/$userId/";
+	parent.location.reload();
+</script>

@@ -1,0 +1,94 @@
+#set($head = '
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/auth.css"/>
+	<style type="text/css">
+		body	{ background:#f5f5f5; }
+	</style>
+	<script type="text/javascript">
+		$("document").ready(function () {
+			$("#j_password").keydown(function (e) {
+				if(e.keyCode == 13) $("#frm_login").submit();
+			});
+		});
+	</script>
+')
+
+
+<div class="login_wrap">
+	<div class="tCenter"><img src="$request.contextPath/images/auth/login_desc.png" /></div>
+	<div class="tCenter" style="padding-bottom:14px; border-bottom:1px solid #e0dfdd;">
+		<a data-social="true" data-action="facebook" data-url="$request.contextPath/social/facebook?mode=login" data-width="650" data-height="320" #if($command.facebookId && $command.facebookId != "") style="display:none;"#end>
+			<img src="$request.contextPath/images/auth/login_for_facebook.png" alt="Facebook Login" />
+		</a>
+	</div>
+	<div style="padding-top:10px; border-top:1px solid #fff;">
+	
+		#if($error)
+		<div style="color:#ff0000; padding:0px 0px 10px;font-family:NanumGothic" class="tCenter">
+			아이디 혹은 비밀번호가 올바르지 않습니다.
+		</div>
+		#end
+		
+		<form id="frm_login" action="$request.contextPath/session/create" method="post">
+		
+		<input type="hidden" name="j_remember_me" value="true">
+		<input type="hidden" name="spring-security-redirect" value="/auth/success-to-redirect" />
+		<fieldset class="pop_field">
+			<legend>로그인</legend>
+			<div class="item">
+				<label for="j_username">E-MAIL</label>
+				<input type="text" id="j_username" name="j_username" value="" class="txt focus" />
+				<div class="clear">
+				</div>
+			</div>
+			<div class="item last">
+				<label for="password">PASSWORD</label>
+				<input type="password" id="j_password" name="j_password" class="txt focus" />
+				<div class="clear">
+				</div>
+			</div>
+		</fieldset>
+			
+		<input type="submit" class="submit" value="로그인" />
+		
+		</form>
+		
+		<div class="bottom_button">
+			<div class="left">
+				<a href="javascript:parent.location.hash='#' + context_path + '/join';void(0);">
+				<div class="item tCenter"><img src="$request.contextPath/images/auth/join_button.png" /></div>
+				</a>
+			</div>
+			<div class="right">
+				<a href="javascript:parent.location.hash='#' + context_path + '/help';void(0);">
+				<div class="item tCenter"><img src="$request.contextPath/images/auth/btn_idpw.png" /></div>
+				</a>
+			</div>
+		</div>
+	
+	</div>
+	
+
+</div>
+
+<script type="text/javascript">
+	$(".focus").focus(function () { $(this).prev().css("opacity", 0.3); });
+	$(".focus").keyup(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 0.3);
+		}
+		else {
+			$(this).prev().hide();
+		}
+	});
+	$(".focus").focusout(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 1);
+		}
+		else {
+			$(this).prev().hide();
+		}
+	});
+	$(".focus").focusout();
+</script>

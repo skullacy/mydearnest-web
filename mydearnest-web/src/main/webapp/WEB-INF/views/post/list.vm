@@ -1,0 +1,20 @@
+
+<div class="clear">
+</div>
+
+<div data-paging="true" data-complete-function="item_loaded" data-scrollable="true" data-url="$request.contextPath/index.ajax?c=$!category">
+	
+	<div id="container" class="masonry paging_list">
+	
+		<div class="find_item pager">
+			<a id="more">결과더보기</a>
+			<span class="loading">로드하는 중입니다.</span>
+		</div>
+	</div>
+	
+	
+</div>
+
+<script type="text/javascript"> 
+	MXB.procScript("index.js"); 
+</script>

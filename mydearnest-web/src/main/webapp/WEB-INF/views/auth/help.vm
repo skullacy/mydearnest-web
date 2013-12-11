@@ -1,0 +1,75 @@
+#set($head = '
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/auth.css"/>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/auth/join.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/auth/validate_form.js"></script>
+')
+
+<div id="fb-root">
+</div>
+
+<form action="$request.contextPath/auth/help" method="post" data-validate="true">
+
+<div class="help_wrap">
+	<div class="tCenter"><img src="$request.contextPath/images/auth/title_help.png" /></div>
+	<div class="tCenter"><img src="$request.contextPath/images/auth/help_desc.png" /></div>
+
+	#if($error)
+	<div style="background:#ff0000; margin-bottom:10px; padding:8px 10px;">
+		올바른 이메일이 아닙니다.
+	</div>
+	#end
+	
+	<div>
+	
+		#if($errors)
+		<div style="color:#ff0000; padding:0px 0px 10px;font-family:NanumGothic" class="tCenter">
+			#if($error)
+				가입된 회원이 아닙니다.
+			#end
+		</div>
+		#end
+		
+		<fieldset class="pop_field">
+			<legend>회원가입</legend>
+			
+			<div class="item first last #if($error)has-error#end">
+				<label for="j_username">E-MAIL</label>
+				<input type="text" id="mailAddress" name="mailAddress" value="$!status.value" class="txt focus" />
+				<div class="clear">
+				</div>
+			</div>
+			
+		</fieldset>
+		
+		<input type="submit" class="submit" value="Sign in" />
+				
+	</div>
+	
+</div>
+	
+</form>
+
+<script type="text/javascript">
+	$(".focus").focus(function () { $(this).prev().css("opacity", 0.3); });
+	$(".focus").keyup(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 0.3);
+		}
+		else {
+			$(this).prev().hide();
+		}
+		
+		if ($(this).hasClass("has-error")) $(this).removeClass("has-error");
+	});
+	$(".focus").focusout(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 1);
+		}
+		else {
+			$(this).prev().hide();
+		}
+	});
+	$(".focus").focusout();
+</script>

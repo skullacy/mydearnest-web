@@ -1,0 +1,17 @@
+#set( $layout = "shared/layout.blank.vm" )
+<html>
+<head>
+<script type="text/javascript">
+	var path = "$request.contextPath/#$request.contextPath/index";
+	if(window.parent.location.href.indexOf(path) > 0) 
+	{
+		window.parent.location.hash = "#$request.contextPath/index";
+		window.parent.location.reload();
+	}
+	else {
+		window.parent.refresh_mode = true;
+		window.parent.location.href = path;
+	}
+</script>
+</head>
+</html>

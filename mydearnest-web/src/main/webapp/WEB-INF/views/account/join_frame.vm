@@ -1,0 +1,11 @@
+#set($layout = './shared/layout.blank.vm')
+<div class="popup_frame" style="max-width:298px;">
+	<div class="header_area">
+		<div class="close ui-widget-mxb-close"><img src="$request.contextPath/images/common/popup_close.png" /></div>
+		<div class="title">
+			<img src="$request.contextPath/images/auth/title_join.png" />
+		</div>
+	</div>
+	<iframe frameborder="0" width="100%" height="380" scrollbar="no" style="overflow:hidden;" src="$request.contextPath/auth/join" allowTransparency="true">
+	</iframe>
+</div>

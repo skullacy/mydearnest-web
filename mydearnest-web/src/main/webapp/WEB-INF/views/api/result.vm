@@ -1,0 +1,27 @@
+#set($layout = "./shared/layout.blank.vm")
+<script type="text/javascript">
+	#if($mode == "modify")
+		#if($failure)
+			alert("$message");
+		#elseif($redirect_uri)
+			opener.location.hash="$redirect_uri";
+			opener.$("#dialog_login").dialog("close");
+		#elseif($mode == "modify")
+			opener.socialResult('$!type', '$!udata', '$!data1', '$!data2', '$!url');  
+		#end
+		window.close();
+	#else
+		#if($failure)
+			alert("$message");
+			location.href = "/";
+		#elseif($redirect_uri)
+			location.href = "/" + "$redirect_uri";
+		#else
+			location.href = "/";
+		#end
+	#end
+	
+	
+//	alert('a');
+</script>
+

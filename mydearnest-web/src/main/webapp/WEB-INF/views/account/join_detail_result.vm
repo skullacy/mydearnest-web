@@ -1,0 +1,13 @@
+<script type="text/javascript">
+	#if($success)
+		parent.location.href = "$redirect_uri";
+	#elseif(!$errors)
+		alert("서버와 연결이 원할하지 않습니다.\n잠시 후 다시 시도해주세요.");
+		parent.$(".submit").show();
+	#else
+		#foreach($error in $errors)
+		parent.$("#" + "${error.field}").parent().addClass("has-error");
+		#end
+		parent.$(".submit").show();
+	#end
+</script>

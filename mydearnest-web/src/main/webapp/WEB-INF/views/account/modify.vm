@@ -1,0 +1,66 @@
+#set($head = '
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/auth.css"/>
+	<style type="text/css"> body { background:#f5f5f5; } </style>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/client/join.js"></script>
+')
+
+<iframe id="modify_detail_submit" name="modify_detail_submit" style="display:none;"></iframe>
+<form id="modify_detail_form" action="$request.contextPath/auth/modify" method="post" enctype="multipart/form-data" target="modify_detail_submit">
+
+	<div class="join_detail_wrap">
+		
+		<div class="user_fields" style="border-top:0px; padding-top:15px;">
+		
+			<div class="fl">
+				<div id="profile_image">
+				
+					#if($command.imageSourceId)
+					<img src="$request.contextPath/user-image/thumb/$command.imageSourceId?w=140&h=140&t=crop" id="thumb_view" />
+					#else
+					<img src="$request.contextPath/images/profile/profile_none_img.png" id="thumb_view" />
+					#end
+					<img src="$request.contextPath/images/profile/profile_cover.png" class="cover" />
+				</div>
+				<p style="color:#b8b2ac; font-size:11px; font-family:NanumGothic;" class="tCenter">프로필사진을 등록해주세요</p>
+				<div class="tCenter" style="position:relative;">
+					<img src="$request.contextPath/images/auth/attach_image.png" />
+					<input id="thumbnail" name="thumbnail" type="file" style="font-size: 30px; position: absolute; z-index:1; right:0px; top:0px; opacity:0; filter: alpha(opacity=0);cursor: pointer;"/>
+				</div>
+				<div class="b">
+				</div>
+			</div>
+			
+			<div class="fr">
+				<fieldset class="pop_field_t2">
+					<legend>로그인</legend>
+					#springBind("command.username")
+					<div class="item first">
+						<label for="username">이름</label>
+						<input type="text" id="username" name="username" value="$!status.value" class="txt" />
+						<div class="clear">
+						</div>
+					</div>
+					#springBind("command.region")
+					<div class="item">
+						<label for="region">거주지 (동)</label>
+						<input type="text" id="region" name="region" value="$!status.value" class="txt" />
+						<div class="clear">
+						</div>
+					</div>
+					#springBind("command.bio")
+					<div class="item last">
+						<label for="bio">소개글</label>
+						<textarea name="bio" id="bio" class="txt">$!status.value</textarea>
+						<div class="clear">
+						</div>
+					</div>
+				</fieldset>
+				<input type="submit" class="submit">
+			</div>
+		
+			<div class="clear">
+			</div>
+		
+		</div>
+	</div>
+</form>

@@ -1,0 +1,89 @@
+<div class="popup_detail" data-post-id-value="$post.id">
+
+	<div class="title_area">
+	
+		<div class="close ui-widget-mxb-close fr">
+			<img src="$request.contextPath/images/post/btn_popup_close.png" />
+		</div>
+		<div class="fr" style="padding-top:5px;">
+			<span data-heart="$post.id" data-mode="love" data-value="yes"#if($love_me) style="display:none;" #end><a><img src="$request.contextPath/images/post/button_love.png" /></a></span>
+			<span data-heart="$post.id" data-mode="love" data-value="no"#if(!$love_me) style="display:none;" #end><a><img src="$request.contextPath/images/post/button_love_on.png" /></a></span>
+			<img src="$request.contextPath/images/post/button_refind.png" />
+		</div>
+		<div class="fl">
+			<h3>$post.title</h3>
+			<p>$post.category.content</p>
+		</div>
+		
+	</div>
+	
+	#set($postHeight = $post.imageHeight * (620 / $math.toDouble($post.imageWidth)))
+
+	<div class="thumb" style="background:#ffffff; text-align:center; position:relative; overflow:hidden; border-top:1px solid #e1deda; border-bottom:1px solid #e1deda; min-height:${postHeight}px">
+		<div class="img_info" style="z-index:999;">
+		</div>
+		<div>
+			<img src="$request.contextPath/user-image/thumb/$post.imageSource.id?p=$post.id&w=620" class="valignimg" style="display:none; width:100%;" />
+		</div>
+	</div>
+	
+	<div class="left_contents">
+		<div>
+			<a href="$request.contextPath/profile/$post.account.id">
+
+			<div class="thumb fl">
+				#if($post.account.imageId)
+				<img src="$request.contextPath/user-image/thumb/$post.account.imageId?w=60&h=60&t=crop" width="36" height="36" />
+				#else
+				<img src="$request.contextPath/images/profile/profile_none_img.png" width="36" height="36" />
+				#end
+			</div>
+			<div class="fr">
+				$post.account.region, 올린방 11개
+			</div>
+			<h5><a href="/profile/$post.account.id">$post.account.name</a></h5>
+			<div class="clear">
+			</div>
+
+			</a>
+		</div>
+		
+		<div style="height:10px; overflow:hidden;">&nbsp;</div>
+		
+		<div class="desc">
+			$post.description
+		</div>
+		<div class="writer_info" style="padding:20px 10px;">
+			
+			
+		</div>
+		
+	</div>
+	
+	<div class="right_contents">
+		#if($sec.principal != "Guest")
+		<div class="ttl" style="padding:15px 0px 10px;">
+			<img src="$request.contextPath/images/post/title_reply_write.png" />
+		</div>
+		<div class="write_comment">
+		<form action="$request.contextPath/post/comment.ajax" method="post">
+			<input type="hidden" name="post_id" value="$post.id" />
+			<p><textarea name="text"></textarea></p>
+			<input type="submit" class="submit" />
+		</form>
+		</div>
+		#end
+		
+		<div class="ttl" style="padding:15px 0px 10px;">
+			<img src="$request.contextPath/images/post/title_reply.png" />
+		</div>
+		
+		<div class="comment_area comment_lst" data-url="$request.contextPath/show/$post.id/comments.ajax" data-page="1">
+			<ul class="paging_list">
+				<li class="comment_pager" style="min-height:auto; font-family:NanumGothic">더보기..</li>
+			</ul>
+		</div>
+		
+	</div>
+	<div style="clear:both;">&nbsp;</div>
+</div>

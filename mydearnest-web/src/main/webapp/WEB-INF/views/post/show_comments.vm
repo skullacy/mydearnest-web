@@ -1,0 +1,26 @@
+#foreach($comment in $comments)
+<li>
+	<div class="thumb">
+		<a href="#/profile/$comment.account.userId">
+			#if(!$comment.account.imageId)
+			<img src="$request.contextPath/images/profile/profile_none_img.png" />
+			#else
+			<img src="$request.contextPath/user-image/thumb/$comment.account.imageId?w=48&h=48&t=crop" />
+			#end
+		</a>
+	</div>
+	<div class="cont">
+		<h5>
+			<a href="#/profile/$comment.account.userId">$comment.account.name</a>
+			<span>$dateTool.format('yyyy.MM.dd', $comment.createdAt)</span>
+		</h5>
+		<p>$comment.text</p>
+		
+	</div>
+</li>
+#end
+
+
+#if(${comments.size()} < 30)
+<div class="comment_notfound" style="display:none;"></div>
+#end

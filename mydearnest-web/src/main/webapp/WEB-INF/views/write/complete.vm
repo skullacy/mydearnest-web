@@ -1,0 +1,6 @@
+
+<script type="text/javascript">
+	alert("등록이 완료되었습니다.");
+	parent.$('#dialog_popup').dialog('close');
+	parent.location.reload();
+</script>

@@ -1,0 +1,4 @@
+<script type="text/javascript">
+	alert("신청해주셔서 감사합니다.\n추후 메일주소로 프로그램을 보내드리겠습니다.");
+	parent.location.hash = "#$request.contextPath/index";
+</script>

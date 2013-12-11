@@ -1,0 +1,106 @@
+#set($head = '
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/auth.css"/>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/auth/join.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/auth/validate_form.js"></script>
+')
+
+<div id="fb-root">
+</div>
+
+<form action="$request.contextPath/auth/join" method="post" data-validate="true">
+
+<div class="join_wrap">
+	<div class="tCenter"><img src="$request.contextPath/images/auth/join_desc.png" /></div>
+	<div class="tCenter" style="padding-bottom:14px; border-bottom:1px solid #e0dfdd;">
+		#springBind("command.facebookId")
+		<input type="hidden" name="facebookId" id="social-facebook-id" value="$!status.value" />
+		#springBind("command.facebookAccessToken")
+		<input type="hidden" name="facebookAccessToken" id="social-facebook-accessToken" value="$!status.value" />
+		#springBind("command.facebookSecretToken")
+		<input type="hidden" name="facebookSecretToken" id="social-facebook-secretToken" value="$!status.value" />
+		
+		<a data-social="true" data-action="facebook" data-url="$request.contextPath/social/facebook?mode=login" data-width="650" data-height="320" #if($command.facebookId && $command.facebookId != "") style="display:none;"#end>
+			<img src="$request.contextPath/images/auth/login_for_facebook.png" alt="Facebook Login" />
+		</a>
+	</div>
+	
+	<div style="padding-top:10px; border-top:1px solid #fff;">
+	
+		#if($errors)
+		<div style="color:#ff0000; padding:0px 0px 10px;font-family:NanumGothic" class="tCenter">
+			#foreach($error in $errors)
+				#if($error.defaultMessage)
+				$error.defaultMessage<br />
+				#else
+				$error.code
+				#end
+			#end
+		</div>
+		#end
+		
+		<fieldset class="pop_field">
+			<legend>회원가입</legend>
+			
+			#springBind("command.mailAddress")
+			<div class="item first #if($status.errors.hasErrors())has-error#end">
+				<label for="j_username">E-MAIL</label>
+				<input type="text" id="mailAddress" name="mailAddress" value="$!status.value" class="txt focus" />
+				<div class="clear">
+				</div>
+			</div>
+			
+			#springBind("command.password")
+			<div class="item #if($status.errors.hasErrors())has-error#end">
+				<label for="password">PASSWORD</label>
+				<input type="password" id="password" name="password" class="txt focus" />
+				<div class="clear">
+				</div>
+			</div>
+			
+			#springBind("command.passwordConfirm")
+			<div class="item last #if($status.errors.hasErrors())has-error#end">
+				<label for="password">PASSWORD CONFIRM</label>
+				<input type="password" id="passwordConfirm" name="passwordConfirm" class="txt focus" />
+				<div class="clear">
+				</div>
+			</div>
+		</fieldset>
+			
+		<input type="submit" class="submit" value="Sign in" />
+				
+		<div class="bottom_button">
+			<a href="javascript:parent.location.hash='#' + context_path + '/login';void(0);">
+			<div class="item tCenter"><img src="$request.contextPath/images/auth/login_button.png" /></div>
+			</a>
+		</div>
+	
+	</div>
+	
+</div>
+
+</form>
+
+<script type="text/javascript">
+	$(".focus").focus(function () { $(this).prev().css("opacity", 0.3); });
+	$(".focus").keyup(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 0.3);
+		}
+		else {
+			$(this).prev().hide();
+		}
+		
+		if ($(this).hasClass("has-error")) $(this).removeClass("has-error");
+	});
+	$(".focus").focusout(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 1);
+		}
+		else {
+			$(this).prev().hide();
+		}
+	});
+	$(".focus").focusout();
+</script>

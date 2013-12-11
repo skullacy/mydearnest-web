@@ -1,0 +1,102 @@
+
+html, body								{ overflow:hidden; height:auto; }
+form									{ padding:0px; margin:0px; }
+.login_wrap								{ width:100%; max-width:278px; margin:0px auto; }
+
+.login_wrap .submit						{ background:#65caa1 url('../images/auth/login_button.png') no-repeat center; margin:0px; padding:0px; border:1px solid #55b48d; width:100%; height:38px; border-radius:5px; margin-top:4px; text-indent:-999; font-size:0px; line-height:0px; behavior:url(../scripts/PIE.htc); }
+.login_wrap .bottom_button 				{ margin-top:4px; }
+.login_wrap .bottom_button .left		{ float:left; width:50%; }
+.login_wrap .bottom_button .right		{ float:left; width:50%; }
+
+.login_wrap .bottom_button .left .item	{ margin-right:2px; background:#dd583d; border:1px solid #af4a36; border-radius:5px; behavior:url(../scripts/PIE.htc); }
+.login_wrap .bottom_button .right .item	{ margin-left:2px;  background:#f5f5f5; border:1px solid #cccccc; border-radius:5px; behavior:url(../scripts/PIE.htc); }
+
+.join_wrap								{ width:100%; max-width:278px; margin:0px auto; }
+.join_wrap .submit						{ background:#dd583d url('../images/auth/join_button.png') no-repeat center; margin:0px; padding:0px; border:1px solid #af4a36; width:100%; height:38px; border-radius:5px; margin-top:4px; text-indent:-999; font-size:0px; line-height:0px; behavior:url(../scripts/PIE.htc); }
+.join_wrap .bottom_button 				{ margin-top:4px; background:#65caa1; border:1px solid #55b48d; border-radius:5px; behavior:url(../scripts/PIE.htc); }
+
+
+.join_detail_wrap						{ width:100%; max-width:438px; margin:0px auto; }
+.join_detail_wrap .agree				{ height:180px; background:#fff; box-shadow:inset 0px 0px 3px #aaa; border-radius:5px; padding:10px; border:1px solid #ddd; behavior:url(../scripts/PIE.htc); }
+.join_detail_wrap .agree_box			{ padding:6px 0px 20px; margin:0px -2px; border-bottom:1px solid #e0dfdd; }
+.join_detail_wrap .agree_box .prettycheckbox.has-error label	{ color:#ff0000; }
+.join_detail_wrap .user_fields			{ border-top:1px solid #fff; padding-top:20px; }
+.join_detail_wrap .user_fields .fl		{ width:140px; }
+.join_detail_wrap .user_fields .fr		{ width:280px; }
+.join_detail_wrap .submit				{ background:#dd583d url('../images/auth/ok_button.png') no-repeat center; margin:0px; padding:0px; border:1px solid #af4a36; width:100%; height:38px; border-radius:5px; margin-top:4px; text-indent:-999; font-size:0px; line-height:0px; behavior:url(../scripts/PIE.htc); }
+
+
+.help_wrap								{ width:100%; max-width:278px; margin:0px auto; }
+.help_wrap .submit						{ background:#dd583d url('../images/auth/ok_button.png') no-repeat center; margin:0px; padding:0px; border:1px solid #af4a36; width:100%; height:38px; border-radius:5px; margin-top:4px; text-indent:-999; font-size:0px; line-height:0px; behavior:url(../scripts/PIE.htc); }
+
+#profile_image							{ position:relative; width:140px; height:140px; }
+#profile_image #thumb_view				{ width:100%; height:100%; }
+#profile_image .cover					{ position:absolute; left:0px; top:0px; width:100%; height:100%; }
+
+@media only screen and (max-width: 440px) {
+	
+	.join_detail_wrap .user_fields .fl						{ float:none; width:auto; padding-bottom:10px; }
+	.join_detail_wrap .user_fields .fl .b					{ clear:both; }
+	.join_detail_wrap .user_fields .fl #profile_image		{ float:left; width:80px; height:80px; }
+	.join_detail_wrap .user_fields .fl p.tCenter			{ text-align:left; padding-left:100px; padding-top:13px; }
+	.join_detail_wrap .user_fields .fl div.tCenter			{ text-align:left; padding-left:100px; }
+	.join_detail_wrap .user_fields .fr						{ float:none; width:auto; }
+	
+}
+
+.join_ok_wrap							{ width:100%; max-width:278px; margin:0px auto; }
+.join_ok_wrap .bottom_button .item		{ margin-right:2px; background:#dd583d; border:1px solid #af4a36; border-radius:5px; behavior:url(../scripts/PIE.htc); }
+
+
+
+
+fieldset.pop_field							{ background:#fff; border-radius:5px; box-shadow:inset 0px 0px 3px #aaa; position:relative; padding:0px 0px 0px; margin:0px; border:1px solid #ddd; behavior:url(../scripts/PIE.htc); }
+fieldset.pop_field div.item					{ height:40px; position:relative; padding:0px 13px; margin:0px; border-bottom:1px solid #e1e1df; }
+fieldset.pop_field div.item.last			{ border-bottom:0px; padding-bottom:2px; }
+fieldset.pop_field div.item.has-error 		{ background:rgba(255, 0, 0, 0.1); }
+fieldset.pop_field div.item.has-error.first	{ border-top-left-radius:6px; border-top-right-radius:6px; }
+fieldset.pop_field div.item.has-error.last	{ border-bottom-left-radius:6px; border-bottom-right-radius:6px; }
+
+fieldset.pop_field .item label				{ position:absolute; top:10px; left:13px; line-height:21px; font-family:NanumGothic; font-size:11px; color:#aaa;  }
+fieldset.pop_field .item input				{ background:none; border:0px; padding:12px 0px; line-height:12px; width:100%; outline:none; font-family:NanumGothic; font-size:12px; }
+
+fieldset.pop_field_t2							{ background:#fff; border-radius:5px; box-shadow:inset 0px 0px 3px #aaa; position:relative; padding:0px 0px 0px; margin:0px; border:1px solid #ddd; behavior:url(../scripts/PIE.htc); }
+fieldset.pop_field_t2 div.item					{ min-height:40px; position:relative; padding:0px 13px 0px 75px; margin:0px; border-bottom:1px solid #e1e1df; }
+fieldset.pop_field_t2 div.item.last				{ border-bottom:0px; padding-bottom:2px; }
+fieldset.pop_field_t2 div.item.has-error 		{ background:rgba(255, 0, 0, 0.1); }
+fieldset.pop_field_t2 div.item.has-error.first	{ border-top-left-radius:6px; border-top-right-radius:6px; }
+fieldset.pop_field_t2 div.item.has-error.last	{ border-bottom-left-radius:6px; border-bottom-right-radius:6px; }
+
+fieldset.pop_field_t2 .item label				{ position:absolute; top:10px; left:13px; line-height:21px; font-family:NanumGothic; font-size:11px; color:#aaa;  }
+fieldset.pop_field_t2 .item input				{ background:none; border:0px; padding:10px 0px; line-height:14px; width:100%; outline:none; font-family:NanumGothic; font-size:12px; }
+fieldset.pop_field_t2 .item textarea			{ background:none; border:0px; padding:10px 0px; line-height:14px; width:100%; height:112px; outline:none; font-family:NanumGothic; font-size:12px; }
+
+
+
+.modify_form						{ width:100%; height:100%; }
+
+.modify_form .fc					{ position:relative; padding:25px; }
+.modify_form .fc .title			{ border-bottom:1px solid #e0e2e4; height:30px; }
+.modify_form .fc .title_desc		{ font-family:NanumGothic; color:#666666; padding:10px 0px 25px; margin:0px; }
+
+.modify_form dl.form dt							{ padding:7px 15px 0px; width:170px; float:left; font-family:NanumGothic; background:url('../images/auth/join_bulit.png') no-repeat left 8px; }
+.modify_form dl.form dd							{ position:relative; padding-left:170px; height:auto; }
+
+.modify_form dl.form dd .radio					{ font-size:12px; line-height:16px; padding:4px 0px 12px; outline:none; width:290px; }
+.modify_form dl.form dd .radio input				{ padding:0px; margin:0px; }
+.modify_form dl.form dd .radio label				{ padding-right:20px; }
+
+.modify_form dl.form dd .text input				{ border-top:1px solid #c0c0c0; border-left:1px solid #c0c0c0; border-right:1px solid #dddddd; border-bottom:1px solid #dddddd; background:#f5f5f5; font-size:12px; line-height:16px; padding:6px 8px; outline:none; width:290px; }
+.modify_form dl.form dd .text textarea			{ border-top:1px solid #c0c0c0; border-left:1px solid #c0c0c0; border-right:1px solid #dddddd; border-bottom:1px solid #dddddd; background:#f5f5f5; font-size:12px; line-height:16px; padding:6px 8px; outline:none; width:290px; }
+.modify_form dl.form dd .text input.date_long		{ width:110px; }
+.modify_form dl.form dd .text input.date_short	{ width:68px; }
+
+.modify_form dl.form dd .validate					{ color:#666666; font-family:NanumGothic; margin:0px; padding:5px 0px 15px; }
+.modify_form dl.form dd .has_bottom				{ padding-bottom:5px; }
+.modify_form dl.form dd .checkbox_view			{ color:#333333; font-family:NanumGothic; line-height:16px; }
+.modify_form dl.form dd .checkbox_view input		{ padding:0px; margin:0px; margin:2px 5px 0px 0px; line-height:16px; }
+
+.modify_form .person_thumb							{ border:1px solid; border-color:#bbb #eee #eee #bbb; padding:3px; width:48px; height:48px; overflow:hidden; margin-right:10px; }
+.modify_form .person_thumb_editor					{ height:40px; padding:5px 0px 20px; position:relative; }
+.modify_form .person_thumb_editor p					{ margin:0px; padding:5px 0px; }
+

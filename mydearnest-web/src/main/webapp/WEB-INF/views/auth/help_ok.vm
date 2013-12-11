@@ -1,0 +1,43 @@
+#set($head = '
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/auth.css"/>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/auth/join.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/auth/validate_form.js"></script>
+')
+
+
+<div class="help_wrap">
+	<div class="tCenter">
+		<h3 style="line-height:30px; font-size:24px; color:#dd583d; text-shadow:inset 0px 0px 2px #ccc; font-family:Tahoma; margin:5px 0px;">$mailAddress</h3>
+	</div>
+	<div class="tCenter"><img src="$request.contextPath/images/auth/help_ok_desc.png" /></div>
+
+	<div style="padding-top:30px;">
+		<input type="button" class="submit" value="Sign in" onclick="parent.$('#dialog_popup').dialog('close');" />
+	</div>
+	
+</div>
+
+<script type="text/javascript">
+	$(".focus").focus(function () { $(this).prev().css("opacity", 0.3); });
+	$(".focus").keyup(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 0.3);
+		}
+		else {
+			$(this).prev().hide();
+		}
+		
+		if ($(this).hasClass("has-error")) $(this).removeClass("has-error");
+	});
+	$(".focus").focusout(function () {
+		if ($(this).val() == "") {
+			$(this).prev().show();
+			$(this).prev().css("opacity", 1);
+		}
+		else {
+			$(this).prev().hide();
+		}
+	});
+	$(".focus").focusout();
+</script>

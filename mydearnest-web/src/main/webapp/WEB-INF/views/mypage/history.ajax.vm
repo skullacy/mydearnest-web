@@ -1,0 +1,37 @@
+#foreach($item in $items)
+<li>
+	<div class="thumb">
+		#if(!$item.account.imageSource.id)
+		<img src="$request.contextPath/images/profile/profile_none_img.png" />
+		#else
+		<img src="$request.contextPath/user-image/thumb/$item.account.imageSource.id?w=48&h=48&t=crop" />
+		#end
+	</div>
+	<div class="cont">
+		<p>
+			<a class="name" href="$request.contextPath/profile/$item.account.userId">$item.account.name</a> 님이 
+			#if($item.postMode == "LOVE")
+			<a class="item" href="$request.contextPath/show/$item.post.id">$item.post.title</a>
+			을(를) 좋아합니다.
+			#else
+			<a class="item" href="$request.contextPath/profile/$item.follower.userId">$item.follower.name</a>
+			을(를) 팔로우합니다.
+			#end
+		</p>
+		<span class="date">
+		1 week ago
+		</span>
+	</div>
+</li>
+#end
+
+
+#if(${items.size()} == 0 && $page == 1)
+<div style="text-align:center; padding:50px 0px;">
+<img src="$request.contextPath/images/mypage/bg_history_none.png" />
+</div>
+#end
+			
+#if(${items.size()} < 30)
+<div class="paging_close" style="display:none;"></div>
+#end

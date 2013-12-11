@@ -1,0 +1,85 @@
+#set($head = '<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/admin-layout.css"/>')
+
+<div class="wrap">
+  	<h2 class="title">
+  		<img src="$request.contextPath/images/admin/title_post.png" class="fl" />
+  		<ul style="font-size:11px; font-weight:normal;">
+			#if($order == "createdAt")
+  			<li style="padding-left:50px; color:#000; font-family:NanumGothic;" class="fl">등록순별 정렬</li>
+			#else
+  			<li style="padding-left:50px; color:#777; font-family:NanumGothic;" class="fl">
+  				<a href="$request.contextPath/admin/post?page=1&order=createdAt" style="color:#777;">등록순별 정렬</a>
+  			</li>
+  			#end
+			#if($order == "warningCount")
+  			<li style="padding-left:20px; color:#000; font-family:NanumGothic;" class="fl">신고수별 정렬</li>
+			#else
+  			<li style="padding-left:20px; color:#777; font-family:NanumGothic;" class="fl">
+  				<a href="$request.contextPath/admin/post?page=1&order=warningCount" style="color:#777;">신고수별 정렬</a>
+  			</li>
+  			#end
+			#if($order == "goodCount")
+  			<li style="padding-left:20px; color:#000; font-family:NanumGothic;" class="fl">좋아요별 정렬</li>
+			#else
+  			<li style="padding-left:20px; color:#777; font-family:NanumGothic;" class="fl">
+  				<a href="$request.contextPath/admin/post?page=1&order=goodCount" style="color:#777;">좋아요별 정렬</a>
+  			</li>
+  			#end
+  		</ul>
+  	</h2>
+  	
+  	<table class="common_table" cellpadding="0" cellspacing="0">
+  		<colgroup>
+  			<col width="80" />
+  			<col width="100" />
+  			<col width="*" />
+  			<col width="80" />
+  			<col width="80" />
+  		</colgroup>
+  		<thead>
+	  		<tr>
+		  		<th>게시자</th>
+		  		<th>첨부파일</th>
+		  		<th>내용</th>
+		  		<th>좋아요</th>	
+		  		<th>신고수</th>		
+		  		<th>삭제</th>		  		
+	  		</tr>
+  		</thead>
+  		<tbody>
+  			#foreach($item in $items)
+	  		<tr>
+		  		<td class="user"><a href="/#/profile/$item.account.userId" target="_blank">$!item.account.userId</a></td>
+		  		<td class="thumb">
+			  		<a href="/#/show/$item.id" target="_blank"><img src="http://findfashion.kr/user-image/thumb/$item.imageSource.id?w=78&h=78&t=crop" /></a>
+		  		</td>
+		  		<td class="contents">
+		  		<a href="/#/show/$item.id" target="_blank">
+		  			<p>$item.title</p>
+		  			<span>$item.description</span>
+		  		</a>
+		  		</td>
+		  		<td>$item.goodCount</td>
+		  		<td>$item.warningCount</td>
+		  		<td>
+			  		<a href="$request.contextPath/admin/post/remove?id=$item.id&redirectUri=$esc.url($request.requestURL)">
+			  			<img src="$request.contextPath/images/admin/btn_delete.png" />
+			  		</a>
+		  		</td>
+	  		</tr>
+	  		#end
+  		</tbody>
+  	</table>
+
+	<!-- UI Object -->
+	<div class="paginate">
+		#foreach($i in [1..$pages])
+		#if($i == $page)
+		<strong>$i</strong>
+		#else
+		<a href="$request.contextPath/admin/post?page=$i&order=$!order">$i</a>
+		#end
+		#end
+	</div>
+	
+</div>

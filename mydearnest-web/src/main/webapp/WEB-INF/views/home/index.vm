@@ -1,5 +1,132 @@
-<h1>
-	Hello world!  
-</h1>
+#set($head = '
+	<script type="text/javascript">if (!location.hash) location.hash = context_path + "/index";</script>
 
-<P>  The time on the server is ${serverTime}. </P>
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/common-layout.css"/>
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/jquery-ui-1.10.3.custom.min.css"/>
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/jquery-ui-1.8.18.modify.css"/>
+	
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.mousewheel.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.address-1.5.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.selectbox-0.2.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery-ui-1.10.3.custom.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.tools.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.masonry.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/shortcut.js"></script>
+	
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.handle.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.loop.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.pager.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.contextmenu.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.downer.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.listener.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.modal.js"></script>
+
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/client/frame.js"></script>
+')
+
+<div id="body">
+
+	<div id="header">
+		<div id="top_area" style="position:relative; z-index:99;">
+			<div class="wrap">
+				<div class="global_nb">
+					<div class="fl main_ci">
+						<img src="$request.contextPath/images/app_frame/gnb_ci.png" alt="Find Fashion" style="cursor:pointer" onclick="jQuery.address.value('$request.contextPath/index');" />
+					</div>
+					<div class="fr">
+						<ul class="quick_menu">
+							<li data-submenu="true" class="has-submenu w160">
+								<a href=""><img src="$request.contextPath/images/app_frame/gnb_menu_category.png" /></a>
+								<div class="submenu" style="display:none; right:-16px; z-index:999;" data-height="177px">
+									<ul>
+										#foreach($category in $categories)
+										<li><a href="$request.contextPath/index/$category.id" rel="address:$request.contextPath/index/$category.id">$category.content</a></li>
+										#end
+									</ul>
+								</div>
+							</li>
+							#if($sec.principal == "Guest")
+							<li class="gap">&nbsp;</li>
+							<li><a href="$request.contextPath/about" rel="address:$request.contextPath/about"><img src="$request.contextPath/images/app_frame/gnb_menu_notice.png" alt="공지사항" /></a></li>
+							<li class="account_button">
+								<a href="$request.contextPath/about" rel="address:$request.contextPath/login"><img src="$request.contextPath/images/app_frame/menu_login.png" alt="로그인" class="l" /></a>
+							</li>
+							<li class="account_button">
+								<a href="$request.contextPath/join" rel="address:$request.contextPath/join"><img src="$request.contextPath/images/app_frame/menu_join.png" alt="시작하기" class="l" /></a>
+							</li>
+							#else
+							<li class="gap">&nbsp;</li>
+							<li data-submenu="true" class="login_info has-submenu w120">
+								<div class="thm_c">
+									#if($user_image_id && $user_image_id > 0)
+									<img src="$request.contextPath/user-image/thumb/$user_image_id?w=60&h=60&t=crop" width="30" height="30" class="i_thumb" />
+									#else
+									<img src="$request.contextPath/images/profile/profile_none_img.png" width="30" height="30" class="i_thumb" />
+									#end
+									<img src="$request.contextPath/images/app_frame/profile_guide.png" style="position:absolute; padding:0px; margin:0px;" class="guide" />
+								</div>
+								<p class="text">
+	    							<a href="$request.contextPath/profile/$sec.accountId" rel="address:$request.contextPath/profile/$sec.accountId">
+	    								<img src="$request.contextPath/images/app_frame/gnb_menu_me.png" />
+	    							</a>
+								</p>
+								<div class="submenu" style="display:none; right:-16px; z-index:999;" data-height="177px">
+									<ul>
+										<li><a href="$request.contextPath/profile/$sec.accountId" rel="address:$request.contextPath/profile/$sec.accountId">마이 페이지</a></li>
+										<li><a href="$request.contextPath/mypage/history" rel="address:$request.contextPath/mypage/history">알림</a></li>
+										<li><a href="$request.contextPath/mypage/modify" rel="address:$request.contextPath/mypage/modify">정보수정</a></li>
+										<li><a href="$request.contextPath/session/destroy" target="_top">로그아웃</a></li>
+									</ul>
+								</div>
+							</li>
+							<li class="gap">&nbsp;</li>
+							<li><a href="$request.contextPath/about/notice" rel="address:$request.contextPath/about/notice"><img src="$request.contextPath/images/app_frame/gnb_menu_notice.png" alt="공지사항" /></a></li>
+							<li class="addbutton">
+								<a href="$request.contextPath/write/browse" rel="address:$request.contextPath/write/browse">
+									<img src="$request.contextPath/images/app_frame/menu_add.png" class="l" />
+								</a>
+							</li>
+							#end
+						</ul>
+					</div>
+					<div class="clear">
+					</div>
+				</div>
+			
+			</div>
+		</div>
+				
+	</div>
+		
+	<div id="content_box">
+		<div id="content_body"></div>
+	</div>
+	
+	<div id="footer">
+		<div class="wrap">
+			<div class="fl">
+				<ul>
+					<li><a href="$request.contextPath/about/feedback" rel="address:$request.contextPath/about/feedback"><img src="$request.contextPath/images/app_frame/quick_menu_feedback.png" /></a></li>
+					<li class="gap"><img src="$request.contextPath/images/app_frame/quick_menu_gap.png" /></li>
+					<li><a href="$request.contextPath/about/contacts" rel="address:$request.contextPath/about/contacts"><img src="$request.contextPath/images/app_frame/quick_menu_contact.png" /></a></li>
+					<li class="gap"><img src="$request.contextPath/images/app_frame/quick_menu_gap.png" /></li>
+					<li><a href="$request.contextPath/about/tos" rel="address:$request.contextPath/about/tos"><img src="$request.contextPath/images/app_frame/quick_menu_privacy.png" /></a></li>
+				</ul>
+			</div>
+			<div class="fr">
+				<ul>
+					<li><img src="$request.contextPath/images/app_frame/quick_menu_addr.png" /></li>
+					<li class="gap"><img src="$request.contextPath/images/app_frame/quick_menu_gap.png" /></li>
+					<li><img src="$request.contextPath/images/app_frame/quick_menu_cinfo.png" /></li>
+				</ul>
+			</div>
+			<div class="clear">
+			</div>
+		</div>
+	</div>
+	
+	<div id="dialog_popup" style="display:none;"></div>
+	<div id="loading" style="display:none;"><div>&nbsp;</div></div>
+	
+</div>

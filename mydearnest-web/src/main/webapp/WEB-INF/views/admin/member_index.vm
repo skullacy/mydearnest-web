@@ -1,0 +1,87 @@
+
+#set($head = '<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/admin-layout.css"/>')
+
+
+<div class="wrap">
+  	<h2 class="title">
+  		<img src="$request.contextPath/images/admin/title_user.png" />
+  	</h2>
+  	
+  	<table class="common_table" cellpadding="0" cellspacing="0">
+  		<thead>
+	  		<tr>
+		  		<th>아이디</th>
+		  		<th>이름</th>
+		  		<th>이메일</th>
+		  		<th>성별</th>
+		  		<th>생일</th>
+		  		<th>휴대전화</th>
+		  		<th>가입일자</th>
+		  		<th>구분</th>		  		
+	  		</tr>
+  		</thead>
+  		<tbody>
+  			#foreach($item in $items)
+	  		<tr>
+		  		<td><a href="/#/profile/$item.userId" target="_blank">$!item.userId</a></td>
+		  		<td>$!item.name</td>
+		  		<td>$!item.email</td>
+		  		<td>
+		  			#if($item.sex == 'M')
+		  			남성
+		  			#elseif($item.sex == 'W')
+		  			여성
+		  			#else
+		  			<span style="color:#999">미입력</span>
+		  			#end
+		  		</td>
+		  		<td>
+		  			#if($item.birthDay)
+		  			$item.birthDay
+		  			#else
+		  			<span style="color:#999">미입력</span>
+		  			#end
+		  		</td>
+		  		<td>
+		  			#if($item.mobilePhone)
+		  			$item.mobilePhone
+		  			#else
+		  			<span style="color:#999">미입력</span>
+		  			#end
+		  		</td>
+		  		<td>
+			  		$dateTool.format("yyyy-MM-dd", $item.createdAt)
+		  		</td>
+		  		<td>
+		  			#set($roleMode = 1)
+		  			#if($item.role.indexOf("ROLE_ADMIN") >= 0)
+		  			#set($roleMode = 2)
+		  			#end
+		  			<select class="role_update" data-userid="$item.userId">
+			  			<option value="ROLE_USER" #if($roleMode==1) selected="selected"#end>사용자</option>
+			  			<option value="ROLE_USER|ROLE_ADMIN" #if($roleMode==2) selected="selected"#end>관리자</option>
+		  			</select>
+		  		</td>
+	  		</tr>
+	  		#end
+
+  		</tbody>
+  	</table>
+  	
+  	<script type="text/javascript" src="$request.contextPath/scripts/admin.js"></script>
+  	<script type="text/javascript">
+  		contextPath = "$request.contextPath";
+  	</script>
+
+	<!-- UI Object -->
+	<div class="paginate">
+		#foreach($i in [1..$pages])
+		#if($i == $page)
+		<strong>$i</strong>
+		#else
+		<a href="$request.contextPath/admin/member?page=$i">$i</a>
+		#end
+		#end
+	</div>
+	
+</div>

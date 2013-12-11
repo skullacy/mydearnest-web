@@ -1,0 +1,33 @@
+<div class="player_fold">
+	<div class="top">
+		<img src="$request.contextPath/images/player/btn_open_on.png" class="on_img" />
+		<img src="$request.contextPath/images/player/btn_open_disable.png" class="off_img" />
+	</div>
+	<div class="advice">
+		<img src="$request.contextPath/images/player/player_advice_txt.png" class="on_img" alt="현재 히스토리가 닫혀있는 상태입니다. 활성화 하시려면 마우스를 올려주세요." />
+	</div>
+</div>
+
+<div id="player" class="player_body checklist">
+	<div>
+		<ul class="top_btn_lst" id="status_command">
+			<li data-required-login="true" data-mode="follow">
+				<img src="$request.contextPath/images/player/btn_follow_on.png" class="on_img" />
+				<img src="$request.contextPath/images/player/btn_follow_off.png" class="off_img" />
+			</li>
+			<li class="on" data-mode="all">
+				<img src="$request.contextPath/images/player/btn_all_on.png" class="on_img" />
+				<img src="$request.contextPath/images/player/btn_all_off.png" class="off_img" />
+			</li>
+			<li class="fold" data-action="fold">
+				<img src="$request.contextPath/images/player/btn_fold_on.png" class="on_img" />
+				<img src="$request.contextPath/images/player/btn_fold_disable.png" class="off_img" />
+			</li>
+		</ul>
+	</div>
+	
+	<div id="history_container">
+		<ul class="history_lst"></ul>
+	</div>
+
+</div>

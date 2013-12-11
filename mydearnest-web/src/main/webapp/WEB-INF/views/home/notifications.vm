@@ -1,0 +1,30 @@
+#foreach($item in $items)
+<li data-id="$item.id" data-handled="false" class="folding">
+	#if ($item.post)
+	#if ($item.postMode == "LOVE")
+	<div class="thumb">
+		<img src="$request.contextPath/user-image/thumb/$item.post.imageSource.id?w=38&h=38&t=crop" />
+	</div>
+	<p>
+		<a href="#$request.contextPath/profile/$item.account.userId">$item.account.name</a>님이 <a href="#$request.contextPath/show/$item.post.id">$item.post.title</a>을(를) 좋아합니다.
+	</p>
+	#else
+	<div class="thumb">
+		<img src="$request.contextPath/user-image/thumb/$item.post.imageSource.id?w=38&h=38&t=crop" />
+	</div>
+	<p>
+		<a href="#$request.contextPath/profile/$item.account.userId">$item.account.name</a>님이 <a href="#$request.contextPath/show/$item.post.id">$item.post.title</a>을(를) #if($item.post.refindId > 0 && $item.post.id != $item.post.refindId)리#end파인드 헀습니다.
+	</p>
+	#end
+	#else
+	<div class="thumb">
+		<img src="$request.contextPath/images/profile/profile_none_img.png" />
+	</div>
+	<p>
+		<a href="#$request.contextPath/profile/$item.account.userId">$item.account.name</a>님이 <a href="#$request.contextPath/profile/$item.follower.userId">$item.follower.name</a>님을 팔로우 합니다.
+	</p>
+	#end
+	<div class="clear">
+	</div>
+</li>
+#end

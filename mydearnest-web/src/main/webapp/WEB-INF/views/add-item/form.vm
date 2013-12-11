@@ -1,0 +1,236 @@
+#set($head = '
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/jquery-ui-1.8.18.custom.css"/>
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/jquery-ui-1.8.18.modify.css"/>
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/jquery.tagit.css"/>
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/add-item.css"/>
+	<link rel="stylesheet" type="text/css" href="' + $request.contextPath + '/stylesheets/jquery.Jcrop.min.css"/>
+
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/uploadify/jquery.uploadify.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.selectbox-0.2.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery-ui-1.8.24.custom.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/tag-it.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/client/add-item.js"></script>
+	<script type="text/javascript">contextPath = "' + $request.contextPath + '";</script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.Jcrop.min.js"></script>
+	<script type="text/javascript" src="' + $request.contextPath + '/scripts/jquery.color.js"></script>
+')
+
+<div class="additem_content">
+	<textarea style="display:none;" id="folderTpl" name="folderTpl">
+		#springBind("command.folderId")
+		<select name="folderId" class="selectbox" data-has-folder="true">
+			<option value="">선택하세요</option>
+			#foreach($haveFolder in $haveFolders)
+			<option value="$haveFolder.id"#if($status.value==$haveFolder.id) selected="selected"#end>$haveFolder.name</option>
+			#end
+		</select>
+	</textarea>
+	
+    <div class="thumb_container">
+    	<div class="wrap">
+    		#if(!$command.imageUrl || $command.imageUrl == '')
+	    		#if(!$command.imageId)
+	    		<div id="imageUpload" style="position:relative; height:100%;">
+					<div style="position:absolute; z-index:3; top:50%; margin-left:-50px; left:50%; margin-top:-50px; width:100px; height:100px; overflow:hidden;">
+						<input id="file_upload" type="file" name="filedata" style="display: none;" width="100" height="21">
+					</div>
+	    		</div>
+	    		<div id="imagePreviewC">
+		    		<img id="imagePreview" class="no_editor" src="$!command.imageUrl" style="display:none;">
+	    		</div>
+	    		#else
+	    		<div id="imagePreviewC">
+		    		<img id="imagePreview" class="no_editor" src="$request.contextPath/user-image/get/$command.imageId">
+	    		</div>
+	    		#end
+    		#else
+    		<div id="imagePreviewC">
+	    		<img id="imagePreview" class="no_editor" src="$!command.imageUrl" style="#if(!$command.imageUrl)display:none;#end">
+    		</div>
+    		#end
+    		
+    		<div id="imageEditor" class="use_editor" style="background:#999999; position:absolute; top:0px; left:0px; right:0px; bottom:35px; overflow:auto; text-align:center; display:none;">
+	    		<img class="jcrop_target" style="#if(!$command.imageUrl)display:none;#end margin:0px; auto;">
+    		</div>
+    		
+    		<div class="info no_editor" id="editButton" style="cursor:pointer;">사진을 자르시려면 여기를 클릭하세요.</div>
+    		<div class="info use_editor" id="editOkButton" style="display:none;">
+    			<span class="save" style="cursor:pointer;">완료</span>
+    			&nbsp;|&nbsp;
+    			<span style="cursor:pointer;">취소</span>
+    		</div>
+    	</div>
+    </div>
+    
+    <div class="input_form">
+    	
+    	<form method="post" action="$request.contextPath/add-item" onsubmit="return onImageCheck();">
+			#springBind("command.imageId")
+    		<input type="hidden" id="imageSourceId" name="imageId" value="$!status.value" />
+			#springBind("command.refindId")
+    		<input type="hidden" name="refindId" value="$!status.value" />
+    		#springBind("command.imageUrl")
+    		<input type="hidden" id="imageUrl" name="imageUrl" value="$!status.value" />
+    		#springBind("command.referer")
+    		<input type="hidden" name="referer" value="$!status.value" />
+    		#springBind("command.price")
+    		<input type="hidden" name="price" value="$!status.value" />
+    		#springBind("command.priceUnit")
+    		<input type="hidden" name="priceUnit" value="$!status.value" />
+    		#springBind("command.crop")
+    		<input type="hidden" name="crop" id="crop" value="$!status.value" />
+        	<dl>
+        		<dt>
+					<span class="fl">폴더</span>
+					<span class="fr">
+						<a data-has-folder="true">+ 새폴더 추가</a>
+					</span>
+					<div class="clear">
+					</div>
+				</dt>
+        		<dd id="folder_container">
+					#springBind("command.folderId")
+					<div id="folder_view">
+					</div>
+					#if($status.errors.hasErrors())
+						<p style="color:#ff0000;">
+						#foreach($e in $status.errorMessages)
+	                        ${e}<br />
+						#end
+						</p>
+					#end
+        		</dd>
+        		<input type="hidden" name="category" id="category" value="1" />
+        		<!--
+        		<dt>카테고리</dt>
+        		<dd>
+    				<div>
+    					<div class="groupbox">
+                        	<select id="category_group" class="selectbox">
+            					#foreach($category in $rootCategories)
+                        		<option value="$category.id">$category.content</option>
+            					#end
+                        	</select>
+    					</div>
+    					<div class="categorybox">
+    					</div>
+    					<div class="clear">
+    					</div>
+    				</div>
+        			<p>아이템을 카테고리에 맞게 분류해 주세요.</p>
+        		</dd>
+        		-->
+        		<dt>태그</dt>
+        		<dd>
+    				#springBind("command.tags")
+        			<input name="tags" id="tags" type="hidden" value="$!status.value" />
+        			<ul id="tagField"></ul>
+        			<p>아이템을 검색어로 등록합니다. </p>
+        		</dd>
+        		<dt>상세소개</dt>
+        		<dd>
+    				#springBind("command.desc")
+        			<textarea id="desc" name="desc" class="input">$!status.value</textarea>
+					#if($status.errors.hasErrors())
+						<p style="color:#ff0000;">
+						#foreach($e in $status.errorMessages)
+	                        ${e}<br />
+						#end
+						</p>
+					#end
+        		</dd>
+        	</dl>
+			
+        	<div style="padding:10px 0px;">
+				<div class="fr">
+					#if($command.refindId)
+					<span class="btn_pack large black"><input type="submit" value="리파인드" onclick="$('#folderTpl').val('');"></span>
+					#else
+					<span class="btn_pack large black"><input type="submit" value="파인드"></span>
+					#end
+				</div>
+				<div class="clear">
+				</div>
+			</div>
+    
+    	</form>
+    </div>
+    
+    <div class="clear">
+    </div>
+
+</div>
+<div id="dialog_folder" style="display:none;">
+	<form action="$request.contextPath/add-item/folder.json" method="post">
+	<div class="contents">
+		<dl>
+			<dt>
+				<h5>폴더명</h5>
+			</dt>
+			<dd>
+				<input type="text" name="name" />
+			</dd>
+			<dt>
+				<h5>내용</h5>
+			</dt>
+			<dd>
+				<textarea name="desc"></textarea>
+			</dd>
+		</dl>
+	</div>
+	<div class="btn_set">
+		<span class="loading" style="display:none;font-family:NanumGothic; font-size:11px; color:#666;">폴더를 등록중입니다..</span>
+		<span class="btn_pack large red"><input type="submit" value="등록하기" /></span>
+		<span class="btn_pack large black"><a href="javascript:$('#dialog_folder').dialog('destroy');void(0);">취소</a></span>
+	</div>
+	<div class="clear">
+	</div>
+	</form>
+</div>
+
+#if($sec.principal == "Guest")
+<div id="dialog_login" style="display:none;">
+	<div class="fl">
+		<div class="dialog-title">
+			<img src="$request.contextPath/images/auth/login_title.png" alt="FindFashion아이디로 로그인" />
+		</div>
+		
+		<div class="dialog-content">
+			<iframe src="$!https_uri$request.contextPath/auth/login" frameborder="0" width="100%" height="155"></iframe>
+		</div>
+
+		<div class="dialog-footer">
+			<ul>
+				<li><a href="$request.contextPath/join" target="_blank">회원가입을 하고 싶습니다.</a></li>
+				<li><a href="/#$request.contextPath/index?p=help" target="_blank">아이디 / 비밀번호를 분실하였습니다.</a></li>						
+			</ul>
+		</div>
+	</div>
+	<div class="fc">
+		<div class="dialog-title">
+			<img src="$request.contextPath/images/auth/login_sns_title.png" alt="SNS로 로그인" />
+		</div>
+		<div class="dialog-content">
+			<ul>
+				<li style="cursor:pointer;" data-url="$request.contextPath/social/facebook?mode=login_wtform&reUrl=${reUrl}" data-width="650" data-height="320" onclick="socialLogin(this);return false;">
+					<img src="$request.contextPath/images/auth/login_for_facebook.png" alt="Facebook Login" />
+				</li>
+				<li style="cursor:pointer;" data-url="$request.contextPath/social/twitter?mode=login_wtform&reUrl=${reUrl}" data-width="650" data-height="620" onclick="socialLogin(this);return false;">
+					<img src="$request.contextPath/images/auth/login_for_twitter.png" alt="Twitter Login" />
+				</li>
+				<li style="cursor:pointer;" data-url="$request.contextPath/social/me2day?mode=login_wtform&reUrl=${reUrl}" data-width="1000" data-height="700" onclick="socialLogin(this);return false;">
+					<img src="$request.contextPath/images/auth/login_for_me2day.png" alt="Me2day Login" />
+				</li>
+			</ul>
+		</div>
+		<div class="dialog-footer">
+			파인드패션에 가입을 하지 않고<br />
+			SNS계정을 통하여 로그인이 가능합니다.
+		</div>
+	</div>
+	<div class="clear">
+	</div>
+</div>
+<script type="text/javascript"> $("#dialog_login").dialog({ width: 738,  resizable: false,  modal: true, beforeClose:function (){ return false; } }); </script>
+<style type="text/css"> body { overflow:hidden; } </style>
+#end

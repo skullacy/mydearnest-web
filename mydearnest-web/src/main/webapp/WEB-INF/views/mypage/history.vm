@@ -1,0 +1,32 @@
+<style>
+	.wrap	{ width:980px; }
+</style>
+
+<div class="body_title wrap">
+	<img src="$request.contextPath/images/profile/title_history.png" />
+</div>
+
+<div class="wrap">
+	<div class="body_content right">
+		#parse("./profile/user_info.vm")
+	</div>
+	
+	<div class="body_content left">
+		<div class="follow_history">
+		
+			<div data-paging="true" data-scrollable="true" data-url="$request.contextPath/mypage/history.ajax">
+				
+				<ul class="follow_history_lst paging_list">
+				</ul>
+				<div class="pager">
+					<a id="more">결과더보기</a>
+					<span class="loading">로드하는 중입니다.</span>
+				</div>
+			
+			</div>
+			
+		</div>
+		
+	</div>
+	
+</div>

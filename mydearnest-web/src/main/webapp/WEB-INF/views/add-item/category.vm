@@ -1,0 +1,5 @@
+<select id="category" name="category" class="selectbox">
+    #foreach($category in $categories)
+    <option value="$category.id">$category.content</option>
+    #end
+</select>

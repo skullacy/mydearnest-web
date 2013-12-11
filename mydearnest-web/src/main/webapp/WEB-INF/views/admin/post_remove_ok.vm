@@ -1,0 +1,10 @@
+<script type="text/javascript">
+	#if($success)
+	alert("삭제되었습니다.");
+	location.href="$redirectUri";
+	#else
+	alert("잠시 후 다시 시도해주세요.");
+	history.back();
+	#end
+	
+</script>

@@ -1,0 +1,15 @@
+#set($layout = "./shared/layout.blank.vm")
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="title" content="${post.title}" />
+		<meta name="description" content="${post.description}" />
+		<link rel="image_src" href="$request.contextPath/user-image/thumb/${post.imageSource.id}?w=150&h=150&t=crop" />
+	</head>
+	<body>
+		<script type="text/javascript">
+			location.href="http://www.findfashion.kr/#/show/${post.id}";
+		</script>
+	</body>
+</html>

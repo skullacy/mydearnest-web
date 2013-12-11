@@ -1,0 +1,21 @@
+<table cellspacing="0" cellpadding="0">
+	<thead>
+		<tr>
+			<th><img src="${site_uri}/images/mail/mail_header02.png" width="700px" height="43px" alt="Mixterbig 아이디/비밀번호 찾기"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border:1px #ccc solid; padding:30px 20px; font-size:12px; line-height:21px; color:#666;">
+			안녕하세요 ${account.name}님, 아이디와 비밀번호를 잊으셨나요?<br />
+			파인드패션에서 해당 메일에 대한 계정 정보 요청을 받았습니다.<br />
+			회원님께서 가입하신 아이디는 <strong style="color:#f48400">${account.userId}</strong> 이며,<br />
+			회원님께 새로 발급된 임시 비밀번호는 <strong style="color:#f48400">${new_password}</strong> 입니다.<br />
+			해당 임시 비밀번호로 파인드패션에 로그인 하시고, 가능한 빠른 시일 내로 원하시는 비밀번호로 변경해주세요.<br /><br /><br />
+			<span style="color:#888">해당 이메일은 발신 전용입니다. <br />
+			궁금한 사항이나 문의사항이 있으면 파인드패션 고객센터 이메일(<a href="mailto:findfashion@findfashion.kr">findfashion@findfashion.kr</a>)로 문의해주시기 바랍니다.<br />
+			파인드패션 올림.</span>
+			</td>
+		</tr>
+	</tbody>
+</table>

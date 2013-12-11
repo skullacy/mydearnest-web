@@ -1,0 +1,112 @@
+@CHARSET "UTF-8";
+
+/* 전역적으로 쓰는 스타일들 */
+*							{ outline:none; }
+html, body					{ width:100%; height:100%; padding:0px; margin:0px; border:0px; font-size:12px; font-family:돋움, Dotum, 'AppleGothic' }
+html						{ _overflow:hidden; }
+body						{ padding:0px; margin:0px; _height:100%; _width:100%; }
+
+.basic_gap					{ height:20px; overflow:hidden; }
+
+a							{ color:#555555; text-decoration:none; }
+
+a.rollover img				{ display:inline-block }
+a.rollover img.over			{ display:none }
+a.rollover:hover img		{ display:none }
+a.rollover:hover img.over	{ display:inline-block }
+
+.hand						{ cursor:pointer; }
+.contextmenu				{ position:relative; cursor:pointer; }
+
+.fl							{ float:left; }
+.fr							{ float:right; }
+.clear						{ clear:both; }
+.relative					{ position:relative; }
+.tLeft						{ text-align:left; }
+.tCenter					{ text-align:center; }
+.tRight						{ text-align:right; }
+.numeric					{ font-size:11px; font-family:Verdana; }
+
+form						{ margin:0px; padding:0px; }
+img							{ border:0px; }
+ul							{ margin:0px; padding:0px; list-style-type:none; }
+fieldset					{ margin:0px; padding:0px; border:none; }
+fieldset legend				{ display:none; }
+iframe						{ border:0px; overflow:hidden; }
+span.singer					{ color:#ed6b00; }
+img.border					{ border:1px solid #e3e3e3; }
+
+
+
+.page_title             			{ padding:0px 0px; }
+.page_title img         			{ margin:10px 0px 13px; }
+.page_title img.large     			{ margin:20px 0px 13px; }
+.page_title h1          			{ padding:0px; margin:0px; }
+.page_title h2          			{ padding:0px; margin:10px 0px 13px; font-size:20px; color:#333333; line-height:24px; }
+.page_title p						{ padding:5px 0px; margin:0px; font-size:11px; line-height:14px; font-family:'NanumGothic', Dotum, 'AppleGothic' }
+
+.frame_container					{ border-top:1px solid #e3e3e3; }
+
+
+.w100				{ width:100px; }
+.w140				{ width:140px; }
+.w160				{ width:160px; }
+.no_control			{ color:#aaa; }
+
+@font-face{
+	font-family:NanumGothic;
+	src:url("../images/font/NanumGothic.eot");
+	src:url("../images/font/NanumGothic.eot?#iefix") format("embedded-opentype"),
+	url("../images/font/NanumGothic.woff") format("woff"),
+	url("../images/font/NanumGothic.ttf") format("truetype");
+	url("../images/font/NanumGothic.svg#NanumGothic") format("svg")
+	src:local(※), url("../images/font/NanumGothic.woff") format("woff");
+}
+
+.wrap								{ width:960px; margin:0px auto;}  
+
+#header								{ background:url('../images/admin/bg_header.png') repeat-x; border-bottom:1px #222 solid; height:50px; }
+#header .logo						{ float:left;}   
+#header .gnb						{ float:right; }
+#header .gnb ul						{ list-style-type:none; padding:0px; margin:0px; }
+#header .gnb li						{ float:left; }
+#header .gnb li .on  				{ display:none; }
+#header .gnb li .off				{ display:block; }
+#header .gnb li.selected .on		{ display:block; }
+#header .gnb li.selected .off		{ display:none; }
+
+#container .title					{ background:url('../images/admin/arr_title.png') no-repeat 0px 3px; padding-left:16px; height:19px; margin:30px 0px 15px; line-height:19px; }
+#container .common_table			{ width:100%; }
+
+#container .common_table.post td	{ height:auto; }
+
+
+#container .common_table th					{ background:url('../images/admin/table_header.png') repeat-x; height:14px; line-height:14px; padding:12px; 
+											  border-top:1px #3d3d3d solid; border-bottom:1px #3d3d3d solid; font-size:12px; 
+											  font-family:NanumGothic,'NanumGothic'; color:#fff;
+											}
+#container .common_table th:first-child 	{ border-left:1px #3d3d3d solid;  }
+#container .common_table th:last-child 		{ border-right:1px #3d3d3d solid; }  
+#container .common_table td					{ border-bottom:1px #d0d0d0 solid; font-size:12px; height:14px; line-height:14px; 
+											  font-family:NanumGothic,'NanumGothic'; padding:12px; color:#666; text-align:center;}  
+#container .common_table td.thumb img		{ width:100%; border:1px #d0d0d0 solid;}
+#container .common_table td.user			{ font-weight:bold; }
+#container .common_table td.contents		{ text-align:left; } 
+#container .common_table td.contents p		{ margin:0px 0px 10px; color:#333; }
+#container .common_table td.contents span	{ color:#666; }  
+
+/* UI Object */
+.paginate						{ padding:15px 0; text-align:center; line-height:normal; }
+.paginate *						{ display:inline-block; position:relative; margin:0 -2px; padding:2px 4px; font-size:11px; font-family:Tahoma, Sans-serif; 
+								  color:#666; line-height:normal; text-decoration:none; vertical-align:middle;
+								}
+.paginate a:hover,
+.paginate a:active,
+.paginate a:focus				{ background-color:#f8f8f8; }
+.paginate strong				{ color:#ff6600; }
+.paginate .direction			{ padding:0 6px; font-weight:bold; font-size:14px; color:#666; text-align:center; }
+.paginate .direction:hover,
+.paginate .direction:active,
+.paginate .direction:focus		{ background-color:transparent !important; color:#333; }
+.paginate .direction span		{ overflow:hidden; visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0; }
+/* //UI Object */

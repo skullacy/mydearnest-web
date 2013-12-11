@@ -1,0 +1,63 @@
+
+#foreach($post in $posts)
+
+	#if ($post.imageWidth <= 292)
+	#set($postHeight = $post.imageHeight)
+	#else
+	#set($postHeight = $post.imageHeight * (270 / $math.toDouble($post.imageWidth)))
+	#end
+	
+	<div class="find_item" data-post-id="$post.id">
+		<div class="thumb" style="min-height:${math.toInteger($postHeight)}px; height:${math.toInteger($postHeight)}px;overflow:hidden;">
+			<a href="$request.contextPath/show/$post.id?ref=${ref}">
+				<img src="$request.contextPath/user-image/thumb/$post.imageSource.id?w=302&p=$post.id" style="max-width:100%;"/>
+			</a>
+			#if($deletable)
+			<div class="delete" data-post-delete="$post.id" data-edit-mode="$!edit_mode" data-post-drawer="$!drawer_id" style="cursor:pointer;">
+				<img src="$request.contextPath/images/post/button_delete.png" />
+			</div>
+			#end
+			<div class="status">
+				<div class="counter">
+					<img src="$request.contextPath/images/post/ico_good_small.png" align="absmiddle" />
+					<span>$post.goodCount</span>
+				</div>
+				<div class="counter">
+					<img src="$request.contextPath/images/post/ico_comment_small.png" align="absmiddle" />
+					<span>$post.commentCount</span>
+				</div>
+				<div class="counter">
+					<img src="$request.contextPath/images/post/ico_refind_small.png" align="absmiddle" />
+					<span>$post.drawerCount</span>
+				</div>
+			</div>
+		</div>
+		<div class="writer_info">
+			<div class="fl">
+				<h4>$post.title.trim()</h4>
+				<p>$dateTool.format('yyyy.MM.dd', $post.createdAt)</p>
+			</div>
+			<div class="fr">
+				<a href="#" class="rollover">
+					<img src="$request.contextPath/images/post/button_love.png" />
+					<img src="$request.contextPath/images/post/button_love_on.png" class="over" />
+				</a>
+				<a href="#" class="rollover">
+					<img src="$request.contextPath/images/post/button_refind.png" />
+					<img src="$request.contextPath/images/post/button_refind_on.png" class="over" />
+				</a>
+			</div>
+		
+			<div class="clear">
+			</div>
+			
+		</div>
+	</div>
+	
+#end
+
+
+
+#if(${posts.size()} < 30)
+<div class="paging_close" style="display:none;"></div>
+#end
