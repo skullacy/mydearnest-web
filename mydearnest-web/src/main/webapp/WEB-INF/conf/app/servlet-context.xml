@@ -60,36 +60,36 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
 	
-<!-- 	<mvc:interceptors> -->
-<!-- 		<mvc:interceptor> -->
-<!-- 			<mvc:mapping path="/**" /> -->
-<!-- 			<bean class="kr.co.osqure.cyh.util.handler.RequestInterceptor"> -->
-<!-- 				<property name="excludeParams"> -->
-<!-- 					<map> -->
-<!-- 						<entry key="fb" value="y" /> -->
-<!-- 					</map> -->
-<!-- 				</property> -->
-<!-- 				<property name="excludePathes"> -->
-<!-- 					<list> -->
-<!-- 						<value>*.html</value> -->
-<!-- 						<value>*.json</value> -->
-<!-- 						<value>*.do</value> -->
-<!-- 						<value>/admin*</value> -->
-<!-- 						<value>/auth/*</value> -->
-<!-- 						<value>/social/*</value> -->
-<!-- 						<value>/</value> -->
-<!-- 						<value>/add-item*</value> -->
-<!-- 						<value>/favicon.ico</value> -->
-<!-- 						<value>/resources/**</value> -->
-<!-- 						<value>/stylesheets/**</value> -->
-<!-- 						<value>/scripts/**</value> -->
-<!-- 						<value>/images/**</value> -->
-<!-- 						<value>/user-image/**</value> -->
-<!-- 					</list> -->
-<!-- 				</property> -->
-<!-- 			</bean> -->
-<!-- 		</mvc:interceptor> -->
-<!--     </mvc:interceptors> -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.osquare.mydearnest.util.handler.RequestInterceptor">
+				<property name="excludeParams">
+					<map>
+						<entry key="fb" value="y" />
+					</map>
+				</property>
+				<property name="excludePathes">
+					<list>
+						<value>*.html</value>
+						<value>*.json</value>
+						<value>*.do</value>
+						<value>/admin*</value>
+						<value>/auth/*</value>
+						<value>/social/*</value>
+						<value>/</value>
+						<value>/add-item*</value>
+						<value>/favicon.ico</value>
+						<value>/resources/**</value>
+						<value>/stylesheets/**</value>
+						<value>/scripts/**</value>
+						<value>/images/**</value>
+						<value>/user-image/**</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+    </mvc:interceptors>
      	
 	
 	<!-- Resolves views selected for rendering by @Controllers to .vm resources in the /WEB-INF/views directory -->

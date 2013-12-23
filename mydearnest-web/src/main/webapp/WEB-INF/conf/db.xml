@@ -14,28 +14,25 @@
 		<property name="location" value="classpath:hibernate.properties" />
 	</bean>
 
-<!-- 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> -->
-<!-- 		<property name="jndiName"> -->
-<!-- 			<value>java:comp/env/${hibernate.connection.datasource}</value> -->
-<!-- 		</property> -->
-<!-- 	</bean> -->
-	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/mydearnest" />
-		<property name="username" value="root" />
-		<property name="password" value="testskullacy" />
-		
-			
-		
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName">
+			<value>java:comp/env/${hibernate.connection.datasource}</value>
+		</property>
 	</bean>
+	
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+<!-- 		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
+<!-- 		<property name="url" value="jdbc:mysql://db.mydearnest.com:3306/mydearnest" /> -->
+<!-- 		<property name="username" value="mydearnest" /> -->
+<!-- 		<property name="password" value="genius12@2345" /> -->
+<!-- 	</bean> -->
 
 
 	
 	
 	<bean id="hibernateProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="properties">
+		<property name="properties">   
 			<props>
 				
 				<prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}</prop>
