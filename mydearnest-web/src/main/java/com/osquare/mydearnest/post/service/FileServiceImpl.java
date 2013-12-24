@@ -39,8 +39,12 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.junglebird.webframe.common.PropertiesManager;
 import com.mortennobel.imagescaling.AdvancedResizeOp;
 import com.mortennobel.imagescaling.ResampleOp;
@@ -202,23 +206,24 @@ public class FileServiceImpl implements FileService {
 			File tmpFile = new File(dir, "tmpData");
 			filedata.transferTo(tmpFile);
 			
-			System.out.println(conf.get("postFile.tmpPath"));
-			System.out.println(conf.get("amazon.credential.accessKey"));
-			System.out.println(conf.get("amazon.credential.secretKey"));
+			BufferedImage img = ImageIO.read(tmpFile);
+			result.setWidth(img.getWidth());
+            result.setHeight(img.getHeight());
+            
 			
-			AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
+			//원이미지는 해당 ID/source로 저장. 
+            AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
 			AmazonS3 fileStorageServer = new AmazonS3Client(credentials);
-			PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/" + result.getFileName(), tmpFile);
+			PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/" + "source", tmpFile);
 			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
 			
 			fileStorageServer.putObject(putObjectRequest);
 			
-//			result.setWidth(img.getWidth());
-//            result.setHeight(img.getHeight());
-//            
-//            session.merge(result);
-//
-//			session.getTransaction().commit();
+			
+            
+            session.merge(result);
+
+			session.getTransaction().commit();
 			
 			
 			
@@ -288,6 +293,7 @@ public class FileServiceImpl implements FileService {
 
 		try {
 			result = new ImageSourceFile();
+			
 			File file = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + "/source");
 						
 			result.setFileLength(file.length());
@@ -296,6 +302,7 @@ public class FileServiceImpl implements FileService {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("FileSize : " + result.getFileLength());
 		
 		return result;
 	}
@@ -310,22 +317,77 @@ public class FileServiceImpl implements FileService {
 
 		if (imageSource == null) return null;
 		
-		String suffix = "";
-		if (postId != null) {
-			suffix = "/" + postId;
-		}
+		
+//		String suffix = "";
+//		if (postId != null) {
+//			suffix = "/" + postId;
+//		}
 
 		ImageSourceFile result = new ImageSourceFile();
 		
-		File afile = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix + "/source");
-		if (!afile.exists()) suffix = "";
+		String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
+		System.out.println(file_location);
 		
-		File tFile = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg");
+		File fileDir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
+		if(!fileDir.isDirectory()) fileDir.mkdirs();
 		
-		if (tFile.exists()) {
+		File tmp_aFile = new File(fileDir, "tmp_aFile");
+		Boolean tmp_aFileExist = true;
+		
+		File tmp_tFile = new File(fileDir, "tmp_fFile");
+		Boolean tmp_tFileExist = true;
+		
+		
+		AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
+		AmazonS3 fileStorageServer = new AmazonS3Client(credentials);
+		
+		//YOU HAVE TO MODIFY ONCE AGAIN
+		//이부분의 코드 반복되므로 리팩토링 해야함, AmazonS3를 이용하면 속도면에서 문제가 생김, CloudFront를 이용하도록 수정해야함.
+		try {
+			System.out.println("getImageSource");
+			fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/source"), tmp_aFile);
+			System.out.println("getImageSource Complete");
+		} catch(AmazonS3Exception s3e) {
+			if (s3e.getStatusCode() == 404) {
+				tmp_aFileExist = false;
+			} else {
+				throw s3e;
+			}
+		}
+		
+		String thumbFile_location = file_location + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg";
+		try {
+			System.out.println("getThumbnailSource");
+			fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), thumbFile_location),	tmp_tFile);
+			System.out.println("getThumbnailSource Complete");
+		} catch (AmazonS3Exception s3e) {
+			if(s3e.getStatusCode() == 404) {
+				tmp_tFileExist = false;
+			} else {
+				throw s3e;
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+//		result.setFileLength(tmpFile.length());
+//		result.setInputStream(new FileInputStream(tmpFile));
+		
+//		File afile = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix + "/source");
+//		if (!afile.exists()) suffix = "";
+//		
+//		File tFile = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg");
+		
+		System.out.println("tmp_tFileExist : " + tmp_tFileExist);
+		if (tmp_tFileExist) {
 			try {
-				result.setFileLength(tFile.length());
-				result.setInputStream(new FileInputStream(tFile));
+				System.out.println("Thumbnail Cache Enable");
+				result.setFileLength(tmp_tFile.length());
+				result.setInputStream(new FileInputStream(tmp_tFile));
 				return result;
 			}
 			catch (FileNotFoundException e) {
@@ -335,19 +397,10 @@ public class FileServiceImpl implements FileService {
 		}
 		
 		try {
-
-			String dir = conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix;
-			if (conf.get("imagemagick.path") != null && !conf.get("imagemagick.path").isEmpty()) {
-	            String[] cmd = new String[] { "/bin/sh", "-c", conf.get("imagemagick.path") + " " + dir.toString() + "/source " + dir.toString() + "/source.jpg" };
-	            Process process = Runtime.getRuntime().exec(cmd);
-	            process.waitFor();
-	
-	            String[] cmd2 = new String[] { "/bin/sh", "-c", "mv -f " + dir.toString() + "/source.jpg " + dir.toString() + "/source" };
-	            Process process2 = Runtime.getRuntime().exec(cmd2);
-	            process2.waitFor();
-			}
-            
-			File file = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix + "/source");
+			System.out.println("Make Thumbnail Start!!!");
+//			String dir = conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix;
+			            
+			File file = tmp_aFile;
 			System.out.println(file);
 			BufferedImage img = ImageIO.read(file.toURI().toURL());
 			
@@ -413,7 +466,7 @@ public class FileServiceImpl implements FileService {
 	        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
 	        iwp.setCompressionQuality(0.9f);
 	        
-	        FileImageOutputStream output = new FileImageOutputStream(tFile);
+	        FileImageOutputStream output = new FileImageOutputStream(tmp_tFile);
 	        writer.setOutput(output);
 	        
 	        IIOImage image = new IIOImage(targetImage, null, null);
@@ -421,8 +474,14 @@ public class FileServiceImpl implements FileService {
 	        writer.dispose();
 	        
 			result = new ImageSourceFile();
-			result.setFileLength(tFile.length());
-			result.setInputStream(new FileInputStream(tFile));
+			result.setFileLength(tmp_tFile.length());
+			result.setInputStream(new FileInputStream(tmp_tFile));
+			
+			//아마존에 만들어진 파일 업로드
+			PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), thumbFile_location, tmp_tFile);
+			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+			
+			fileStorageServer.putObject(putObjectRequest);
 			
 		} 
 		catch (Exception e) {
