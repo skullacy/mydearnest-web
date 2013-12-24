@@ -35,6 +35,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.junglebird.webframe.common.PropertiesManager;
 import com.mortennobel.imagescaling.AdvancedResizeOp;
 import com.mortennobel.imagescaling.ResampleOp;
@@ -173,6 +179,7 @@ public class FileServiceImpl implements FileService {
 
 			Date now = new Date();
 			
+			//ImageSource Table에 저장한다.
 			result = new ImageSource();
 			result.setFileName(filedata.getFileItem().getName());
 			result.setExtension("image");
@@ -186,40 +193,75 @@ public class FileServiceImpl implements FileService {
 			
 			session.persist(result);
 			
-			File dir = new File(conf.get("imageSource.savePath") + "/" + result.getStoragePath() + "/" + result.getId());
+			result.setByteLength(filedata.getSize());
+			
+			String file_location = result.getStoragePath() + "/" + result.getId();
+			File dir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
 			if(!dir.isDirectory()) dir.mkdirs();
 			
-			in = filedata.getInputStream(); 
-			out = new BufferedOutputStream(new FileOutputStream(dir.toString() + "/source")); 
-
-			byte[] buffer = new byte[1024]; 
-            int numRead; 
-            long readBytes = 0;
-            while ((numRead = in.read(buffer)) != -1) {
-                out.write(buffer, 0, numRead);
-                readBytes += numRead;
-            }
-            result.setByteLength(readBytes);
-            if (in != null) in.close(); 
-            if (out != null) out.close(); 
-            
-            if (conf.get("imagemagick.path") != null && !conf.get("imagemagick.path").isEmpty()) {
-	            String[] cmd = new String[] { "/bin/sh", "-c", conf.get("imagemagick.path") + " " + dir.toString() + "/source " + dir.toString() + "/source.jpg" };
-	            Process process = Runtime.getRuntime().exec(cmd);
-	            process.waitFor();
-	
-	            String[] cmd2 = new String[] { "/bin/sh", "-c", "mv -f " + dir.toString() + "/source.jpg " + dir.toString() + "/source" };
-	            Process process2 = Runtime.getRuntime().exec(cmd2);
-	            process2.waitFor();
-            }
-
-            BufferedImage img = ImageIO.read(new File(dir.toString() + "/source"));
-            result.setWidth(img.getWidth());
-            result.setHeight(img.getHeight());
-            
-            session.merge(result);
-
-			session.getTransaction().commit();
+			File tmpFile = new File(dir, "tmpData");
+			filedata.transferTo(tmpFile);
+			
+			System.out.println(conf.get("postFile.tmpPath"));
+			System.out.println(conf.get("amazon.credential.accessKey"));
+			System.out.println(conf.get("amazon.credential.secretKey"));
+			
+			AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
+			AmazonS3 fileStorageServer = new AmazonS3Client(credentials);
+			PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/" + result.getFileName(), tmpFile);
+			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+			
+			fileStorageServer.putObject(putObjectRequest);
+			
+//			result.setWidth(img.getWidth());
+//            result.setHeight(img.getHeight());
+//            
+//            session.merge(result);
+//
+//			session.getTransaction().commit();
+			
+			
+			
+			
+			
+			
+//			//이미지 경로를 만들고 없으면 디렉토리 생성.
+//			File dir = new File(conf.get("imageSource.savePath") + "/" + result.getStoragePath() + "/" + result.getId());
+//			if(!dir.isDirectory()) dir.mkdirs();
+//			
+//			//해당 디렉토리에 source로 저장한다.
+//			in = filedata.getInputStream(); 
+//			out = new BufferedOutputStream(new FileOutputStream(dir.toString() + "/source")); 
+//
+//			byte[] buffer = new byte[1024]; 
+//            int numRead; 
+//            long readBytes = 0;
+//            while ((numRead = in.read(buffer)) != -1) {
+//                out.write(buffer, 0, numRead);
+//                readBytes += numRead;
+//            }
+//            result.setByteLength(readBytes);
+//            if (in != null) in.close(); 
+//            if (out != null) out.close(); 
+//            
+//            if (conf.get("imagemagick.path") != null && !conf.get("imagemagick.path").isEmpty()) {
+//	            String[] cmd = new String[] { "/bin/sh", "-c", conf.get("imagemagick.path") + " " + dir.toString() + "/source " + dir.toString() + "/source.jpg" };
+//	            Process process = Runtime.getRuntime().exec(cmd);
+//	            process.waitFor();
+//	
+//	            String[] cmd2 = new String[] { "/bin/sh", "-c", "mv -f " + dir.toString() + "/source.jpg " + dir.toString() + "/source" };
+//	            Process process2 = Runtime.getRuntime().exec(cmd2);
+//	            process2.waitFor();
+//            }
+//
+//            
+//            BufferedImage img = ImageIO.read(new File(dir.toString() + "/source"));
+//            result.setWidth(img.getWidth());
+//            result.setHeight(img.getHeight());
+//            
+//            session.merge(result);
+//
+//			session.getTransaction().commit();
 		}
 		catch(Exception ex) {
 			session.getTransaction().rollback();
