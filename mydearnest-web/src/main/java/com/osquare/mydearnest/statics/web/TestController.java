@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.osquare.mydearnest.entity.TestPost;
-import com.osquare.mydearnest.entity.itf.TestRepository;
+import com.osquare.mydearnest.entity.itf.TestRepository; 
 
 @Controller
 @RequestMapping("/test22")
