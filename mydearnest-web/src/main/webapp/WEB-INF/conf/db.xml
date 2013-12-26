@@ -2,16 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd	
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.1.xsd http://www.springframework.org/schema/data/mongo"
 	default-autowire="byName">
 	
 	<!-- Scans within the base package of the application for @Components to 
 		configure as beans -->
 	<bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:hibernate.properties" />
+		<property name="location">
+			<list>
+				<value>classpath:hibernate.properties</value>
+				<value>classpath:mongo.properties</value>
+			</list>
+		</property>
 	</bean>
 
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -20,13 +27,25 @@
 		</property>
 	</bean>
 	
-<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
-<!-- 		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
-<!-- 		<property name="url" value="jdbc:mysql://db.mydearnest.com:3306/mydearnest" /> -->
-<!-- 		<property name="username" value="mydearnest" /> -->
-<!-- 		<property name="password" value="genius12@2345" /> -->
-<!-- 	</bean> -->
-
+	<mongo:mongo host="${mongo.host}" port="${mongo.port}">
+		<mongo:options 
+			connections-per-host="8"
+			threads-allowed-to-block-for-connection-multiplier="4"
+			connect-timeout="1000"
+			max-wait-time="1500"
+			auto-connect-retry="true"
+			socket-keep-alive="true"
+			socket-timeout="1500"
+			slave-ok="true"
+			write-number="1"
+			write-timeout="0"
+			write-fsync="true" />
+	</mongo:mongo>
+	
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongo" />
+		<constructor-arg name="databaseName" value="${mongo.db.name}" />
+	</bean>
 
 	
 	
