@@ -8,7 +8,7 @@ body				{ background: #f8f7f5; padding: 0px; margin: 0px; font-family: NanumGoth
 #imagePreviewC				{ max-width:100%;max-height:100%; top:50%; left:50%; position:absolute; overflow:hidden; margin:0px auto; }
 #imagePreview.loaded		{ max-width:100%;max-height:100%; }
 
-.input_form					{ width:98%; margin:0px auto; max-width:445px; margin-top:10px; }
+.input_form					{ width:98%; margin:0px auto; margin-top:10px; }
 
 fieldset.pop_field_t3							{ background:#fff; border-radius:5px; box-shadow:inset 0px 0px 3px #aaa; position:relative; padding:0px 0px 0px; margin:0px; border:1px solid #ddd; behavior:url(../scripts/PIE.htc); }
 fieldset.pop_field_t3 div.item					{ min-height:38px; position:relative; padding:0px 3px 0px 70px; margin:0px; border-bottom:1px solid #e1e1df; }

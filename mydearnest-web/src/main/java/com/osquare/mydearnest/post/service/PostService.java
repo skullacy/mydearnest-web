@@ -8,6 +8,7 @@ import com.osquare.mydearnest.entity.Folder;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostComment;
+import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.PostLove;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.profile.vo.CommentVO;
@@ -41,6 +42,8 @@ public interface PostService {
 	PostLove createPostLove(Account account, Long postId);
 	PostLove findPostLoveByAccount(Account account, Post post);
 	void deletePostLove(PostLove postLove);
+	
+	PostGrade createPostGrade(Post post, Account account, PostVO postVO);
 	
 	
 	Long getPrevPostId(Long postId, String ref);

@@ -32,21 +32,28 @@ public class Post implements Serializable {
 	private Category category;
 	private Account account;
 	
+	private String position;
+	
 	private ImageSource imageSource;
 	private int imageWidth;
 	private int imageHeight;
 	
+	private int homeSize;
+	private int areaType;
+	private String accessory;
+	
 	private String title;
 	private String description;
+	private String source;
 	
 	private long goodCount;
 	private long commentCount;
 	private long drawerCount;
+	private long gradeCount;
 	
 	private Date createdAt;
 	private Date deletedOn;
 	
-	private Set<Folder> folders = new HashSet<Folder>(0);
 	
 	private Set<Notification> notifications = new HashSet<Notification>(0);
 	private Set<PostLove> postLoves = new HashSet<PostLove>(0);
@@ -54,6 +61,8 @@ public class Post implements Serializable {
 	
 	private Set<PostView> postViews = new HashSet<PostView>(0);
 	private Set<PostRank> postRanks = new HashSet<PostRank>(0);
+	
+	private Set<PostGrade> postGrades = new HashSet<PostGrade>(0);
 	
 
 	@Id
@@ -68,13 +77,22 @@ public class Post implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CATEGORY_ID", nullable = false)
+	@JoinColumn(name = "CATEGORY_ID", nullable = true)
 	public Category getCategory() {
 		return category;
 	}
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+	
+	@Column(name = "POSITION", nullable = true)
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -87,7 +105,7 @@ public class Post implements Serializable {
 		this.account = account;
 	}
 
-	@Column(name = "TITLE", nullable = false)
+	@Column(name = "TITLE", nullable = true)
 	public String getTitle() {
 		return title;
 	}
@@ -124,13 +142,22 @@ public class Post implements Serializable {
 		this.imageHeight = imageHeight;
 	}
 
-	@Column(name = "DESCRIPTION", nullable = false)
+	@Column(name = "DESCRIPTION", nullable = true)
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@Column(name = "SOURCE", nullable = true)
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	@Column(name = "GOOD_COUNT", nullable = false)
@@ -159,6 +186,15 @@ public class Post implements Serializable {
 	public void setDrawerCount(long drawerCount) {
 		this.drawerCount = drawerCount;
 	}
+	
+	@Column(name = "GRADE_COUNT", nullable = false)
+	public long getGradeCount() {
+		return gradeCount;
+	}
+
+	public void setGradeCount(long gradeCount) {
+		this.gradeCount = gradeCount;
+	}
 
 	@Column(name = "CREATED_AT", nullable = false)
 	public Date getCreatedAt() {
@@ -176,6 +212,33 @@ public class Post implements Serializable {
 
 	public void setDeletedOn(Date deletedOn) {
 		this.deletedOn = deletedOn;
+	}
+	
+	@Column(name = "HOME_SIZE", nullable = true)
+	public int getHomeSize() {
+		return homeSize;
+	}
+
+	public void setHomeSize(int homeSize) {
+		this.homeSize = homeSize;
+	}
+	
+	@Column(name = "AREA_TYPE", nullable = true)
+	public int getAreaType() {
+		return areaType;
+	}
+
+	public void setAreaType(int areaType) {
+		this.areaType = areaType;
+	}
+
+	@Column(name = "ACCESSORY", nullable = true)
+	public String getAccessory() {
+		return accessory;
+	}
+
+	public void setAccessory(String accessory) {
+		this.accessory = accessory;
 	}
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
@@ -223,16 +286,18 @@ public class Post implements Serializable {
 		this.postRanks = postRanks;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "POST_FOLDER", joinColumns = { @JoinColumn(name = "POST_ID", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "FOLDER_ID", nullable = false, updatable = false) })
-	public Set<Folder> getFolders() {
-		return folders;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+	public Set<PostGrade> getPostGrade() {
+		return postGrades;
+	}
+	
+	public void setPostGrade(Set<PostGrade> postGrades) {
+		this.postGrades = postGrades;
 	}
 
-	public void setFolders(Set<Folder> folders) {
-		this.folders = folders;
-	}
-
+	
+	
+	
 	
 	
 	

@@ -46,6 +46,16 @@ public class VelocitySecUser {
 			return "Guest";
 		}
 	}
+	
+	public static String getAuthorType() {
+		Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (obj instanceof UserDetails) {
+			return ((SignedDetails) obj).getAuthorities().toArray()[0].toString();
+		} else {
+			return "Guest";
+		}
+	}
 
 	/**
 	 * Is the user granted all of the grantedAuthorities passed in

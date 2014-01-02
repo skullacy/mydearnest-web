@@ -27,6 +27,7 @@ public class Category implements Serializable {
 	private long id;
 	private String sort;
 	private String content;
+	private String searchTag;
 	private Long imageId;
 	private long parentId;
 	private long orderIndex;
@@ -62,6 +63,7 @@ public class Category implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
 
 	@Column(name = "IMAGE_ID", nullable = false)
 	public Long getImageId() {
@@ -106,5 +108,14 @@ public class Category implements Serializable {
 
 	public void setPosts(Set<Post> posts) {
 		this.posts = posts;
+	}
+
+	@Column(name = "SEARCHTAG", nullable = false)
+	public String getSearchTag() {
+		return searchTag;
+	}
+
+	public void setSearchTag(String searchTag) {
+		this.searchTag = searchTag;
 	}
 }

@@ -7,7 +7,7 @@
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
 	
-	<title>패션놀이터 :: FindFashion.kr</title>
+	<title>마이디어네스트:: mydearnest.com</title>
 	
 	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/default.css"/>
 	
@@ -46,6 +46,12 @@
 	  			</li>
 	  			<li#if($page_on == "post") class="selected"#end>
 	  				<a href="$request.contextPath/admin/post">
+		  				<img src="$request.contextPath/images/admin/menu02_off.png" class="off" />
+		  				<img src="$request.contextPath/images/admin/menu02_on.png" class="on" />
+	  				</a>
+	  			</li>
+	  			<li#if($page_on == "category") class="selected"#end>
+	  				<a href="$request.contextPath/admin/category">
 		  				<img src="$request.contextPath/images/admin/menu02_off.png" class="off" />
 		  				<img src="$request.contextPath/images/admin/menu02_on.png" class="on" />
 	  				</a>

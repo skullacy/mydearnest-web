@@ -23,10 +23,11 @@
 	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.modal.js"></script>
 
 	<script type="text/javascript" src="' + $request.contextPath + '/scripts/client/frame.js"></script>
+	<script type="text/javascript" src="/scripts/fortest/jquery.spidergraph.js"></script>
 ')
 
 <div id="body">
-
+	
 	<div id="header">
 		<div id="top_area" style="position:relative; z-index:99;">
 			<div class="wrap">
