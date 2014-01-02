@@ -45,12 +45,13 @@ public class WriteController {
 		model.addAttribute("layout", "shared/layout.blank.vm");
 		
 		return "write/browse_frame";
+		
+		
 	}
 	
 
 	@RequestMapping(value = "/browse.do", method = RequestMethod.GET)
 	public String browse(Model model, HttpServletRequest request, HttpServletResponse response) {
-
 		PostVO postVO = new PostVO();
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
 
@@ -66,6 +67,7 @@ public class WriteController {
 		model.addAttribute("command", postVO);
 		model.addAttribute("layout", "./shared/layout.default.vm");
 		return "write/browse.html";
+		
 		
 	}
 
@@ -88,6 +90,7 @@ public class WriteController {
 
 		new PostValidator().validate(postVO, result);
 		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
 			model.addAttribute("errors", result.getAllErrors());
 		}
 		else {

@@ -18,7 +18,8 @@
         <beans:property name="tokenValiditySeconds" value="151221"/>
         <beans:property name="cookieName" value="tt"/>
         <beans:property name="userDetailsService" ref="userDetailsService"/>
-        <beans:property name="key" value="findfashion"/>
+<!--         <beans:property name="key" value="findfashiont"/> -->
+        <beans:property name="key" value="mydearnest"/>
     </beans:bean>
     
 	<http auto-config='true'>
@@ -29,8 +30,15 @@
 	    
 	    <logout logout-url="/session/destroy" invalidate-session="true" logout-success-url="/" />
 
-	    <intercept-url pattern="/admin*" access="ROLE_ADMIN" requires-channel="any" />	    
+	    <intercept-url pattern="/admin*" access="ROLE_ADMIN" requires-channel="any" />
 	    <intercept-url pattern="/admin/**" access="ROLE_ADMIN" requires-channel="any" />
+	    
+	    <intercept-url pattern="/admin/manager*" access="ROLE_UPLOADER" requires-channel="any" />	    	    
+	    <intercept-url pattern="/admin/manager/**" access="ROLE_UPLOADER" requires-channel="any" />
+	    <intercept-url pattern="/admin/manager*" access="ROLE_MODIFIER" requires-channel="any" />	    	    
+	    <intercept-url pattern="/admin/manager/**" access="ROLE_MODIFIER" requires-channel="any" />
+	    
+	    	    
 	    <intercept-url pattern="/mypage*" access="ROLE_USER" requires-channel="any" />
 	    <intercept-url pattern="/mypage/*" access="ROLE_USER" requires-channel="any" />
 	    <intercept-url pattern="/auth/modify" access="ROLE_USER" requires-channel="any" />

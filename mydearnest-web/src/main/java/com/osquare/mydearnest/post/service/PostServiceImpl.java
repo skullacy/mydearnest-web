@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 
 
 
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Query;
@@ -42,6 +43,7 @@ import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Notification;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostComment;
+import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.PostLove;
 import com.osquare.mydearnest.entity.PostRank;
 import com.osquare.mydearnest.post.vo.PostVO;
@@ -137,15 +139,13 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public Post createPost(Account account, ImageSource imageSource, PostVO postVO) {
 
-		Folder folder = this.getFolder(postVO.getFolderId());
-
 		Post post = null;
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
 
 		try {
-			Category category = new Category();
-			category.setId(postVO.getCategory());
+//			Category category = new Category();
+//			category.setId(postVO.getCategory());
 			
 			post = new Post();
 			post.setAccount(account);
@@ -154,30 +154,26 @@ public class PostServiceImpl implements PostService {
 			post.setImageWidth(imageSource.getWidth());
 			post.setImageHeight(imageSource.getHeight());
 			
-			post.setCategory(category);
+//			post.setCategory(category);
 
 			post.setTitle(postVO.getTitle());
 			post.setDescription(postVO.getDesc());
 
 			post.setCreatedAt(new Date());
-			post.getFolders().add(folder);
+			
+			post.setPosition(postVO.getPosition());
+			post.setHomeSize(postVO.getHomeSize());
+			post.setAreaType(postVO.getAreaType());
+			post.setAccessory(postVO.getAccessory());
+			
+			
+			
 			session.persist(post);
 			
-			session.refresh(folder);
-			
-			folder.setCount(folder.getPosts().size() + 1);
-			session.merge(folder);
-			
-			Notification notification = new Notification();
-			notification.setAccount(account);
-			notification.setPost(post);
-			notification.setPostMode("ADD");
-			notification.setPostWriter(account);
-			notification.setCreatedAt(new Date());
-			notification.setConfirmedAt(new Date());
-			session.persist(notification);
 			
 			session.getTransaction().commit();
+			
+			this.createPostGrade(post, account, postVO);
 		}
 		catch(Exception ex) {
 			session.getTransaction().rollback();
@@ -199,34 +195,34 @@ public class PostServiceImpl implements PostService {
 			SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 			
 			result = (Post) session.get(Post.class, postId);
-			if (editMode.equals("love")) {
-					
-				PostLove postLove = (PostLove) session.createCriteria(PostLove.class)
-					.add(Restrictions.eq("post", result))
-					.add(Restrictions.eq("account", session.get(Account.class, principal.getAccountId())))
-					.setMaxResults(1).uniqueResult();
-				
-				session.delete(postLove);
-			}
-			else if (editMode.equals("folder")) {
-				
-				Folder folder = (Folder) session.get(Folder.class, drawerId);
-				folder.getPosts().remove(result);
-				folder.setCount(folder.getPosts().size());
-				session.merge(folder);
-				
-				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
-			}
-			else if (editMode.equals("post")) {
-				
-				for(Folder folder : result.getFolders()) {
-					folder.setCount(folder.getPosts().size());
-					session.merge(folder);
-				}
-
-				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
-				
-			}
+//			if (editMode.equals("love")) {
+//					
+//				PostLove postLove = (PostLove) session.createCriteria(PostLove.class)
+//					.add(Restrictions.eq("post", result))
+//					.add(Restrictions.eq("account", session.get(Account.class, principal.getAccountId())))
+//					.setMaxResults(1).uniqueResult();
+//				
+//				session.delete(postLove);
+//			}
+//			else if (editMode.equals("folder")) {
+//				
+//				Folder folder = (Folder) session.get(Folder.class, drawerId);
+//				folder.getPosts().remove(result);
+//				folder.setCount(folder.getPosts().size());
+//				session.merge(folder);
+//				
+//				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
+//			}
+//			else if (editMode.equals("post")) {
+//				
+//				for(Folder folder : result.getFolders()) {
+//					folder.setCount(folder.getPosts().size());
+//					session.merge(folder);
+//				}
+//
+//				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
+//				
+//			}
 			
 			session.getTransaction().commit();
 		}
@@ -640,6 +636,41 @@ public class PostServiceImpl implements PostService {
 			ex.printStackTrace();
 		}
 		
+	}
+	
+	
+	@Override
+	public PostGrade createPostGrade(Post post1, Account account, PostVO postVO) {
+
+		PostGrade result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+
+		try {
+			
+			Post post = (Post) session.get(Post.class, post1.getId());
+			post.setGradeCount(post.getGradeCount() + 1);
+			session.merge(post);
+			
+			result = new PostGrade();
+			result.setAccount(account);
+			result.setPost(post);
+			result.setFeelCute(postVO.getFeelCute());
+			result.setFeelWarm(postVO.getFeelWarm());
+			result.setFeelModern(postVO.getFeelModern());
+			result.setFeelVintage(postVO.getFeelVintage());
+			result.setFeelLuxury(postVO.getFeelLuxury());
+			result.setCreatedAt(new Date());
+			
+			session.persist(result);
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	

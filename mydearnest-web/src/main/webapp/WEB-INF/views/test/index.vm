@@ -1,0 +1,20 @@
+<style>
+	.chart_test		{width:300px; height:300px; border:1px solid #ccc; position:relative;}
+</style>
+
+
+<div class="chart_test"></div>
+
+<script type="text/javascript">
+		$('.chart_test').spidergraph({
+			'fields' : ['모던함', '따뜻함', '귀여움', '고급스러움', '빈티지'],
+			'gridcolor' : 'rgba(20,20,20,1)'
+		});
+		
+		$('.chart_test').spidergraph('setactivedata', {
+			'strokecolor' : 'rgba(230,204,0,0.8)',
+			'fillcolor' : 'rgba(230,204,0,0.6)',
+			'data' : [5,4,9,8,1],
+			'linear' : true
+		});
+</script>

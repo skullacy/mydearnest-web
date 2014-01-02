@@ -15,12 +15,9 @@ public class PostValidator implements Validator {
 
 	public void validate(Object target, Errors errors) {
 
-		ValidationUtils.rejectIfEmpty(errors, "desc", "error.required.description");
-		ValidationUtils.rejectIfEmpty(errors, "category", "error.required.category");
+//		ValidationUtils.rejectIfEmpty(errors, "desc", "error.required.description");
+//		ValidationUtils.rejectIfEmpty(errors, "category", "error.required.category");
 		
 		PostVO postVO = (PostVO) target;
-		if ((postVO.getFolderId() == null || postVO.getFolderId() == 0))
-			errors.rejectValue("folderId", "error.required.folderId");
-
 	}
 }
