@@ -42,7 +42,7 @@ public class WriteController {
 		response.setHeader("Expires", "0");
 		
 		response.addHeader("mxb-popup-width", "95%");
-		model.addAttribute("layout", "shared/layout.blank.vm");
+		model.addAttribute("layout", "shared/layout.blank.vm"); 
 		
 		return "write/browse_frame";
 		
