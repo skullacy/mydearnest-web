@@ -15,3 +15,4 @@
 	</div>
 
 	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:relative; left:600px" value="등록하기" />
+</form>

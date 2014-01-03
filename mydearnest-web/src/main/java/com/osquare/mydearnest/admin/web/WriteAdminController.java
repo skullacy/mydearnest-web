@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -91,6 +92,43 @@ public class WriteAdminController {
 		return "account/join_detail_result";
 	}
 	
+	
+	/**
+	 * @brief
+	 * 사진 상세정보 입력 화면
+	 */
+	@RequestMapping(value = "/detail/{postId}" , method = RequestMethod.GET)
+	public String insertPostData(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("postId") Long postId) {
+		
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Expires", "0");
+		
+		//포스트 정보 가져오기
+		Post post = postService.getPostById(postId);
+		model.addAttribute("post", post);
+		
+		return "write/browse_frame";
+	}
+	
+	/**
+	 * @brief
+	 * 사진 상세정보 입력 처리 
+	 */
+	@RequestMapping(value = "/detail/{postId}", method = RequestMethod.POST)
+	public String insertPostDetailSubmit(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("postId") Long postId,
+			@ModelAttribute("command") PostVO postVO,
+			BindingResult result) {
+		
+		model.addAttribute("success", false);
+		
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+
+		return null;
+	}
 	
 	
 	
