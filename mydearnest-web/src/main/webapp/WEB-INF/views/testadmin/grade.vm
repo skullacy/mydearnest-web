@@ -28,7 +28,7 @@
 <input type="hidden" name="feelWarm" id="feelWarm" />
 <input type="hidden" name="feelVintage" id="feelVintage" />
 <input type="hidden" name="feelCute" id="feelCute" />
-<input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px;" />
+<input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px; position:relative; left:300px;" />
 
 </form>
 
