@@ -50,7 +50,7 @@
 	 			<a href="#">바로가기</a>
 	 		</td>
 	 		<td>
-	 			<a class="btn btn-success" href="/testAdmin/home/feel">평가하기</a>
+	 			<a class="btn btn-success" href="/testAdmin/write/grade">평가하기</a>
 	 		</td>
 	 		<td>
 	 			<button type="button" class="btn btn-default btn-xs">거실</button>

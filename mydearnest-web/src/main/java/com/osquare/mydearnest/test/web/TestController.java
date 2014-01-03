@@ -50,10 +50,10 @@ public class TestController {
 		return "testadmin/member";
 	}
 	
-	@RequestMapping("/home/feel")
+	@RequestMapping("/write/grade")
 	public String feelUpload(Model model, HttpServletRequest request){
 		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/feel";
+		return "testadmin/grade";
 	}
 	
 	@RequestMapping("/write/detail")
