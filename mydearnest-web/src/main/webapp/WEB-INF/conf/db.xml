@@ -13,12 +13,7 @@
 	<!-- Scans within the base package of the application for @Components to 
 		configure as beans -->
 	<bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<list>
-				<value>classpath:hibernate.properties</value>
-				<value>classpath:mongo.properties</value>
-			</list>
-		</property>
+		<property name="location" value="classpath:hibernate.properties" />
 	</bean>
 	
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">

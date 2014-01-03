@@ -101,15 +101,6 @@ public class Category implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
-	public Set<Post> getPosts() {
-		return posts;
-	}
-
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
-	}
-
 	@Column(name = "SEARCHTAG", nullable = false)
 	public String getSearchTag() {
 		return searchTag;
