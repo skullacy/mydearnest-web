@@ -40,11 +40,22 @@ public class WriteController {
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
-		
-		response.addHeader("mxb-popup-width", "95%");
-		model.addAttribute("layout", "shared/layout.blank.vm");
-		
-		return "write/browse_frame";
+
+		PostVO postVO = new PostVO();
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+
+		if (authentication.getPrincipal() instanceof SignedDetails) {
+			SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+			Account account = accountService.findAccountById(principal.getAccountId());
+
+			model.addAttribute("rootCategories", categoryService.getRootCategories());
+			model.addAttribute("haveFolders", postService.getUserFolders(account));
+			
+		}
+
+		model.addAttribute("command", postVO);
+		model.addAttribute("layout", "./shared/layout.default.vm");
+		return "write/browse.html";
 	}
 	
 

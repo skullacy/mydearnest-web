@@ -2,18 +2,18 @@
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
 	<classpath>
-		<dir name="D:/Workspace/java/cyh-web/target/classes">
+		<dir name="/Users/cray0114/git/mydearnest-web/mydearnest-web/target/classes">
 		</dir>
 	</classpath>
 
 	<web>
 		<link target="/">
-			<dir name="D:/Workspace/java/cyh-web/target/m2e-wtp/web-resources">
+			<dir name="/Users/cray0114/git/mydearnest-web/mydearnest-web/target/m2e-wtp/web-resources">
 				<exclude name="/"/>
 			</dir>
 		</link>
 		<link target="/">
-			<dir name="D:/Workspace/java/cyh-web/src/main/webapp">
+			<dir name="/Users/cray0114/git/mydearnest-web/mydearnest-web/src/main/webapp">
 			</dir>
 		</link>
 	</web>
