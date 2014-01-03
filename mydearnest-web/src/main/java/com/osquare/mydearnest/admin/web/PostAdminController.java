@@ -18,7 +18,10 @@ public class PostAdminController {
 	@Autowired private AdminAccountService adminAccountService;
 	@Autowired private AdminPostService adminPostService;
 	
-	@RequestMapping("")
+	
+	//사진 리스트 출력용 컨트롤러
+	//권한 : 모두. 접근기능은 권한별 한정하기.
+	@RequestMapping("/list")
 	public String index(ModelMap model, 
 			@RequestParam(value="page", required = false) Integer page,
 			@RequestParam(value="order", required = false) String order) {
@@ -35,6 +38,16 @@ public class PostAdminController {
 		return "admin/post_index";
 	}
 
+	
+	/**
+	 * @brief
+	 * 기존 포스트 삭제용 메소드, 리팩토링 예
+	 * @param model
+	 * @param id
+	 * @param redirectUri
+	 * @return
+	 * @deprecated
+	 */
 	@RequestMapping("/remove")
 	public String index(ModelMap model, 
 			@RequestParam(value="id", required = true) long id,
@@ -47,5 +60,6 @@ public class PostAdminController {
 		
 		return "admin/post_remove_ok";
 	}
+	
 
 }

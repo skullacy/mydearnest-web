@@ -39,7 +39,9 @@ public class APIPostsController {
 		for(Post post : posts) {
 			JSONObject object = new JSONObject();
 			object.put("id", post.getId());
-			object.put("title", post.getTitle());
+			//기존 방식 에러제거위해 주석처
+//			object.put("title", post.getTitle());
+			object.put("title", "1");
 			object.put("image", post.getImageSource().getId());
 			array.add(object);
 		}

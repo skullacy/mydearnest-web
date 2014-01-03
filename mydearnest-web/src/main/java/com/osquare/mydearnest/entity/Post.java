@@ -13,8 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -29,40 +27,38 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class Post implements Serializable {
 
 	private long id;
-	private Category category;
 	private Account account;
-	
-	private String position;
 	
 	private ImageSource imageSource;
 	private int imageWidth;
 	private int imageHeight;
 	
-	private int homeSize;
-	private int areaType;
-	private String accessory;
-	
-	private String title;
-	private String description;
 	private String source;
 	
-	private long goodCount;
-	private long commentCount;
-	private long drawerCount;
-	private long gradeCount;
+	private int tagSize;
+	private int tagTone;
+	private int theme;
+	private int spaceType;
+	
 	
 	private Date createdAt;
 	private Date deletedOn;
 	
 	
-	private Set<Notification> notifications = new HashSet<Notification>(0);
+
+	
+	//포스트 관련 수치들
+	private long goodCount;
+	private long commentCount;
+	private long gradeCount;
 	private Set<PostLove> postLoves = new HashSet<PostLove>(0);
 	private Set<PostComment> postComments = new HashSet<PostComment>(0);
-	
 	private Set<PostView> postViews = new HashSet<PostView>(0);
-	private Set<PostRank> postRanks = new HashSet<PostRank>(0);
 	
+	//사진 평가모음
 	private Set<PostGrade> postGrades = new HashSet<PostGrade>(0);
+	//사진 태그모음(중복입력 가능한것들)
+	private Set<PostTag> postTags = new HashSet<PostTag>(0);
 	
 
 	@Id
@@ -76,25 +72,6 @@ public class Post implements Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CATEGORY_ID", nullable = true)
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-	
-	@Column(name = "POSITION", nullable = true)
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
-	}
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ACCOUNT_ID", nullable = false)
 	public Account getAccount() {
@@ -103,15 +80,6 @@ public class Post implements Serializable {
 
 	public void setAccount(Account account) {
 		this.account = account;
-	}
-
-	@Column(name = "TITLE", nullable = true)
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -142,22 +110,49 @@ public class Post implements Serializable {
 		this.imageHeight = imageHeight;
 	}
 
-	@Column(name = "DESCRIPTION", nullable = true)
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	@Column(name = "SOURCE", nullable = true)
+	@Column(name = "SOURCE", nullable = false)
 	public String getSource() {
 		return source;
 	}
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+	
+	@Column(name = "SIZE", nullable = true)
+	public int getTagSize() {
+		return tagSize;
+	}
+
+	public void setTagSize(int tagSize) {
+		this.tagSize = tagSize;
+	}
+
+	@Column(name = "TONE", nullable = true)
+	public int getTagTone() {
+		return tagTone;
+	}
+
+	public void setTagTone(int tagTone) {
+		this.tagTone = tagTone;
+	}
+
+	@Column(name = "THEME", nullable = true)
+	public int getTheme() {
+		return theme;
+	}
+
+	public void setTheme(int theme) {
+		this.theme = theme;
+	}
+
+	@Column(name = "SPACETYPE", nullable = true)
+	public int getSpaceType() {
+		return spaceType;
+	}
+
+	public void setSpaceType(int spaceType) {
+		this.spaceType = spaceType;
 	}
 
 	@Column(name = "GOOD_COUNT", nullable = false)
@@ -178,15 +173,6 @@ public class Post implements Serializable {
 		this.commentCount = commentCount;
 	}
 
-	@Column(name = "DRAWER_COUNT", nullable = false)
-	public long getDrawerCount() {
-		return drawerCount;
-	}
-
-	public void setDrawerCount(long drawerCount) {
-		this.drawerCount = drawerCount;
-	}
-	
 	@Column(name = "GRADE_COUNT", nullable = false)
 	public long getGradeCount() {
 		return gradeCount;
@@ -214,42 +200,6 @@ public class Post implements Serializable {
 		this.deletedOn = deletedOn;
 	}
 	
-	@Column(name = "HOME_SIZE", nullable = true)
-	public int getHomeSize() {
-		return homeSize;
-	}
-
-	public void setHomeSize(int homeSize) {
-		this.homeSize = homeSize;
-	}
-	
-	@Column(name = "AREA_TYPE", nullable = true)
-	public int getAreaType() {
-		return areaType;
-	}
-
-	public void setAreaType(int areaType) {
-		this.areaType = areaType;
-	}
-
-	@Column(name = "ACCESSORY", nullable = true)
-	public String getAccessory() {
-		return accessory;
-	}
-
-	public void setAccessory(String accessory) {
-		this.accessory = accessory;
-	}
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-	public Set<Notification> getNotifications() {
-		return notifications;
-	}
-
-	public void setNotifications(Set<Notification> notifications) {
-		this.notifications = notifications;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
 	public Set<PostLove> getPostLoves() {
 		return postLoves;
@@ -278,21 +228,21 @@ public class Post implements Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-	public Set<PostRank> getPostRanks() {
-		return postRanks;
-	}
-
-	public void setPostRanks(Set<PostRank> postRanks) {
-		this.postRanks = postRanks;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
 	public Set<PostGrade> getPostGrade() {
 		return postGrades;
 	}
 	
 	public void setPostGrade(Set<PostGrade> postGrades) {
 		this.postGrades = postGrades;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+	public Set<PostTag> getPostTag() {
+		return postTags;
+	}
+
+	public void setPostTag(Set<PostTag> postTags) {
+		this.postTags = postTags;
 	}
 
 	

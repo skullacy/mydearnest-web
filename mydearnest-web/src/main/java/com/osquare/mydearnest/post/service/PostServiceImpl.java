@@ -135,18 +135,62 @@ public class PostServiceImpl implements PostService {
 		
 		return folder;
 	}
-
+	
+//	@Override
+//	public Post createPost(Account account, ImageSource imageSource, PostVO postVO) {
+//
+//		Post post = null;
+//		Session session = sessionFactory.getCurrentSession();
+//		session.getTransaction().begin();
+//
+//		try {
+////			Category category = new Category();
+////			category.setId(postVO.getCategory());
+//			
+//			post = new Post();
+//			post.setAccount(account);
+//			post.setImageSource(imageSource);
+//			
+//			post.setImageWidth(imageSource.getWidth());
+//			post.setImageHeight(imageSource.getHeight());
+//			
+////			post.setCategory(category);
+//
+//			post.setTitle(postVO.getTitle());
+//			post.setDescription(postVO.getDesc());
+//
+//			post.setCreatedAt(new Date());
+//			
+//			post.setPosition(postVO.getPosition());
+//			post.setHomeSize(postVO.getHomeSize());
+//			post.setAreaType(postVO.getAreaType());
+//			post.setAccessory(postVO.getAccessory());
+//			
+//			
+//			
+//			session.persist(post);
+//			
+//			
+//			session.getTransaction().commit();
+//			
+//			this.createPostGrade(post, account, postVO);
+//		}
+//		catch(Exception ex) {
+//			session.getTransaction().rollback();
+//			ex.printStackTrace();
+//		}
+//		
+//		return post;
+//	}
+	
 	@Override
-	public Post createPost(Account account, ImageSource imageSource, PostVO postVO) {
-
+	public Post createPostUpload(Account account, ImageSource imageSource,
+			PostVO postVO) {
 		Post post = null;
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
-
+		
 		try {
-//			Category category = new Category();
-//			category.setId(postVO.getCategory());
-			
 			post = new Post();
 			post.setAccount(account);
 			post.setImageSource(imageSource);
@@ -154,35 +198,27 @@ public class PostServiceImpl implements PostService {
 			post.setImageWidth(imageSource.getWidth());
 			post.setImageHeight(imageSource.getHeight());
 			
-//			post.setCategory(category);
-
-			post.setTitle(postVO.getTitle());
-			post.setDescription(postVO.getDesc());
-
-			post.setCreatedAt(new Date());
-			
-			post.setPosition(postVO.getPosition());
-			post.setHomeSize(postVO.getHomeSize());
-			post.setAreaType(postVO.getAreaType());
-			post.setAccessory(postVO.getAccessory());
-			
-			
+			post.setSource(postVO.getSource());
 			
 			session.persist(post);
 			
-			
 			session.getTransaction().commit();
-			
-			this.createPostGrade(post, account, postVO);
-		}
-		catch(Exception ex) {
+		} catch(Exception e) {
 			session.getTransaction().rollback();
-			ex.printStackTrace();
+			e.printStackTrace();
 		}
 		
-		return post;
+		return null;
 	}
-	
+
+	@Override
+	public Post createPostDetail(Account account, ImageSource imageSource,
+			PostVO postVO) {
+		
+		
+		return null;
+	}
+
 	@Override 
 	public Post removePostByMode(Long postId, String editMode, Long drawerId) {
 		Post result = null;

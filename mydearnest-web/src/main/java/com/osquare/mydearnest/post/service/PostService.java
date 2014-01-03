@@ -33,7 +33,11 @@ public interface PostService {
 	Collection<Post> getPostsByLove(Account account, Integer page);
 	
 	Post getPostById(Long postId);
-	Post createPost(Account account, ImageSource imageSource, PostVO postVO);
+	
+	Post createPostUpload(Account account, ImageSource imageSource, PostVO postVO);
+	Post createPostDetail(Account account, ImageSource imageSource, PostVO postVO);
+	PostGrade createPostGrade(Post post, Account account, PostVO postVO);
+	
 	Post removePostByMode(Long postId, String editMode, Long drawerId);
 	
 	Collection<PostComment> getCommentsByPost(Post post, Integer page);
@@ -43,7 +47,7 @@ public interface PostService {
 	PostLove findPostLoveByAccount(Account account, Post post);
 	void deletePostLove(PostLove postLove);
 	
-	PostGrade createPostGrade(Post post, Account account, PostVO postVO);
+	
 	
 	
 	Long getPrevPostId(Long postId, String ref);

@@ -7,7 +7,7 @@ import org.springframework.validation.Validator;
 
 import com.osquare.mydearnest.post.vo.PostVO;
 
-public class PostValidator implements Validator {
+public class PostUploadValidator implements Validator {
 
 	public boolean supports(Class<?> clazz) {
 		return PostVO.class.isAssignableFrom(clazz);
