@@ -24,7 +24,7 @@ fieldset.pop_field_t3 .item textarea			{ background:none; border:0px; padding:11
 
 .input_form .submit								{ background:#dd583d url('../images/auth/ok_button.png') no-repeat center; margin:0px; padding:0px; border:1px solid #af4a36; width:100%; height:38px; border-radius:5px; margin-top:4px; text-indent:-999; font-size:0px; line-height:0px; behavior:url(../scripts/PIE.htc); }
 
-/* 셀렉트박스 */
+/* ��������몃����� */
 .sbHolder				{ border-radius: 0px; border:0px; background: #fff; position: relative; min-height: 38px; }
 .sbHolder.group_box		{ width: 140px; }
 
@@ -45,3 +45,6 @@ fieldset.pop_field_t3 .item textarea			{ background:none; border:0px; padding:11
 .sbOptions a:visited	{ color: #777; text-decoration: none; }
 .sbOptions a:hover 		{ color: #333; text-decoration: underline; }
 
+/* cray add source*/
+.image_content{width:300px; height:500px; position:relative; background:#438505; display:inline-block; float:left; margin-left:20px;}
+.input_contents{width:400px; height:600px; position:relative; background:#659785; display:inline-block;  margin-left:20px;}

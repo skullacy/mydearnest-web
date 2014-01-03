@@ -1,0 +1,92 @@
+#parse("./testadmin/management_navi.vm")
+<h2>사진관리</h2>
+<table class="table table-striped table-bordered" style="margin-top:20px; text-align:center;">
+ 	<thead style="font-size:14px; background:#cccccc; font-weight:bold;">
+ 	<tr>
+ 		<td>
+ 			사진
+ 		</td>
+ 		<td>
+ 			url
+ 		</td>
+ 		<td>
+ 			느낌평가수
+ 		</td>
+ 		<td>
+ 			홈
+ 		</td>
+ 		<td>
+ 			악세사리
+ 		</td>
+ 		<td>
+ 			평수
+ 		</td>
+ 		<td>
+ 			테마
+ 		</td>
+ 		<td>
+ 			공간
+ 		</td>
+ 		<td>
+ 			톤
+ 		</td>
+ 		<td>
+ 			색상
+ 		</td>
+ 		<td>
+ 			악세사리 링크
+ 		</td>
+ 		<td>
+ 			수정
+ 		</td>
+ 	</tr>
+ 	<thead>
+ 	<tbody style="padding:0; margin:0;">
+	 	<tr>
+	 		<td>
+	 			<img src="..." alt="..." class="img-rounded">
+	 		</td>
+	 		<td>
+	 			<a href="#">바로가기</a>
+	 		</td>
+	 		<td>
+	 			5명
+	 		</td>
+	 		<td>
+	 			<button type="button" class="btn btn-default btn-xs">거실</button>
+	 		</td>
+	 		<td style="width:80px; text-align:center;">
+	 			<button type="button" style="display:block;" class="btn btn-default btn-xs">거실</button>
+	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">거실</button>
+	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">거실</button>
+	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">거실</button>
+	 		</td>
+	 		<td>
+	 			<button type="button" class="btn btn-default btn-xs">10~20평</button>
+	 		</td>
+	 		<td>
+	 			<button type="button" class="btn btn-default btn-xs">없음</button>
+	 		</td>
+	 		<td>
+	 			<button type="button" class="btn btn-default btn-xs">인도어</button>
+	 		</td>
+	 		<td>
+	 			<button type="button" class="btn btn-default btn-xs">black</button>
+	 		</td>
+	 		<td>
+	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">#ffffff</button>
+	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">#ffffff</button>
+	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">#ffffff</button>
+	 		</td>
+	 		<td>
+	 			<a href="#">의자</a>
+	 			<a href="#">소파</a>
+	 			<a href="#">선반</a>
+	 		</td>
+	 		<td>
+	 			<a class="btn btn-success">수정</a>
+	 		</td>
+	 	</tr>
+	 	
+	 </tbody>
+</table>

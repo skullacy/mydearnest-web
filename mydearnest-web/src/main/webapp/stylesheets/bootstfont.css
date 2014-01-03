@@ -1,0 +1,9 @@
+
+@font-face {
+  font-family: 'NanumGothic';
+  font-style: normal;
+  font-weight: bold;
+  src: url(./fonts/bootstrap/glyphicons-halflings-regular.eot);
+  src: url(./fonts/bootstrap/glyphicons-halflings-regular.woff) format('woff'),
+       url(./fonts/bootstrap/glyphicons-halflings-regular.ttf) format('truetype');
+}

@@ -1,0 +1,10 @@
+<h2>태그관리</h2>
+
+<div class="btn-group">
+  <a class="btn btn-default" href="#">Home</a>
+  <a class="btn btn-default" href="#">Accesary</a>
+</div>
+
+<div class="btn-group" style="float:right;">
+  <a class="btn btn-default" href="/testAdmin/category/create" >태그추가</a>
+</div>
