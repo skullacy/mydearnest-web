@@ -200,6 +200,8 @@ public class PostServiceImpl implements PostService {
 			
 			post.setSource(postVO.getSource());
 			
+			post.setCreatedAt(new Date());
+			
 			session.persist(post);
 			
 			session.getTransaction().commit();
