@@ -110,7 +110,7 @@ public class Post implements Serializable {
 		this.imageHeight = imageHeight;
 	}
 
-	@Column(name = "SOURCE", nullable = false)
+	@Column(name = "SOURCE", columnDefinition="TEXT", nullable = false)
 	public String getSource() {
 		return source;
 	}

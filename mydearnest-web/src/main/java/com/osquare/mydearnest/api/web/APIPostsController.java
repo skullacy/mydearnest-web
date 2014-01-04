@@ -30,6 +30,7 @@ import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.post.service.FileService;
 import com.osquare.mydearnest.post.service.PostService;
+import com.osquare.mydearnest.post.vo.PostVO;
 
 @Controller
 @RequestMapping("/api/posts")
@@ -74,17 +75,21 @@ public class APIPostsController {
 	@RequestMapping(value = "/upload.ge", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadGE(MultipartHttpServletRequest request, HttpServletResponse response) {
 		
+		PostVO postVO = new PostVO();
+		postVO.setThumbnail((CommonsMultipartFile) request.getFile("thumbnail"));
+		postVO.setSource(request.getParameter("source"));
+		
+		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type",	"application/json; charset=UTF-8");
 		
 		JSONObject document = new JSONObject();
 		
-		System.out.println(request.getParameter("source").toString());
 		
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
 		if (!(authentication.getPrincipal() instanceof SignedDetails)) {
 			document.put("success", false);
-			return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.FORBIDDEN);
+			return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
 		}
 
 		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
@@ -92,9 +97,18 @@ public class APIPostsController {
 		Account account = accountService.findAccountById(principal.getAccountId());
 		
 		ImageSource imageSource = null;
-		imageSource = fileService.createImageSourceForData((CommonsMultipartFile) request.getFile("thumbnail"));
+		imageSource = fileService.createImageSourceForData(postVO.getThumbnail());
 		
-		document.put("success", true);
+		Post post = postService.createPostUpload(account, imageSource, postVO);
+		
+		if(post == null) {
+			document.put("success", false);
+		}
+		else {
+			document.put("success", true);
+		}
+		
+		
 		
 		return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
 	}
