@@ -76,6 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	/**
 	 * @brief 카테고리 Autocomplete 리턴용 메서드
+	 * @deprecated
 	 */
 	@Override
 	@SuppressWarnings("unchecked")

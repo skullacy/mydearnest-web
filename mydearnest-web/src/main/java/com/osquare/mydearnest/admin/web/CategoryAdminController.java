@@ -8,21 +8,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.osquare.mydearnest.admin.service.AdminAccountService;
-import com.osquare.mydearnest.admin.service.AdminPostService;
-import com.osquare.mydearnest.entity.Post;
+import com.osquare.mydearnest.admin.service.AdminTagCateService;
+import com.osquare.mydearnest.entity.TagCategory;
+import com.osquare.mydearnest.post.vo.TagCategoryVO;
 
 @Controller
 @RequestMapping("/admin/category")
 public class CategoryAdminController {
 
 	@Autowired private AdminAccountService adminAccountService;
-//	@Autowired private AdminPostService adminPostService;
+	@Autowired private AdminTagCateService adminTagCateService;
 	
 	
 	//카테고리 리스트 출력용 컨트롤
@@ -56,7 +59,27 @@ public class CategoryAdminController {
 	
 	//카테고리 입력 처리
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String insertTagSubmit(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+	public String insertTagSubmit(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@ModelAttribute("command") TagCategoryVO tagCateVO,
+			BindingResult result) {
+		
+		model.addAttribute("success", false);
+		
+		if(result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			model.addAttribute("errors", result.getAllErrors());
+		}
+		else {
+			TagCategory tagCate = adminTagCateService.createTagCategory(tagCateVO);
+			if(tagCate == null) {
+				model.addAttribute("success", false);
+			}
+			else {
+				model.addAttribute("success", true);
+				//성공했을 시 리다이렉트 설정해주기 (return에 있는 view파일에서 redirect_uri로 넘겨준다.) 아직 설정하지 않았으므로 다른방법 찾아도 됨.
+//				model.addAttribute("redirect_uri", request.getContextPath() + "slagjsdlfasjf");
+			}
+		}
 		
 		return null;
 	}

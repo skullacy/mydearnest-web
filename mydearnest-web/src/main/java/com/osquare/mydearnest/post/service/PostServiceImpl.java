@@ -210,7 +210,7 @@ public class PostServiceImpl implements PostService {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return post;
 	}
 
 	@Override
