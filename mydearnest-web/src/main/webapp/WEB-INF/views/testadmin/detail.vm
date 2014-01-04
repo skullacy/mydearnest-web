@@ -1,1 +1,69 @@
 <h2>정보입력 페이지</h2>
+<style>
+	.photocontainer {
+    	width:400px;
+    	height:600px;
+    	position:relative;
+    	display:inline-block;
+    	float:left;
+    	background:#480960;
+    }
+    .infoInput{
+    	width:500px;
+    	height:auto;
+    	position:relative;
+    	display:inline-block;
+    	margin-left:20px;
+    }
+    .tagResult{
+    	width:500px;
+    	height:200px;
+    	position:relative;
+    	display:inline-block;
+    	background:#eeeeee;
+    	border:1px solid #aaaaaa;
+    }    
+</style>
+<div class="photocontainer">
+
+</div>		
+<div class="infoInput">
+	<form class="form-horizontal" role="form">
+		<div class="form-group">
+			<div class="col-lg-10">
+			<span>태그입력</span>
+				<input type="email" class="form-control" id="inputEmail1" placeholder="태그검색">
+			</div>
+		</div>
+		<div class="tagResult">
+			<div class="tag_ori" style="display:none">
+				<span class="tag_label"></span>
+					<a class="delete_tag" href="#">X</a>
+				<input type="hidden" class="position_hidden" />
+			</div>
+		</div>
+		<span>테마</span>
+		<div class="btn-group" data-toggle="buttons" style="display:block;">
+			<label class="btn btn-primary active">
+			<input type="radio" name="options" id="option1" checked="true"> 있음
+			</label>
+			<label class="btn btn-primary">
+			<input type="radio" name="options" id="option2"> 없음
+			</label>
+		</div>
+		<span>테마</span>
+		<div class="btn-group" data-toggle="buttons" style="display:block;">
+			<label class="btn btn-primary active">
+			<input type="radio" name="options" id="option1" checked="true"> 있음
+			</label>
+			<label class="btn btn-primary">
+			<input type="radio" name="options" id="option2"> 없음
+			</label>
+		</div>
+	</form>
+</div>
+
+
+
+					
+	

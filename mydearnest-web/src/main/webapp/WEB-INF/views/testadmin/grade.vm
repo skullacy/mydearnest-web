@@ -1,0 +1,56 @@
+<h2>느낌평가하기</h2>
+<style>
+	.photocontainer {
+    	width:400px;
+    	height:600px;
+    	position:relative;
+    	display:inline-block;
+    	float:left;
+    	background:#237849;
+    }    
+        
+    #spidergraphcontainer {
+        width: 450px;
+        height:450px;
+        position: relative;
+        display:inline-block;
+        margin-left:20px;
+    }
+ 
+    
+</style>
+
+<div class="photocontainer"></div>		
+<div id="spidergraphcontainer"></div>
+<form action="$request.contextPath/admin/write/grade" method="post">
+<input type="hidden" name="feelModern" id="feelModern" />
+<input type="hidden" name="feelLuxury" id="feelLuxury" />
+<input type="hidden" name="feelWarm" id="feelWarm" />
+<input type="hidden" name="feelVintage" id="feelVintage" />
+<input type="hidden" name="feelCute" id="feelCute" />
+<input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px; position:relative; left:300px;" />
+
+</form>
+
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.spidergraph.js"></script>
+<script>
+    $('#spidergraphcontainer').spidergraph({
+        'fields': ['모던함','귀여움','빈티지','고급스러움','따뜻함'],
+        'gridcolor': 'rgba(20,20,20,1)'   
+       
+    }).spidergraph('setactivedata', { 
+        'strokecolor': 'rgba(124,209,210,0.8)',
+        'fillcolor': 'rgba(151,254,255,0.6)',
+        'data': [0, 0, 0, 0, 0],
+         'linear': true
+    });
+    
+    $('#spidergraphcontainer').bind('spiderdatachange', function( ev, data ) {
+     	$('#feelModern').val(data[0]);
+     	$('#feelCute').val(data[1]);
+     	$('#feelVintage').val(data[2]);
+     	$('#feelLuxury').val(data[3]);
+     	$('#feelWarm').val(data[4]);
+	});
+
+</script>

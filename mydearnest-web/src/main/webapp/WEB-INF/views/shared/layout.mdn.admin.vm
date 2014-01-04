@@ -5,23 +5,19 @@
 	<title>Ggumim :: 꾸밈</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/bootstrap/bootstrap-theme.min.css"/>
-	<link rel="stylesheet" href="$request.contextPath/stylesheets/bootstrap/bootstrap.min.css"  media="screen"/>
-	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/bootstrap/bootstfontfont.css"/>
+	<link rel="stylesheet" href="$request.contextPath/stylesheets/bootstrap/bootstrap.css"  media="screen"/>
+	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/bootstfont.css"/>
 	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/mdn-admin.css"/>
 	
-	
+	<script type="text/javascript" src="$request.contextPath/scripts/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/bootstrap.min.js"></script>
 	
-	 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요한) -->
-    <script src="//code.jquery.com/jquery.js"></script>
-    <!-- 모든 합쳐진 플러그인을 포함하거나 (아래) 필요한 각각의 파일들을 포함하세요 -->
-    <script src="js/bootstrap.min.js"></script>
- 
-    <!-- Respond.js 으로 IE8 에서 반응형 기능을 활성화하세요 (https://github.com/scottjehl/Respond) -->
-    <script src="js/respond.js"></script>
+    
+	
 
 </head>
 <body style="padding:10px;">
+
 <nav class="navbar navbar-default" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
