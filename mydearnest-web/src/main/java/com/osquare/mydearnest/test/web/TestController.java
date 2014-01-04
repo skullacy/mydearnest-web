@@ -38,11 +38,6 @@ public class TestController {
 		return "testadmin/photoupload";
 	}
 	
-	@RequestMapping("/management/photo")
-	public String photoManagement(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/photo";
-	}
 	
 	@RequestMapping("/management/member")
 	public String memberManagement(Model model, HttpServletRequest request){
@@ -55,6 +50,7 @@ public class TestController {
 		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
 		return "testadmin/grade";
 	}
+	
 	
 	@RequestMapping("/write/detail")
 	public String writeDetail(Model model, HttpServletRequest request){
