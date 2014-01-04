@@ -15,6 +15,18 @@
     	display:inline-block;
     	margin-left:20px;
     }
+    .infoInput ul{
+    	margin:0;
+    	padding:0;
+    	margin-top:10px;
+    }
+    .infoInput ul li{
+    	list-style-type:none;
+    	display:block;
+    	margin-top:5px;
+    	
+    }
+    
     .tagResult{
     	width:500px;
     	height:200px;
@@ -32,7 +44,7 @@
 		<div class="form-group">
 			<div class="col-lg-10">
 			<span>태그입력</span>
-				<input type="email" class="form-control" id="inputEmail1" placeholder="태그검색">
+				<input type="text" class="form-control" id="position_search" action="$request.contextPath/api/category/search.ajax" placeholder="태그검색">
 			</div>
 		</div>
 		<div class="tagResult">
@@ -42,28 +54,72 @@
 				<input type="hidden" class="position_hidden" />
 			</div>
 		</div>
-		<span>테마</span>
-		<div class="btn-group" data-toggle="buttons" style="display:block;">
-			<label class="btn btn-primary active">
-			<input type="radio" name="options" id="option1" checked="true"> 있음
-			</label>
-			<label class="btn btn-primary">
-			<input type="radio" name="options" id="option2"> 없음
-			</label>
-		</div>
-		<span>테마</span>
-		<div class="btn-group" data-toggle="buttons" style="display:block;">
-			<label class="btn btn-primary active">
-			<input type="radio" name="options" id="option1" checked="true"> 있음
-			</label>
-			<label class="btn btn-primary">
-			<input type="radio" name="options" id="option2"> 없음
-			</label>
-		</div>
+		<ul>
+		<li>테마</li>
+			<li>
+				<div class="btn-group" data-toggle="buttons" >
+					<label class="btn btn-primary active">
+						<input type="radio" name="options" id="option1" checked="true"> 있음
+					</label>
+					<label class="btn btn-primary">
+						<input type="radio" name="options" id="option2"> 없음
+					</label>
+				</div>
+			</li>
+			<li>공간</li>
+			<li>
+				<div class="btn-group" data-toggle="buttons" >
+					<label class="btn btn-primary active">
+						<input type="radio" name="options" id="option1" checked="true"> 있음
+					</label>
+					<label class="btn btn-primary">
+						<input type="radio" name="options" id="option2"> 없음
+					</label>
+				</div>
+			</li>
+		</ul>
+		
 	</form>
 </div>
 
-
+<script>
+$('#position_search').autocomplete({
+	focus: function(){
+		return false;	
+	},
+	source: function(request, response){
+		$.ajax({
+			url: $('#position_search').attr('action'),
+			dataType: "Json",
+			data: $('#position_search).serialize(),
+			success: function(result){
+				response($.map(result.data, function(item){
+					return{
+						label: item.name,
+						value: item.id
+					}
+				}));
+			}
+		});
+	},
+	select: function(event, ui){
+		console.log(event);
+		console.log(ui);
+		$('#position_search').val('');
+		var tag = $('.tagList').children('.tag_ori').clone();
+		console.log(tag);
+		tag.removeClass('tag_ori').addClass('tag').data('value', ui.item.value);
+		tag.children('.tag_label').text(ui.item.label);
+		tag.children('.position_hidden').removeClass('position_hidden')
+			.attr('name', 'position').val(ui.item.value);
+		
+		$('.tagList').append(tag);
+		tag.show();
+		return false;
+	}
+});
+	
+</script>
 
 					
 	
