@@ -4,7 +4,7 @@
 		<div class="fl">
 			<div class="thumb">
 				#if($item.account.imageId)
-				<img src="$request.contextPath/user-image/thumb/$item.account.imageId?w=48&h=48&t=crop" />
+				<img src="$request.contextPath/mdn-image/thumb/$item.account.imageId?w=48&h=48&t=crop" />
 				#else
 				<img src="$request.contextPath/images/profile/profile_none_img.png" />
 				#end

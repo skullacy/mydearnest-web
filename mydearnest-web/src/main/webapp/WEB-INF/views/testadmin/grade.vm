@@ -20,14 +20,20 @@
     
 </style>
 
-<div class="photocontainer"></div>		
+<div class="photocontainer">
+<img src="$request.contextPath/mdn-image/thumb/$post.imageSource.id?w=400&h=600&t=crop" />
+</div>		
 <div id="spidergraphcontainer"></div>
-<form action="$request.contextPath/admin/write/grade" method="post">
-<input type="hidden" name="feelModern" id="feelModern" />
-<input type="hidden" name="feelLuxury" id="feelLuxury" />
-<input type="hidden" name="feelWarm" id="feelWarm" />
-<input type="hidden" name="feelVintage" id="feelVintage" />
-<input type="hidden" name="feelCute" id="feelCute" />
+
+<form action="$request.contextPath/admin/write/grade/$post.id" method="post">
+<input type="hidden" name="feelModern" id="feelModern" value="$!grade.feelModern" />
+<input type="hidden" name="feelLuxury" id="feelLuxury" value="$!grade.feelLuxury" />
+<input type="hidden" name="feelWarm" id="feelWarm" value="$!grade.feelWarm" />
+<input type="hidden" name="feelVintage" id="feelVintage" value="$!grade.feelVintage" />
+<input type="hidden" name="feelCute" id="feelCute" value="$!grade.feelCute" />
+#if($pagetype == "update")
+<input type="hidden" name="pagetype" value="update" />
+#end
 <input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px; position:relative; left:300px;" />
 
 </form>
@@ -41,7 +47,7 @@
     }).spidergraph('setactivedata', { 
         'strokecolor': 'rgba(124,209,210,0.8)',
         'fillcolor': 'rgba(151,254,255,0.6)',
-        'data': [0, 0, 0, 0, 0],
+        'data': [$('#feelModern').val(), $('#feelCute').val(), $('#feelVintage').val(), $('#feelLuxury').val(), $('#feelWarm').val()],
          'linear': true
     });
     

@@ -42,15 +42,29 @@
  	</tr>
  	<thead>
  	<tbody style="padding:0; margin:0;">
+ 		#foreach($item in $items)
 	 	<tr>
 	 		<td>
-	 			<img src="..." alt="..." class="img-rounded">
+	 			<img src="$request.contextPath/mdn-image/thumb/$item.imageSource.id?w=70&h=70&t=crop" alt="..." class="img-rounded">
 	 		</td>
 	 		<td>
 	 			<a href="#">바로가기</a>
 	 		</td>
 	 		<td>
-	 			<a class="btn btn-success" href="/testAdmin/write/grade">평가하기</a>
+	 			#set($isGrade = "false")
+	 			#foreach($grade in $item.postGrade)
+	 				#if($sec.accountId == $grade.account.id)
+	 					#set($isGrade = "true")
+	 				#end
+	 			#end
+	 			<p>$item.gradeCount 명이 평가함</p>
+	 			#if($isGrade == "true")
+	 			<p>평가한 사진</p>
+	 			<a class="btn btn-warning" href="/admin/write/grade/$item.id?pagetype=update">평가수정</a>
+	 			#else
+	 			<a class="btn btn-success" href="/admin/write/grade/$item.id">평가하기</a>
+	 			#end
+	 			
 	 		</td>
 	 		<td>
 	 			<button type="button" class="btn btn-default btn-xs">거실</button>
@@ -84,9 +98,10 @@
 	 			<a href="#">선반</a>
 	 		</td>
 	 		<td>
-	 			<a class="btn btn-success" href="/testAdmin/write/detail">수정</a>
+	 			<a class="btn btn-success" href="/testAdmin/write/detail/$item.id">수정</a>
 	 		</td>
 	 	</tr>
+	 	#end
 	 	
 	 </tbody>
 </table>

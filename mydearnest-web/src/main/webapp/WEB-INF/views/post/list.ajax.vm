@@ -10,7 +10,7 @@
 	<div class="find_item" data-post-id="$post.id">
 		<div class="thumb" style="min-height:${math.toInteger($postHeight)}px; height:${math.toInteger($postHeight)}px;overflow:hidden;">
 			<a href="$request.contextPath/show/$post.id?ref=${ref}">
-				<img src="$request.contextPath/user-image/thumb/$post.imageSource.id?w=302&p=$post.id" style="max-width:100%;"/>
+				<img src="$request.contextPath/mdn-image/thumb/$post.imageSource.id?w=302&p=$post.id" style="max-width:100%;"/>
 			</a>
 			#if($deletable)
 			<div class="delete" data-post-delete="$post.id" data-edit-mode="$!edit_mode" data-post-drawer="$!drawer_id" style="cursor:pointer;">

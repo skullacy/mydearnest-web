@@ -37,8 +37,12 @@ public interface PostService {
 	Post createPostUpload(Account account, ImageSource imageSource, PostVO postVO);
 	Post createPostDetail(Account account, ImageSource imageSource, PostVO postVO);
 	PostGrade createPostGrade(Post post, Account account, PostVO postVO);
+	PostGrade updatePostGrade(Post post, Account account, PostVO postVO);
 	
 	Post removePostByMode(Long postId, String editMode, Long drawerId);
+	
+	Collection<PostGrade> getPostGradeByPost(Post post);
+	PostGrade getMyPostGradeByPost(Account account, Post post);
 	
 	Collection<PostComment> getCommentsByPost(Post post, Integer page);
 	PostComment createPostComment(Post post, Account account, String text);

@@ -15,14 +15,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.account.service.AccountService;
 import com.osquare.mydearnest.entity.Account;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
+import com.osquare.mydearnest.entity.PostGrade;
+import com.osquare.mydearnest.entity.PostTag;
 import com.osquare.mydearnest.post.service.FileService;
 import com.osquare.mydearnest.post.service.PostService;
+import com.osquare.mydearnest.post.validator.PostGradeValidator;
 import com.osquare.mydearnest.post.validator.PostUploadValidator;
 import com.osquare.mydearnest.post.vo.PostVO;
 
@@ -109,7 +113,10 @@ public class WriteAdminController {
 		Post post = postService.getPostById(postId);
 		model.addAttribute("post", post);
 		
-		return "write/browse_frame";
+		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
+		
+//		return "testadmin/grade";
+		return null;
 	}
 	
 	/**
@@ -122,13 +129,122 @@ public class WriteAdminController {
 			@ModelAttribute("command") PostVO postVO,
 			BindingResult result) {
 		
+//		model.addAttribute("success", false);
+//		
+//		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+//		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+//
+//		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+//		Account account = accountService.findAccountById(principal.getAccountId());
+//		
+//		Post post = postService.getPostById(postId);
+//
+//		model.addAttribute("account", account);
+//		model.addAttribute("command", postVO);
+//
+//		new PostGradeValidator().validate(postVO, result);
+//		
+//		if (result.hasErrors()) {
+//			System.out.println(result.getAllErrors());
+//			model.addAttribute("errors", result.getAllErrors());
+//		}
+//		else {
+//			
+//			PostGrade postGrade = postService.createPostGrade(post, account, postVO);
+//			if (postGrade == null) {
+//				model.addAttribute("success", false);
+//			}
+//			else {
+//				model.addAttribute("success", true);
+//				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+//			}
+//		}
+		
+
+		return null;
+	}
+	
+	/**
+	 * @brief
+	 * 사진 평가 입력 화면
+	 */
+	@RequestMapping(value = "/grade/{postId}", method = RequestMethod.GET)
+	public String insertPostGrade(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("postId") Long postId,
+			@RequestParam(value = "pagetype", required = false) String pagetype) {
+		
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
+		Post post = postService.getPostById(postId);
+		model.addAttribute("post", post);
+		
+		if("update".equals(pagetype)) {
+			PostGrade postGrade = postService.getMyPostGradeByPost(account, post);
+			model.addAttribute("grade", postGrade);
+			model.addAttribute("pagetype", pagetype);
+		}
+		
+		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
+		
+		return "testadmin/grade";
+	}
+	
+	/**
+	 * @brief
+	 * 사진 평가 입력 처리
+	 */
+	@RequestMapping(value = "/grade/{postId}", method = RequestMethod.POST)
+	public String insertPostGrade(Model model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "pagetype", required = false) String pageType,
+			@PathVariable("postId") Long postId,
+			@ModelAttribute("command") PostVO postVO,
+			BindingResult result) {
+		
 		model.addAttribute("success", false);
 		
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
 		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
 
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
+		Post post = postService.getPostById(postId);
+
+		model.addAttribute("account", account);
+		model.addAttribute("command", postVO);
+
+		new PostGradeValidator().validate(postVO, result);
+		
+		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			model.addAttribute("errors", result.getAllErrors());
+		}
+		else {
+			PostGrade postGrade = null;
+			if("update".equals(pageType)) {
+				postGrade = postService.updatePostGrade(post, account, postVO);
+			}
+			else {
+				postGrade = postService.createPostGrade(post, account, postVO);
+			}
+			
+			if (postGrade == null) {
+				model.addAttribute("success", false);
+			}
+			else {
+				model.addAttribute("success", true);
+				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+			}
+		}
+		
+		
 		return null;
 	}
+	
 	
 	
 	

@@ -84,7 +84,7 @@
 						<value>/stylesheets/**</value>
 						<value>/scripts/**</value>
 						<value>/images/**</value>
-						<value>/user-image/**</value>
+						<value>/mdn-image/**</value>
 						<value>/testAdmin/**</value>
 					</list>
 				</property>

@@ -516,6 +516,53 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
+	public Collection<PostGrade> getPostGradeByPost(Post post) {
+		Collection<PostGrade> postGrade = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(PostGrade.class)
+								.add(Restrictions.eq("post", post));
+			
+			postGrade = cr.list();
+		}
+		catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return postGrade;
+	}
+
+	@Override
+	public PostGrade getMyPostGradeByPost(Account account, Post post) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(PostGrade.class)
+								.setFetchMode("account", FetchMode.JOIN)
+								.add(Restrictions.eq("post", post))
+								.add(Restrictions.eq("account", account))
+								.setMaxResults(1);
+			
+			PostGrade postGrade = (PostGrade) cr.uniqueResult();
+			
+			session.getTransaction().commit();
+			return postGrade;
+		}
+		catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<PostComment> getCommentsByPost(Post post, Integer page) {
 
@@ -701,6 +748,33 @@ public class PostServiceImpl implements PostService {
 			result.setCreatedAt(new Date());
 			
 			session.persist(result);
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public PostGrade updatePostGrade(Post post1, Account account, PostVO postVO) {
+		
+		PostGrade result = getMyPostGradeByPost(account, post1);
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		
+		try {
+			
+			result.setFeelCute(postVO.getFeelCute());
+			result.setFeelWarm(postVO.getFeelWarm());
+			result.setFeelModern(postVO.getFeelModern());
+			result.setFeelVintage(postVO.getFeelVintage());
+			result.setFeelLuxury(postVO.getFeelLuxury());
+			
+			session.update(result);
 			session.getTransaction().commit();
 		}
 		catch(Exception ex) {

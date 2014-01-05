@@ -61,7 +61,7 @@
 							<li data-submenu="true" class="login_info has-submenu w120">
 								<div class="thm_c">
 									#if($user_image_id && $user_image_id > 0)
-									<img src="$request.contextPath/user-image/thumb/$user_image_id?w=60&h=60&t=crop" width="30" height="30" class="i_thumb" />
+									<img src="$request.contextPath/mdn-image/thumb/$user_image_id?w=60&h=60&t=crop" width="30" height="30" class="i_thumb" />
 									#else
 									<img src="$request.contextPath/images/profile/profile_none_img.png" width="30" height="30" class="i_thumb" />
 									#end

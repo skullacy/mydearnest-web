@@ -2,13 +2,17 @@ package com.osquare.mydearnest.admin.service;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.annotation.Resource;
 
 
 
+
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -59,6 +63,12 @@ public class AdminPostServiceImpl implements AdminPostService {
 					.add(Restrictions.isNull("deletedOn"))
 					.setMaxResults(10).setFirstResult((page - 1) * 20);
 			result = cr.list();
+			
+			Iterator<Post> itr = result.iterator();
+			while(itr.hasNext()) {
+				Hibernate.initialize(itr.next().getPostGrade());
+			}
+			
 			
 			session.getTransaction().commit();
 		}

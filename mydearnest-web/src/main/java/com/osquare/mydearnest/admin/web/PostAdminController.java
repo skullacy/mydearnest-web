@@ -1,15 +1,24 @@
 package com.osquare.mydearnest.admin.web;
 
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.admin.service.AdminAccountService;
 import com.osquare.mydearnest.admin.service.AdminPostService;
 import com.osquare.mydearnest.entity.Post;
+import com.osquare.mydearnest.entity.PostGrade;
 
 @Controller
 @RequestMapping("/admin/post")
@@ -32,10 +41,17 @@ public class PostAdminController {
 		model.addAttribute("order", order);
 		model.addAttribute("page", page);
 		model.addAttribute("pages", Math.ceil((double)adminPostService.sizeOfPost() / 20));
-		model.addAttribute("items", adminPostService.findPost(page, order));
+		
+		Collection<Post> items = adminPostService.findPost(page, order);
+		
+		model.addAttribute("items", items);
 		model.addAttribute("page_on", "post");
 		
-		return "admin/post_index";
+		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
+		
+		
+		
+		return "testadmin/index";
 	}
 
 	
