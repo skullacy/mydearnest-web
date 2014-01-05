@@ -3,6 +3,11 @@
 <div class="btn-group">
   <a class="btn btn-default" href="#">Home</a>
   <a class="btn btn-default" href="#">Accesary</a>
+  <a class="btn btn-default" href="#">평수</a>
+  <a class="btn btn-default" href="#">테마</a>
+  <a class="btn btn-default" href="#">공간</a>
+  <a class="btn btn-default" href="#">톤</a>
+
 </div>
 
 <div class="btn-group" style="float:right;">
