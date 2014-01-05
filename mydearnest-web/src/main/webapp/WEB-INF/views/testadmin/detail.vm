@@ -6,7 +6,6 @@
     	position:relative;
     	display:inline-block;
     	float:left;
-    	background:#480960;
     }
     .infoInput{
     	width:500px;
@@ -32,10 +31,10 @@
     }
 </style>
 <div class="photocontainer">
-
+	<img src="$request.contextPath/user-image/thumb/1?w=400&h=300&t=crop" width="400px" height="300px" id="test"/>
 </div>		
 <div class="infoInput">
-	<form class="form-horizontal" role="form" action="$request.contextPaty/write/detail/{postID}" method="post">
+	<form class="form-horizontal" role="form" action="$request.contextPath/write/detail/{postID}" method="post">
 		<div class="form-group">
 			<div class="col-lg-10">
 			<span>태그입력</span>
@@ -43,7 +42,7 @@
 			</div>
 		</div>
 		<div class="tagResult">
-			<div style="display:none;" class="btn btn-default btn-xs tag_ori">
+			<div style="display:none;" class="btn btn-default btn-xs tag_ori" style="">
 				<span class="tag_label"></span>
 				<a class="delete_tag" href="#">X</a>
 				<input type="hidden" class="position_hidden" />
@@ -97,11 +96,12 @@
 				</tr>
 				<tr>
 					<td class="tag_name">색상</td>
+					<td class="tag_color"></td>
 				</tr>
 			</table>
 			
 		</div>
-		<a class="btn btn-default btn-lg" href="#" style="margin-top:10px;"><이전</a>
+		<a class="btn btn-default btn-lg" href="#" style="margin-top:10px; display:none;"><이전</a>
 		<input type="submit" class="btn btn-primary btn-lg" value="등록완료 다음>" style="margin-top:10px; position:relative; left:260px;" />	
 	</form>
 </div>

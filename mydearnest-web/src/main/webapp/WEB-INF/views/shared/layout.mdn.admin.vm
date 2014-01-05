@@ -9,11 +9,14 @@
 	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/bootstfont.css"/>
 	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/mdn-admin.css"/>
 	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/jquery-ui-1.10.3.custom.min.css"/>
+	<link rel="stylesheet" href="$request.contextPath/stylesheets/bootstrap/ImageColorPicker.css" type="text/css" media="screen" charset="utf-8"/>
+	
 	
 	<script type="text/javascript" src="$request.contextPath/scripts/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="$request.contextPath/scripts/jquery-ui-1.10.3.custom.min.js"></script>
 	<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/bootstrap.min.js"></script>
 	<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/admin.js"></script>
+	<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.ImageColorPicker.js"></script>
     
 	
 

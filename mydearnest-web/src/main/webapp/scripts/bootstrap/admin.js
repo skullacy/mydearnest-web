@@ -47,7 +47,28 @@ $(function(){
 		}
 
 	});
-	
+	$("#test").ImageColorPicker({
+		afterColorSelected: function(event, color){
+			var tag = $('.tagResult').children('.tag_ori').clone();
+			console.log(color);
+			console.log(event);
+			console.log(tag);
+			tag.removeClass('tag_ori').addClass('tag').data('value', color).css('background',color);
+			tag.children('.tag_label').text(color);
+			$("#result_test").text(color);
+			tag.children('.position_hidden').removeClass('position_hidden')
+			.attr('name', 'tagColor').attr('value', color);
+		
+			
+			tag.find('a.delete_tag').click(function(){
+				$(this).parent('.tag').remove();
+				return false;
+			});
+			$('.tag_color').append(tag);
+			tag.show();
+			
+			}
+	});
 	
 
 

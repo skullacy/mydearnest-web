@@ -3,7 +3,7 @@
   <a class="btn btn-default" href="#">미완료</a>
  
 </div>
- <a class="btn btn-default" href="/testAdmin//write/upload" style="float:right;">사진 업로드</a>
+ <a class="btn btn-default" href="/testAdmin/write/upload" style="float:right;">사진 업로드</a>
 
 
 
