@@ -50,23 +50,38 @@ public class AdminPostServiceImpl implements AdminPostService {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<Post> findPost(Integer page, String order) {
+	public Collection<Post> findPost(Integer page, String order, Integer checksum) {
 		Collection<Post> result = null;
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
-
+		Criteria cr = null;
 		try {
-			Criteria cr = session.createCriteria(Post.class)
-					.setFetchMode("account", FetchMode.JOIN)
-					.addOrder(Order.desc(order))
-					.addOrder(Order.desc("createdAt"))
-					.add(Restrictions.isNull("deletedOn"))
-					.setMaxResults(10).setFirstResult((page - 1) * 20);
+			if(checksum == 2) {
+				cr = session.createCriteria(Post.class)
+						.setFetchMode("account", FetchMode.JOIN)
+						.addOrder(Order.desc(order))
+						.addOrder(Order.desc("createdAt"))
+						.add(Restrictions.isNull("deletedOn"))
+						.setMaxResults(10).setFirstResult((page - 1) * 20);
+			}
+			else {
+				cr = session.createCriteria(Post.class)
+						.setFetchMode("account", FetchMode.JOIN)
+						.addOrder(Order.desc(order))
+						.addOrder(Order.desc("createdAt"))
+						.add(Restrictions.isNull("deletedOn"))
+						.add(Restrictions.eq("checkSum", checksum == 1 ? true : false))
+						.setMaxResults(10).setFirstResult((page - 1) * 20);
+			}
+			
 			result = cr.list();
 			
 			Iterator<Post> itr = result.iterator();
 			while(itr.hasNext()) {
-				Hibernate.initialize(itr.next().getPostGrade());
+				Post tmpPost = null;
+				tmpPost = itr.next();
+				Hibernate.initialize(tmpPost.getPostGrade());
+				Hibernate.initialize(tmpPost.getPostTag());
 			}
 			
 			

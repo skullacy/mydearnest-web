@@ -70,33 +70,41 @@
 	 			
 	 		</td>
 	 		<td>
-	 			<button type="button" class="btn btn-default btn-xs">거실</button>
+	 			#foreach($tag in $item.getPostTag())
+	 				#if($tagcate.get("$tag.getTagCateId()").getType() == "home")
+	 					<button type="button" style="display:block;" class="btn btn-default btn-xs">$tagcate.get("$tag.getTagCateId()").getTitle()</button>
+	 				#end
+	 			#end
 	 		</td>
 	 		<td style="width:80px; text-align:center;">
 	 			#foreach($tag in $item.getPostTag())
-	 				
+	 				#if($tagcate.get("$tag.getTagCateId()").getType() == "accessory")
+	 					<button type="button" style="display:block;" class="btn btn-default btn-xs">$tagcate.get("$tag.getTagCateId()").getTitle()</button>
+	 				#end
 	 			#end
-	 			<button type="button" style="display:block;" class="btn btn-default btn-xs">거실</button>
-	 			<button type="button" style="display:block;" class="btn btn-default btn-xs">거실</button>
-	 			<button type="button" style="display:block;" class="btn btn-default btn-xs">거실</button>
-	 			<button type="button" style="display:block;" class="btn btn-default btn-xs">거실</button>
 	 		</td>
 	 		<td>
-	 			<button type="button" class="btn btn-default btn-xs">10~20평</button>
+	 			#if($item.getTagSize() > 0)
+	 			<button type="button" class="btn btn-default btn-xs">$tagcate.get("$item.getTagSize()").getTitle()</button>
+	 			#end
 	 		</td>
 	 		<td>
-	 			<button type="button" class="btn btn-default btn-xs">없음</button>
+	 			<button type="button" class="btn btn-default btn-xs">#if($item.getTheme() > 0)있음 #else 없음 #end</button>
 	 		</td>
 	 		<td>
-	 			<button type="button" class="btn btn-default btn-xs">인도어</button>
+	 			<button type="button" class="btn btn-default btn-xs">#if($item.getTheme() > 0)아웃도어 #else 인도어 #end</button>
 	 		</td>
 	 		<td>
-	 			<button type="button" class="btn btn-default btn-xs">black</button>
+	 			#if($item.getTagTone() > 0)
+	 			<button type="button" class="btn btn-default btn-xs">$tagcate.get("$item.getTagTone()").getTitle()</button>
+	 			#end
 	 		</td>
 	 		<td>
-	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">#ffffff</button>
-	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">#ffffff</button>
-	 			<button type="button" style="display:block;"class="btn btn-default btn-xs">#ffffff</button>
+	 			#foreach($tag in $item.getPostTag())
+	 				#if($tag.getTagCateId() == 0 && $tag.getNonCateType() == "color")
+	 					<button type="button" style="display:block; background:$tag.getValue()" class="btn btn-default btn-xs">$tag.getValue()</button>
+	 				#end
+	 			#end
 	 		</td>
 	 		<td>
 	 			<a href="#">의자</a>

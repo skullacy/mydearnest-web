@@ -38,6 +38,7 @@ public interface PostService {
 	Post createPostDetail(Post post, Account account, PostVO postVO);
 	PostGrade createPostGrade(Post post, Account account, PostVO postVO);
 	PostGrade updatePostGrade(Post post, Account account, PostVO postVO);
+	Post checkPostPublishable(Post post);
 	
 	Post removePostByMode(Long postId, String editMode, Long drawerId);
 	

@@ -35,18 +35,22 @@ public class PostAdminController {
 	//사진 리스트 출력용 컨트롤러
 	//권한 : 모두. 접근기능은 권한별 한정하기.
 	@RequestMapping("/list")
-	public String index(ModelMap model, 
+	public String index(ModelMap model,
+			@RequestParam(value="checksum", required = false) Integer checksum,
 			@RequestParam(value="page", required = false) Integer page,
 			@RequestParam(value="order", required = false) String order) {
 		
 		if (page == null) page = 1;
 		if (order == null) order = "createdAt";
 		
+		//1 : 모든 조건 충족된 포스트, 0: 아직 게시조건에 충족안되는 포스트, 2: 모든 포스
+		if (checksum == null) checksum = 2;
+		
 		model.addAttribute("order", order);
 		model.addAttribute("page", page);
 		model.addAttribute("pages", Math.ceil((double)adminPostService.sizeOfPost() / 20));
 		
-		Collection<Post> items = adminPostService.findPost(page, order);
+		Collection<Post> items = adminPostService.findPost(page, order, checksum);
 		Collection<TagCategory> tagCate = adminTagCateService.getTagCategories();
 		HashMap<String, TagCategory> tagCateHashMap = new HashMap<String, TagCategory>();
 		

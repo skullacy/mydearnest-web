@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 
 
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -186,6 +187,63 @@ public class PostServiceImpl implements PostService {
 //		
 //		return post;
 //	}
+	@Override
+	public Post checkPostPublishable(Post post) {
+		Post result = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			
+			Criteria cr = null;
+			cr = session.createCriteria(Account.class)
+					.add(Restrictions.eq("role", "ROLE_ADMIN"))
+					.setProjection(Projections.rowCount());
+			
+			Long maxGrader = (Long) cr.uniqueResult();
+			
+			
+			cr = session.createCriteria(PostTag.class)
+					.add(Restrictions.eq("post", post))
+					.setProjection(Projections.rowCount());
+			
+			Long postTagCount = (Long) cr.uniqueResult();
+			
+			System.out.println(maxGrader);
+			System.out.println(post.getGradeCount() == maxGrader);
+			System.out.println(post.getSpaceType() >= 0);
+			System.out.println(post.getTagSize() >= 0);
+			System.out.println(post.getTagTone() >= 0);
+			System.out.println(post.getTheme() >= 0);
+			System.out.println(postTagCount >= 4);
+			
+			Boolean checkSum = (
+						post.getGradeCount() == maxGrader &&
+						post.getSpaceType() >= 0 &&
+						post.getTagSize() >= 0 &&
+						post.getTagTone() >= 0 &&
+						post.getTheme() >= 0 &&
+						postTagCount >= 4
+					);
+			
+			cr = session.createCriteria(Post.class)
+					.add(Restrictions.eq("id", post.getId()));
+			
+			result = (Post) cr.uniqueResult();
+			result.setCheckSum(checkSum);
+			
+			session.update(result);
+					
+			session.getTransaction().commit();
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return post;
+		
+	}
 	
 	@Override
 	public Post createPostUpload(Account account, ImageSource imageSource,
@@ -213,6 +271,8 @@ public class PostServiceImpl implements PostService {
 			session.getTransaction().rollback();
 			e.printStackTrace();
 		}
+		
+		checkPostPublishable(post);
 		
 		return post;
 	}
@@ -287,6 +347,8 @@ public class PostServiceImpl implements PostService {
 			session.getTransaction().rollback();
 			e.printStackTrace();
 		}
+		
+		checkPostPublishable(post);
 		
 		return result;
 	}
@@ -801,12 +863,13 @@ public class PostServiceImpl implements PostService {
 	public PostGrade createPostGrade(Post post1, Account account, PostVO postVO) {
 
 		PostGrade result = null;
+		Post post = null;
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
 
 		try {
 			
-			Post post = (Post) session.get(Post.class, post1.getId());
+			post = (Post) session.get(Post.class, post1.getId());
 			post.setGradeCount(post.getGradeCount() + 1);
 			session.merge(post);
 			
@@ -827,6 +890,8 @@ public class PostServiceImpl implements PostService {
 			session.getTransaction().rollback();
 			ex.printStackTrace();
 		}
+		
+		checkPostPublishable(post);
 		
 		return result;
 	}
@@ -854,6 +919,8 @@ public class PostServiceImpl implements PostService {
 			session.getTransaction().rollback();
 			ex.printStackTrace();
 		}
+		
+		checkPostPublishable(post1);
 		
 		return result;
 	}
@@ -1260,6 +1327,8 @@ public class PostServiceImpl implements PostService {
 			return false;
 		}
 	}
+
+	
 
 
 

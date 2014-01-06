@@ -37,6 +37,7 @@ public class Post implements Serializable {
 	
 	private Date createdAt;
 	private Date deletedOn;
+	private Boolean checkSum;
 	
 	
 
@@ -243,6 +244,15 @@ public class Post implements Serializable {
 
 	public void setPostTag(Set<PostTag> postTags) {
 		this.postTags = postTags;
+	}
+
+	@Column(name = "CHECKSUM", nullable = true)
+	public Boolean getCheckSum() {
+		return checkSum;
+	}
+
+	public void setCheckSum(Boolean checkSum) {
+		this.checkSum = checkSum;
 	}
 
 	

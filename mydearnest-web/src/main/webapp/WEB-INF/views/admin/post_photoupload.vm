@@ -22,11 +22,7 @@
 		<input type="text" class="form-control" placeholder="링크입력">
 		
 	</div>
-		<!--div id="thumb_button" style="width:110px; height:40px; overflow:hidden; left:50%; top:50%; margin-left:-55px; margin-top:-20px; position:absolute; z-index:11;">
-	    	<input type="file" id="thumbnail" name="thumbnail" style="font-size:40px;position:absolute;opacity:0;filter:alpha(opacity=0);cursor:pointer;" />
-	    	<!--img src="$request.contextPath/images/auth/attach_image.png" /-->
-		</div-->	
-	</div>
+		
 	<div class="link_content">
 		<input type="text" id="source" name="source" value="testSource" />
 		<table style="margin-top: 1em;">
@@ -68,6 +64,10 @@
 	      </tbody>
 	    </table>
 	</div>
+	<div id="thumb_button">
+	    	<input type="file" id="thumbnail" name="thumbnail" />
+	    	<!--img src="$request.contextPath/images/auth/attach_image.png" /-->
+		</div>	
 	
 	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:relative; left:310px" value="등록하기" />
 </form>

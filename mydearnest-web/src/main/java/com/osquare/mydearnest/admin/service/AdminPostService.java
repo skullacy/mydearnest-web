@@ -9,7 +9,7 @@ public interface AdminPostService {
 
 	Long sizeOfPost();
 
-	Collection<Post> findPost(Integer page, String order);
+	Collection<Post> findPost(Integer page, String order, Integer checksum);
 
 	Post disabledPost(long id);
 
