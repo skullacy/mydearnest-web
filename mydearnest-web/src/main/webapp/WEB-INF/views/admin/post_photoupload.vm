@@ -9,7 +9,7 @@
 <form method="post" action="$request.contextPath/admin/write/upload" enctype="multipart/form-data">
 	<div class="image_content" style="display:inline-block; float:left;">
 	<img id="photo_upload" src="$request.contextPath/images/testphoto.jpg" width="400px"/>
-	<div class="link_input">
+	<div class="link_input" style="display:none;">
 		<span style="color:#fff;">악세사리 태그입력</span>
 		<input style="margin-bottom:10px;" type="text" class="form-control" id="position_search" name="keyword" action="$request.contextPath/api/category/search.ajax" placeholder="악세사리 태그검색">
 		<div style="display:none;" class="btn btn-default btn-xs tag_ori" style="">
@@ -17,9 +17,9 @@
 				<a class="delete_tag" href="#">X</a>
 				<input type="hidden" class="position_hidden" />
 		</div>
-		<span class="tag_accesary">링크입력</span>
+		<span class="tag_accesary" style="display:block; margin-bottom:10px;"></span>
 		<span style="color:#fff;">링크입력</span>
-		<input type="text" class="form-control" placeholder="링크입력">
+		<input type="text" class="form-control" placeholder="링크입력" action="" method="">
 		
 	</div>
 		
@@ -102,7 +102,7 @@ $(function () {
     	aspectRatio: '1:1', handles: true,
         fadeSpeed: 200, onSelectChange: preview, 
         onSelectEnd: function (img, selection) {
-    	
+    	$('.link_input').css('display','block');
     }
     
     });
