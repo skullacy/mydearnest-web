@@ -1,0 +1,46 @@
+<h2>태그관리</h2>
+
+<div class="btn-group">
+	<a class="btn btn-default" href="$request.getRequestURI()">전체</a>
+	<a class="btn btn-default" href="$request.getRequestURI()?type=home">Home</a>
+	<a class="btn btn-default" href="$request.getRequestURI()?type=accessory">Accessory</a>
+	<a class="btn btn-default" href="$request.getRequestURI()?type=size">평수</a>
+	<a class="btn btn-default" href="$request.getRequestURI()?type=tone">톤</a>
+
+</div>
+
+<div class="btn-group" style="float:right;">
+  <a class="btn btn-default" href="/admin/category/create" >태그추가</a>
+</div>
+<table class="table table-striped table-bordered" style="margin-top:20px; text-align:center;">
+ 	<thead>
+ 	
+	 	<tr style="font-weight:bold;">
+	  		<th>제목</th>
+	  		<th>타입</th>
+	  		<th></th>
+	 	</tr>
+	</thead>
+	<tbody>
+		#foreach($item in $items)
+	 	<tr>
+	 		<td>$!item.title</td>
+	 		<td>
+	 			<span>
+	 				#if($item.type == "home")
+	 					Home
+	 				#elseif($item.type == "accessory")
+	 					Accessory
+	 				#elseif($item.type == "size")
+	 					평수
+	 				#elseif($item.type == "tone")
+	 					톤
+	 				#end
+	  		</td>
+	  		<td>
+	  			<a href="#">수정</a>
+	  		</td>
+	 	</tr>
+	 	#end
+	 </tbody>
+</table>

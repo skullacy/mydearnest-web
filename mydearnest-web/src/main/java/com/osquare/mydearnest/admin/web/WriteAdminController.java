@@ -48,7 +48,7 @@ public class WriteAdminController {
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
 		
-		return "write/browse_frame";
+		return "admin/post_photoupload";
 	}
 	
 	/**
@@ -191,9 +191,9 @@ public class WriteAdminController {
 			model.addAttribute("command", new PostGrade());
 		}
 		
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
+		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
-		return "testadmin/grade";
+		return "admin/post_grade";
 	}
 	
 	/**

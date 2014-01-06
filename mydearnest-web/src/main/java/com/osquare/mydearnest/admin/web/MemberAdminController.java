@@ -14,7 +14,7 @@ import com.osquare.mydearnest.admin.service.AdminAccountService;
 import com.osquare.mydearnest.entity.Account;
 
 @Controller
-@RequestMapping("/admin/member")
+@RequestMapping("/admin/management/member")
 public class MemberAdminController {
 	
 	@Autowired private AdminAccountService adminAccountService;
@@ -28,7 +28,7 @@ public class MemberAdminController {
 		model.addAttribute("items", adminAccountService.findAccount(page));
 		model.addAttribute("page_on", "member");
 		
-		return "admin/member_index";
+		return "admin/member";
 	}
 
 	@RequestMapping("/updateRole")

@@ -31,7 +31,7 @@
     }
 </style>
 <div class="photocontainer">
-	<img src="$request.contextPath/user-image/thumb/1?w=400&h=300&t=crop" width="400px" height="300px" id="test"/>
+	<img src="$request.contextPath/mdn-image/thumb/1?w=400&h=300&t=crop" width="400px" height="300px" id="test"/>
 </div>		
 <div class="infoInput">
 	<form class="form-horizontal" role="form" action="$request.contextPath/write/detail/{postID}" method="post">

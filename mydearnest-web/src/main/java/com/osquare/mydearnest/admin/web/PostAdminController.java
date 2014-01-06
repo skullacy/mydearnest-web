@@ -47,11 +47,11 @@ public class PostAdminController {
 		model.addAttribute("items", items);
 		model.addAttribute("page_on", "post");
 		
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
+		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
 		
 		
-		return "testadmin/index";
+		return "admin/post_list";
 	}
 
 	

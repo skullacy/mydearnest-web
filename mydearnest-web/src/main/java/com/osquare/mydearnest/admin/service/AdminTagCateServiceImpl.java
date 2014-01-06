@@ -8,10 +8,13 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
 import com.junglebird.webframe.common.StringUtils;
+import com.osquare.mydearnest.entity.Account;
 import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.TagCategoryVO;
 
@@ -21,13 +24,68 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 	@Resource private SessionFactory sessionFactory;
 
 	@Override
-	public Long sizeOfTag() {
-		return null;
+	public Long sizeOfTag(String type) {
+		Long result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = null;
+			
+			if(type.isEmpty()) {
+				cr = session.createCriteria(TagCategory.class)
+						.setProjection(Projections.rowCount());
+			}
+			else {
+				cr = session.createCriteria(TagCategory.class)
+						.add(Restrictions.eq("type", type))
+						.setProjection(Projections.rowCount());
+			}
+			
+			result = (Long) cr.uniqueResult();
+			
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	@Override
-	public Collection<TagCategory> findTag(Integer page, String order) {
-		return null;
+	public Collection<TagCategory> findTag(Integer page, String type, String order) {
+		Collection<TagCategory> result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+
+		try {
+			
+			Criteria cr = null;
+			
+			if(type.isEmpty()) {
+				cr = session.createCriteria(TagCategory.class)
+//						.addOrder(Order.desc(order))
+						.setMaxResults(10).setFirstResult((page - 1) * 20);
+			}
+			else {
+				cr = session.createCriteria(TagCategory.class)
+						.add(Restrictions.eq("type", type))
+//						.addOrder(Order.desc(order))
+						.setMaxResults(10).setFirstResult((page - 1) * 20);
+			}
+			
+			result = cr.list();
+			
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	@Override

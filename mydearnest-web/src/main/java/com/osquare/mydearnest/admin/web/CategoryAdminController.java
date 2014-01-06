@@ -38,15 +38,15 @@ public class CategoryAdminController {
 		
 		if (type == null) type = "";
 		if (page == null) page = 1;
-		if (order == null) order = "createdAt";
+		if (order == null) order = "id";
 		
 		model.addAttribute("order", order);
 		model.addAttribute("page", page);
-//		model.addAttribute("pages", Math.ceil((double)adminPostService.sizeOfPost() / 20));
-//		model.addAttribute("items", adminPostService.findPost(page, order));
+		model.addAttribute("pages", Math.ceil((double)adminTagCateService.sizeOfTag(type) / 20));
+		model.addAttribute("items", adminTagCateService.findTag(page, type, order));
 		model.addAttribute("page_on", "post");
 		
-		return "admin/post_index";
+		return "admin/tag_list";
 	}
 	
 	
@@ -54,7 +54,7 @@ public class CategoryAdminController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String insertTag(Model model, HttpServletRequest request, HttpServletResponse response) {
 		
-		return null;
+		return "admin/tag_create";
 	}
 	
 	//카테고리 입력 처리
@@ -81,7 +81,7 @@ public class CategoryAdminController {
 			}
 		}
 		
-		return null;
+		return "redirect:/admin/category/list";
 	}
 	
 	

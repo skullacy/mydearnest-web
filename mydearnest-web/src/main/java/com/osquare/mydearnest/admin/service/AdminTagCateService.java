@@ -10,10 +10,9 @@ import com.osquare.mydearnest.post.vo.TagCategoryVO;
 public interface AdminTagCateService {
 
 	//태그 갯수 구하기 
-	Long sizeOfTag();
+	Long sizeOfTag(String type);
 	
-	
-	Collection<TagCategory> findTag(Integer page, String order);
+	Collection<TagCategory> findTag(Integer page, String type, String order);
 
 	TagCategory disabledTag(long id);
 	

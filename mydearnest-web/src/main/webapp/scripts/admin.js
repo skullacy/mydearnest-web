@@ -4,7 +4,7 @@ $(document).ready(function (){
 		var $T  =$(this);
 		$(this).attr("disabled", "disabled");
 		$.ajax({
-			url: contextPath + "/admin/member/updateRole",
+			url: contextPath + "/admin/management/member/updateRole",
 			data: { "userId" : $T.attr("data-userid"), "role" : $T.val() },
 			success:function () {
 				alert("저장이 완료되었습니다.");

@@ -11,9 +11,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+	
 	@RequestMapping("")
 	public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 		
 		return "redirect:/admin/post/list";
 	}
+	
+	@RequestMapping("/management")
+	public String managementIndex(Model model, HttpServletRequest request, HttpServletResponse response) {
+		return "redirect:/admin/management/member";
+	}
+	
+	
+	
+	
+	
+	
 }
