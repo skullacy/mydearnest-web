@@ -11,9 +11,9 @@ public class PostVO {
 	
 	//세부입력 과정
 		//중복입력 가능한것들 (따로 tag스키마를 사용)
-	private int[] tagHome;
-	private int[] tagAccessory;
-	private int[] tagColor;
+	private long[] tagHome;
+	private long[] tagAccessory;
+	private String[] tagColor;
 		//단일입력해야 하는것들(POST스키마에 입력)
 	private int tagSize;
 	private int tagTone;
@@ -42,22 +42,22 @@ public class PostVO {
 	public void setSource(String source) {
 		this.source = source;
 	}
-	public int[] getTagHome() {
+	public long[] getTagHome() {
 		return tagHome;
 	}
-	public void setTagHome(int[] tagHome) {
+	public void setTagHome(long[] tagHome) {
 		this.tagHome = tagHome;
 	}
-	public int[] getTagAccessory() {
+	public long[] getTagAccessory() {
 		return tagAccessory;
 	}
-	public void setTagAccessory(int[] tagAccessory) {
+	public void setTagAccessory(long[] tagAccessory) {
 		this.tagAccessory = tagAccessory;
 	}
-	public int[] getTagColor() {
+	public String[] getTagColor() {
 		return tagColor;
 	}
-	public void setTagColor(int[] tagColor) {
+	public void setTagColor(String[] tagColor) {
 		this.tagColor = tagColor;
 	}
 	public int getTagSize() {

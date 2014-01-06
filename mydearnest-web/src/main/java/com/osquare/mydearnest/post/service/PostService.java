@@ -35,7 +35,7 @@ public interface PostService {
 	Post getPostById(Long postId);
 	
 	Post createPostUpload(Account account, ImageSource imageSource, PostVO postVO);
-	Post createPostDetail(Account account, ImageSource imageSource, PostVO postVO);
+	Post createPostDetail(Post post, Account account, PostVO postVO);
 	PostGrade createPostGrade(Post post, Account account, PostVO postVO);
 	PostGrade updatePostGrade(Post post, Account account, PostVO postVO);
 	

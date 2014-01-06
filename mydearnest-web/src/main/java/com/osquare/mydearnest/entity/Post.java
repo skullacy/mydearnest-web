@@ -35,12 +35,6 @@ public class Post implements Serializable {
 	
 	private String source;
 	
-	private int tagSize;
-	private int tagTone;
-	private int theme;
-	private int spaceType;
-	
-	
 	private Date createdAt;
 	private Date deletedOn;
 	
@@ -57,9 +51,15 @@ public class Post implements Serializable {
 	
 	//사진 평가모음
 	private Set<PostGrade> postGrades = new HashSet<PostGrade>(0);
+	
 	//사진 태그모음(중복입력 가능한것들)
 	private Set<PostTag> postTags = new HashSet<PostTag>(0);
 	
+	//단일입력만 가능한 것들
+	private int tagSize;
+	private int tagTone;
+	private int theme;
+	private int spaceType;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

@@ -159,4 +159,30 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 		return result;
 	}
 
+	@Override
+	public Collection<TagCategory> getTagCategories() {
+		Collection<TagCategory> result = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(TagCategory.class);
+			
+			result = cr.list();
+			
+			session.getTransaction().commit();
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+			return null;
+		}
+		catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
 }

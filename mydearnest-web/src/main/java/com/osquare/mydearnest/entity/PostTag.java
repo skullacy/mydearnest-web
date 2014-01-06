@@ -3,7 +3,6 @@ package com.osquare.mydearnest.entity;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,11 +25,12 @@ public class PostTag implements Serializable {
 	private long id;
 	private Account account;
 	private Post post;
-	private Date createdAt;
 	
-	private String title;
+	
+	private String nonCateType;
+	private long tagCateId;
 	private String value;
-	private String type;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
@@ -62,25 +62,7 @@ public class PostTag implements Serializable {
 		this.post = post;
 	}
 
-	@Column(name = "CREATED_AT", nullable = false)
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	@Column(name = "TITLE", nullable = false)
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	@Column(name = "VALUE", nullable = false)
+	@Column(name = "VALUE", nullable = true)
 	public String getValue() {
 		return value;
 	}
@@ -89,14 +71,25 @@ public class PostTag implements Serializable {
 		this.value = value;
 	}
 
-	@Column(name = "TYPE", nullable = false)
-	public String getType() {
-		return type;
+	@Column(name = "NONCATETYPE", nullable = true)
+	public String getNonCateType() {
+		return nonCateType;
+	}
+	
+	public void setNonCateType(String nonCateType) {
+		this.nonCateType = nonCateType;
+	}
+	
+	@Column(name = "TAGCATEID", nullable = true)
+	public long getTagCateId() {
+		return tagCateId;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTagCateId(long tagCateId) {
+		this.tagCateId = tagCateId;
 	}
+
+	
 
 	
 

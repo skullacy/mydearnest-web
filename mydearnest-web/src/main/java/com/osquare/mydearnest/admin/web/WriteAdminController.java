@@ -1,5 +1,7 @@
 package com.osquare.mydearnest.admin.web;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,7 +11,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.account.service.AccountService;
+import com.osquare.mydearnest.admin.service.AdminTagCateService;
 import com.osquare.mydearnest.entity.Account;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostGrade;
-import com.osquare.mydearnest.entity.PostTag;
+import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.service.FileService;
 import com.osquare.mydearnest.post.service.PostService;
 import com.osquare.mydearnest.post.validator.PostGradeValidator;
@@ -37,7 +39,8 @@ public class WriteAdminController {
 	@Autowired private PostService postService;
 	@Autowired private FileService fileService;
 	@Autowired private AccountService accountService;
-
+	@Autowired private AdminTagCateService adminTagCateService;
+	
 	/**
 	 * @brief
 	 * 사진 업로드 화면
@@ -111,6 +114,10 @@ public class WriteAdminController {
 		
 		//포스트 정보 가져오기
 		Post post = postService.getPostById(postId);
+		
+		Collection<TagCategory> tagCate = adminTagCateService.getTagCategories();
+		
+		model.addAttribute("tagcate", tagCate);
 		model.addAttribute("post", post);
 		
 		model.addAttribute("layout", "./shared/layout.admin.vm");
@@ -129,36 +136,37 @@ public class WriteAdminController {
 			@ModelAttribute("command") PostVO postVO,
 			BindingResult result) {
 		
-//		model.addAttribute("success", false);
-//		
-//		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
-//		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
-//
-//		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
-//		Account account = accountService.findAccountById(principal.getAccountId());
-//		
-//		Post post = postService.getPostById(postId);
-//
-//		model.addAttribute("account", account);
-//		model.addAttribute("command", postVO);
-//
+		
+		model.addAttribute("success", false);
+		
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
+		Post post = postService.getPostById(postId);
+
+		model.addAttribute("account", account);
+		model.addAttribute("command", postVO);
+
 //		new PostGradeValidator().validate(postVO, result);
 //		
-//		if (result.hasErrors()) {
-//			System.out.println(result.getAllErrors());
-//			model.addAttribute("errors", result.getAllErrors());
-//		}
-//		else {
-//			
-//			PostGrade postGrade = postService.createPostGrade(post, account, postVO);
-//			if (postGrade == null) {
-//				model.addAttribute("success", false);
-//			}
-//			else {
-//				model.addAttribute("success", true);
-//				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
-//			}
-//		}
+		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			model.addAttribute("errors", result.getAllErrors());
+		}
+		else {
+			
+			Post postResult = postService.createPostDetail(post, account, postVO);
+			if ( postResult == null) {
+				model.addAttribute("success", false);
+			}
+			else {
+				model.addAttribute("success", true);
+				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+			}
+		}
 		
 
 		return null;

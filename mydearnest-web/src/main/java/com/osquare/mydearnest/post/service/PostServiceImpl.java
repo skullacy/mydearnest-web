@@ -19,8 +19,11 @@ import javax.annotation.Resource;
 
 
 
+
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -46,6 +49,7 @@ import com.osquare.mydearnest.entity.PostComment;
 import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.PostLove;
 import com.osquare.mydearnest.entity.PostRank;
+import com.osquare.mydearnest.entity.PostTag;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.post.vo.RefPost;
 import com.osquare.mydearnest.profile.vo.CommentVO;
@@ -214,13 +218,79 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post createPostDetail(Account account, ImageSource imageSource,
-			PostVO postVO) {
+	public Post createPostDetail(Post post, Account account, PostVO postVO) {
 		
+		Post result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
 		
-		return null;
+		Collection<PostTag> dResult = null;
+		
+		try {
+			
+				
+			Criteria cr = session.createCriteria(PostTag.class)
+					.add(Restrictions.eq("post", post));
+			
+			dResult = cr.list();
+			for(PostTag postTag : dResult) {
+				session.delete(postTag);
+			}
+			
+			PostTag postTag = null;
+			
+			for(long tagId : postVO.getTagAccessory()) {
+				postTag = null;
+				postTag = new PostTag();
+				postTag.setPost(post);
+				postTag.setAccount(account);
+				postTag.setTagCateId(tagId);
+				
+				session.persist(postTag);
+			}
+			
+			for(long tagId : postVO.getTagHome()) {
+				postTag = null;
+				postTag = new PostTag();
+				postTag.setPost(post);
+				postTag.setAccount(account);
+				postTag.setTagCateId(tagId);
+				
+				session.persist(postTag);
+			}
+			
+			for(String value : postVO.getTagColor()) {
+				postTag = null;
+				postTag = new PostTag();
+				postTag.setPost(post);
+				postTag.setAccount(account);
+				postTag.setNonCateType("color");
+				postTag.setValue(value);
+				
+				session.persist(postTag);
+			}
+			
+			result = post;
+			result.setTagSize(postVO.getTagSize());
+			result.setTagTone(postVO.getTagTone());
+			result.setTheme(postVO.getTheme());
+			result.setSpaceType(postVO.getSpaceType());
+			
+			session.update(result);
+			
+			
+			
+			session.getTransaction().commit();
+			
+			
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
-
+	
 	@Override 
 	public Post removePostByMode(Long postId, String editMode, Long drawerId) {
 		Post result = null;
@@ -287,6 +357,9 @@ public class PostServiceImpl implements PostService {
 					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			
 			result = (Post) cr.uniqueResult();
+			
+			Hibernate.initialize(result.getPostTag());
+			
 			session.getTransaction().commit();
 		}
 		catch(Exception ex) {

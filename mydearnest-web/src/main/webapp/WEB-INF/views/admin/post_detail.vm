@@ -34,7 +34,7 @@
 	<img src="$request.contextPath/mdn-image/get/$post.id" width="400px" height="600px" id="test"/>
 </div>		
 <div class="infoInput">
-	<form class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/{postID}" method="post">
+	<form class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/$post.id" method="post">
 		<div class="form-group">
 			<div class="col-lg-10">
 			<span>태그입력</span>
@@ -72,11 +72,11 @@
 					<td class="tag_name">테마</td>
 					<td>
 						<div class="btn-group" data-toggle="buttons" >
-							<label class="btn btn-default btn-sm active">
-								<input type="radio" name="options" id="option1" checked="true"> 있음
+							<label class="btn btn-default btn-sm #if($post.getTheme() == 0) active #end">
+								<input type="radio" name="theme" value="0" #if($post.getTheme() == 0) checked="true" #end /> 있음
 							</label>
-							<label class="btn btn-default btn-sm">
-								<input type="radio" name="options" id="option2"> 없음
+							<label class="btn btn-default btn-sm #if($post.getTheme() == 1) active #end">
+								<input type="radio" name="theme" value="1" #if($post.getTheme() == 1) checked="true" #end /> 없음
 							</label>
 						</div>
 					</td>
@@ -85,11 +85,11 @@
 					<td class="tag_name">공간</td>
 					<td>
 						<div class="btn-group" data-toggle="buttons" >
-							<label class="btn btn-default btn-sm active">
-								<input type="radio" name="options" id="option1" checked="true"> 인도어
+							<label class="btn btn-default btn-sm #if($post.getSpaceType() == 0) active #end">
+								<input type="radio" name="spaceType" value="0" #if($post.getSpaceType() == 0) checked="true" #end /> 인도어
 							</label>
-							<label class="btn btn-default btn-sm">
-								<input type="radio" name="options" id="option2"> 아웃도어
+							<label class="btn btn-default btn-sm #if($post.getSpaceType() == 1) active #end">
+								<input type="radio" name="spaceType" value="1" #if($post.getSpaceType() == 1) checked="true" #end /> 아웃도어
 							</label>
 						</div>
 					</td>
@@ -103,8 +103,107 @@
 		</div>
 		<a class="btn btn-default btn-lg" href="#" style="margin-top:10px; display:none;"><이전</a>
 		<input type="submit" class="btn btn-primary btn-lg" value="등록완료 다음>" style="margin-top:10px; position:relative; left:260px;" />	
+			
 	</form>
 </div>
+
+<script>
+	#foreach($postTag in $post.getPostTag())
+		#if($postTag.tagCateId > 0)
+			#set($title = "")
+			#set($type = "")
+			#foreach($tagCate in $tagcate)
+				#if($tagCate.id == $postTag.tagCateId)
+					#set($title = $tagCate.title)
+					#set($type = $tagCate.type)
+				#end
+			#end
+			var tag = $('.tagResult').children('.tag_ori').clone();
+			tag.removeClass('tag_ori').addClass('tag').data('value', "$!postTag.tagCateId");
+			tag.children('.tag_label').text("$!title");
+			
+			
+			tag.children('.position_hidden').removeClass('position_hidden')
+				.attr('name', 'tag'+"$!type".substring(0, 1).toUpperCase() + "$!type".substring(1, "$!type".length).toLowerCase()).val("$!postTag.tagCateId");
+			
+			tag.find('a.delete_tag').click(function(){
+				$(this).parent('.tag').remove();
+				return false;
+			});
+			
+			$(".tag_$!type").append(tag);
+			tag.show();
+		#else
+			var tag = $('.tagResult').children('.tag_ori').clone();
+			tag.removeClass('tag_ori').addClass('tag').data('value', "$!postTag.value").css('background',"$!postTag.value");
+			tag.children('.tag_label').text("$!postTag.value");
+			$("#result_test").text("$!postTag.value");
+			tag.children('.position_hidden').removeClass('position_hidden')
+			.attr('name', 'tagColor').attr('value', "$!postTag.value");
+		
+			
+			tag.find('a.delete_tag').click(function(){
+				$(this).parent('.tag').remove();
+				return false;
+			});
+			$('.tag_color').append(tag);
+			tag.show();
+		#end
+	#end
+	
+	#if($!post.getTagTone() > 0)
+		#set($title = "")
+		#set($type = "")
+		#foreach($tagCate in $tagcate)
+			#if($tagCate.id == $!post.getTagTone())
+				#set($title = $tagCate.title)
+				#set($type = $tagCate.type)
+			#end
+		#end
+		var tag = $('.tagResult').children('.tag_ori').clone();
+		tag.removeClass('tag_ori').addClass('tag').data('value', "$!post.getTagTone()");
+		tag.children('.tag_label').text("$!title");
+		console.log("$!title");
+		
+		tag.children('.position_hidden').removeClass('position_hidden')
+			.attr('name', 'tag'+"$!type".substring(0, 1).toUpperCase() + "$!type".substring(1, "$!type".length).toLowerCase()).val("$!post.getTagTone()");
+		
+		tag.find('a.delete_tag').click(function(){
+			$(this).parent('.tag').remove();
+			return false;
+		});
+		
+		$(".tag_$!type").append(tag);
+		tag.show();
+	#end
+	#if($!post.getTagSize() > 0)
+		#set($title = "")
+		#set($type = "")
+		#foreach($tagCate in $tagcate)
+			#if($tagCate.id == $!post.getTagSize())
+				#set($title = $tagCate.title)
+				#set($type = $tagCate.type)
+			#end
+		#end
+		var tag = $('.tagResult').children('.tag_ori').clone();
+		tag.removeClass('tag_ori').addClass('tag').data('value', "$!post.getTagSize()");
+		tag.children('.tag_label').text("$!title");
+		
+		
+		tag.children('.position_hidden').removeClass('position_hidden')
+			.attr('name', 'tag'+"$!type".substring(0, 1).toUpperCase() + "$!type".substring(1, "$!type".length).toLowerCase()).val("$!post.getTagSize()");
+		
+		tag.find('a.delete_tag').click(function(){
+			$(this).parent('.tag').remove();
+			return false;
+		});
+		
+		$(".tag_$!type").append(tag);
+		tag.show();
+	#end
+	
+		
+</script>
 
 					
 	

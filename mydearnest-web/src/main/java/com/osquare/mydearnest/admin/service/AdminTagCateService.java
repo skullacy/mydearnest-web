@@ -25,5 +25,7 @@ public interface AdminTagCateService {
 	//Autocomplete에서 검색되는 태그들 리턴해주기
 	Collection<TagCategory> getMatchedTagCategories(String keyword);
 	
+	//모든 태그 리턴
+	Collection<TagCategory> getTagCategories();
 
 }
