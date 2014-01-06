@@ -26,11 +26,20 @@
 <div id="spidergraphcontainer"></div>
 
 <form action="$request.contextPath/admin/write/grade/$post.id" method="post">
-<input type="hidden" name="feelModern" id="feelModern" value="$!grade.feelModern" />
-<input type="hidden" name="feelLuxury" id="feelLuxury" value="$!grade.feelLuxury" />
-<input type="hidden" name="feelWarm" id="feelWarm" value="$!grade.feelWarm" />
-<input type="hidden" name="feelVintage" id="feelVintage" value="$!grade.feelVintage" />
-<input type="hidden" name="feelCute" id="feelCute" value="$!grade.feelCute" />
+#springBind("command.feelModern")
+<input type="hidden" name="feelModern" id="feelModern" value="$!status.value" />
+
+#springBind("command.feelLuxury")
+<input type="hidden" name="feelLuxury" id="feelLuxury" value="$!status.value" />
+
+#springBind("command.feelWarm")
+<input type="hidden" name="feelWarm" id="feelWarm" value="$!status.value" />
+
+#springBind("command.feelVintage")
+<input type="hidden" name="feelVintage" id="feelVintage" value="$!status.value" />
+
+#springBind("command.feelCute")
+<input type="hidden" name="feelCute" id="feelCute" value="$!status.value" />
 #if($pagetype == "update")
 <input type="hidden" name="pagetype" value="update" />
 #end
@@ -40,6 +49,8 @@
 
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.spidergraph.js"></script>
 <script>
+
+	
     $('#spidergraphcontainer').spidergraph({
         'fields': ['모던함','귀여움','빈티지','고급스러움','따뜻함'],
         'gridcolor': 'rgba(20,20,20,1)'   

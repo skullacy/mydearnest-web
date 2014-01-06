@@ -184,8 +184,11 @@ public class WriteAdminController {
 		
 		if("update".equals(pagetype)) {
 			PostGrade postGrade = postService.getMyPostGradeByPost(account, post);
-			model.addAttribute("grade", postGrade);
+			model.addAttribute("command", postGrade);
 			model.addAttribute("pagetype", pagetype);
+		}
+		else {
+			model.addAttribute("command", new PostGrade());
 		}
 		
 		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
