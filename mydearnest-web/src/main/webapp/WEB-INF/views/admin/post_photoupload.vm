@@ -1,18 +1,117 @@
+<style>
+	.image_content{width:400px;  position:relative; background:#438505; display:inline-block; float:left; }
+	.link_content{display:inline-block; positionL:relative; width:450px; height:500px; border:1px solid #aaa; padding:5px; margin-left:10px;}
+	.link_input{width:400px; height:auto; position:relative; background:#333; padding:10px;}
+</style>
+
+
 <h2>사진업로드</h2>
-
-
-
-
 <form method="post" action="$request.contextPath/admin/write/upload" enctype="multipart/form-data">
-	<div class="image_content">
-		<div id="thumb_button" style="width:110px; height:40px; overflow:hidden; left:50%; top:50%; margin-left:-55px; margin-top:-20px; position:absolute; z-index:11;">
+	<div class="image_content" style="display:inline-block; float:left;">
+	<img id="photo_upload" src="$request.contextPath/images/testphoto.jpg" width="400px"/>
+	<div class="link_input">
+		<span style="color:#fff;">악세사리 태그입력</span>
+		<input style="margin-bottom:10px;" type="text" class="form-control" id="position_search" name="keyword" action="$request.contextPath/api/category/search.ajax" placeholder="악세사리 태그검색">
+		<div style="display:none;" class="btn btn-default btn-xs tag_ori" style="">
+				<span class="tag_label"></span>
+				<a class="delete_tag" href="#">X</a>
+				<input type="hidden" class="position_hidden" />
+		</div>
+		<span class="tag_accesary">링크입력</span>
+		<span style="color:#fff;">링크입력</span>
+		<input type="text" class="form-control" placeholder="링크입력">
+		
+	</div>
+		<!--div id="thumb_button" style="width:110px; height:40px; overflow:hidden; left:50%; top:50%; margin-left:-55px; margin-top:-20px; position:absolute; z-index:11;">
 	    	<input type="file" id="thumbnail" name="thumbnail" style="font-size:40px;position:absolute;opacity:0;filter:alpha(opacity=0);cursor:pointer;" />
-	    	<img src="$request.contextPath/images/auth/attach_image.png" />
-		</div>		
+	    	<!--img src="$request.contextPath/images/auth/attach_image.png" /-->
+		</div-->	
 	</div>
-	<div class="link_content" style="display:inline-block; positionL:relative; width:400px; height:500px; background:#839845;">
+	<div class="link_content">
 		<input type="text" id="source" name="source" value="testSource" />
+		<table style="margin-top: 1em;">
+	      <thead style="text-align:center;">
+	        <tr>
+	          <th colspan="2" style="font-size: 110%; font-weight: bold; text-align: left; padding-left: 0.1em;">
+	            Coordinates
+	          </th>
+	          <th colspan="2" style="font-size: 110%; font-weight: bold; text-align: left; padding-left: 0.1em;">
+	            Dimensions
+	          </th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        <tr>
+	          <td style="width: 10%;"><b>X<sub>1</sub>:</b></td>
+	 		      <td style="width: 30%;"><input type="text" id="x1" value="-" /></td>
+	 		      <td style="width: 20%;"><b>Width:</b></td>
+	   		    <td><input type="text" value="-" id="w" /></td>
+	        </tr>
+	        <tr>
+	          <td><b>Y<sub>1</sub>:</b></td>
+	          <td><input type="text" id="y1" value="-" /></td>
+	          <td><b>Height:</b></td>
+	          <td><input type="text" id="h" value="-" /></td>
+	        </tr>
+	        <tr>
+	          <td><b>X<sub>2</sub>:</b></td>
+	          <td><input type="text" id="x2" value="-" /></td>
+	          <td></td>
+	          <td></td>
+	        </tr>
+	        <tr>
+	          <td><b>Y<sub>2</sub>:</b></td>
+	          <td><input type="text" id="y2" value="-" /></td>
+	          <td></td>
+	          <td></td>
+	        </tr>
+	      </tbody>
+	    </table>
 	</div>
-
-	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:relative; left:600px" value="등록하기" />
+	
+	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:relative; left:310px" value="등록하기" />
 </form>
+
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/photoupload.js"></script>	
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.imgareaselect.pack.js"></script>
+<script type="text/javascript">
+function preview(img, selection) {
+    if (!selection.width || !selection.height)
+        return;
+    
+    var scaleX = 100 / selection.width;
+    var scaleY = 100 / selection.height;
+
+    $('#preview img').css({
+        width: Math.round(scaleX * 300),
+        height: Math.round(scaleY * 300),
+        marginLeft: -Math.round(scaleX * selection.x1),
+        marginTop: -Math.round(scaleY * selection.y1)
+    });
+
+    $('#x1').val(selection.x1);
+    $('#y1').val(selection.y1);
+    $('#x2').val(selection.x2);
+    $('#y2').val(selection.y2);
+    $('#w').val(selection.width);
+    $('#h').val(selection.height);    
+}
+
+$(function () {
+    $('#photo_upload').imgAreaSelect({ 
+    	aspectRatio: '1:1', handles: true,
+        fadeSpeed: 200, onSelectChange: preview, 
+        onSelectEnd: function (img, selection) {
+    	
+    }
+    
+    });
+     
+	  
+        
+});
+
+
+
+
+</script>

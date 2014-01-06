@@ -106,5 +106,5 @@
 	</form>
 </div>
 
-					
-	
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.ImageColorPicker.js"></script>					
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/admin.js"></script>	
