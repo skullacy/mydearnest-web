@@ -113,10 +113,10 @@ public class WriteAdminController {
 		Post post = postService.getPostById(postId);
 		model.addAttribute("post", post);
 		
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
+		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
 //		return "testadmin/grade";
-		return null;
+		return "admin/post_detail";
 	}
 	
 	/**

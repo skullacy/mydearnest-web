@@ -294,10 +294,34 @@ public class FileServiceImpl implements FileService {
 		try {
 			result = new ImageSourceFile();
 			
-			File file = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + "/source");
-						
-			result.setFileLength(file.length());
-			result.setInputStream(new FileInputStream(file));
+			String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
+			System.out.println(file_location);
+			
+			File fileDir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
+			if(!fileDir.isDirectory()) fileDir.mkdirs();
+			
+			File tmp_aFile = new File(fileDir, "tmp_aFile");
+			Boolean tmp_aFileExist = true;
+			
+			AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
+			AmazonS3 fileStorageServer = new AmazonS3Client(credentials);
+			
+			try {
+				System.out.println("getThumbnailSource");
+				fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/source"), tmp_aFile);
+				System.out.println("getThumbnailSource Complete");
+			} catch (AmazonS3Exception s3e) {
+				if(s3e.getStatusCode() == 404) {
+					tmp_aFileExist = false;
+				} else {
+					throw s3e;
+				}
+			}
+			
+			result.setFileLength(tmp_aFile.length());
+			result.setInputStream(new FileInputStream(tmp_aFile));
+			
+			
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

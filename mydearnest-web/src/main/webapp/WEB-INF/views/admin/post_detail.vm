@@ -31,10 +31,10 @@
     }
 </style>
 <div class="photocontainer">
-	<img src="$request.contextPath/mdn-image/thumb/1?w=400&h=300&t=crop" width="400px" height="300px" id="test"/>
+	<img src="$request.contextPath/mdn-image/get/$post.id" width="400px" height="600px" id="test"/>
 </div>		
 <div class="infoInput">
-	<form class="form-horizontal" role="form" action="$request.contextPath/write/detail/{postID}" method="post">
+	<form class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/{postID}" method="post">
 		<div class="form-group">
 			<div class="col-lg-10">
 			<span>태그입력</span>
