@@ -1,11 +1,8 @@
-<h2>admin 관리 페이지</h2>
-<div class="btn-group">
-  <a class="btn btn-default" href="/testAdmin/management/member">맴버관리</a>
-  <a class="btn btn-default" href="/testAdmin/management/photo">사진관리</a>
-</div>
-<div class="btn-group" style="float:right;">
+<h2>admin 맴버 관리 페이지</h2>
+
+<div class="btn-group" style="float:right; margin-bottom:10px;">
   <a class="btn btn-default" href="/testAdmin/category/list">태그관리</a>
-  <a class="btn btn-default" href="/testAdmin/write/upload">사진업로드</a>
+ 
 </div>
 
 
