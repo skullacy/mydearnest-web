@@ -2,6 +2,7 @@ package com.osquare.mydearnest.admin.web;
 
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.hibernate.Hibernate;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.admin.service.AdminAccountService;
 import com.osquare.mydearnest.admin.service.AdminPostService;
+import com.osquare.mydearnest.admin.service.AdminTagCateService;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostGrade;
+import com.osquare.mydearnest.entity.TagCategory;
 
 @Controller
 @RequestMapping("/admin/post")
@@ -26,6 +29,7 @@ public class PostAdminController {
 
 	@Autowired private AdminAccountService adminAccountService;
 	@Autowired private AdminPostService adminPostService;
+	@Autowired private AdminTagCateService adminTagCateService;
 	
 	
 	//사진 리스트 출력용 컨트롤러
@@ -43,7 +47,14 @@ public class PostAdminController {
 		model.addAttribute("pages", Math.ceil((double)adminPostService.sizeOfPost() / 20));
 		
 		Collection<Post> items = adminPostService.findPost(page, order);
+		Collection<TagCategory> tagCate = adminTagCateService.getTagCategories();
+		HashMap<String, TagCategory> tagCateHashMap = new HashMap<String, TagCategory>();
 		
+		for(TagCategory tc : tagCate) {
+			tagCateHashMap.put(String.valueOf(tc.getId()), tc);
+		}
+		
+		model.addAttribute("tagcate", tagCateHashMap);
 		model.addAttribute("items", items);
 		model.addAttribute("page_on", "post");
 		
