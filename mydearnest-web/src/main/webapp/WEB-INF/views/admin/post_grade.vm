@@ -9,7 +9,7 @@
     	background:#237849;
     }    
         
-    #spidergraphcontainer {
+    #radarChart {
         width: 450px;
         height:450px;
         position: relative;
@@ -21,25 +21,25 @@
 </style>
 
 <div class="photocontainer">
-<img src="$request.contextPath/mdn-image/thumb/$post.imageSource.id?w=400&h=600&t=crop" />
+<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" />
 </div>		
-<div id="spidergraphcontainer"></div>
+<div id="radarChart"></div>
 
 <form action="$request.contextPath/admin/write/grade/$post.id" method="post">
 #springBind("command.feelModern")
-<input type="hidden" name="feelModern" id="feelModern" value="$!status.value" />
+<input type="text" name="feelModern" id="feelModern" value="$!status.value" />
 
 #springBind("command.feelLuxury")
-<input type="hidden" name="feelLuxury" id="feelLuxury" value="$!status.value" />
+<input type="text" name="feelLuxury" id="feelLuxury" value="$!status.value" />
 
 #springBind("command.feelWarm")
-<input type="hidden" name="feelWarm" id="feelWarm" value="$!status.value" />
+<input type="text" name="feelWarm" id="feelWarm" value="$!status.value" />
 
 #springBind("command.feelVintage")
-<input type="hidden" name="feelVintage" id="feelVintage" value="$!status.value" />
+<input type="text" name="feelVintage" id="feelVintage" value="$!status.value" />
 
 #springBind("command.feelCute")
-<input type="hidden" name="feelCute" id="feelCute" value="$!status.value" />
+<input type="text" name="feelCute" id="feelCute" value="$!status.value" />
 #if($pagetype == "update")
 <input type="hidden" name="pagetype" value="update" />
 #end
@@ -51,7 +51,7 @@
 <script>
 
 	
-    $('#spidergraphcontainer').spidergraph({
+    $('#radarChart').spidergraph({
         'fields': ['모던함','귀여움','빈티지','고급스러움','따뜻함'],
         'gridcolor': 'rgba(20,20,20,1)'   
        
@@ -62,7 +62,7 @@
          'linear': true
     });
     
-    $('#spidergraphcontainer').bind('spiderdatachange', function( ev, data ) {
+    $('#radarChart').bind('spiderdatachange', function( ev, data ) {
      	$('#feelModern').val(data[0]);
      	$('#feelCute').val(data[1]);
      	$('#feelVintage').val(data[2]);

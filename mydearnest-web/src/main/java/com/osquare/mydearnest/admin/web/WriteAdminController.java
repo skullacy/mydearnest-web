@@ -99,6 +99,45 @@ public class WriteAdminController {
 		return "account/join_detail_result";
 	}
 	
+	/**
+	 * @brief
+	 * 사진 태그 입력 화면
+	 */
+	@RequestMapping(value = "/phototag/{postId}", method = RequestMethod.GET)
+	public String insertPhotoTag(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("postId") long postId) {
+		
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Expires", "0");
+		
+		//포스트 정보 가져오기
+		Post post = postService.getPostById(postId);
+		
+		model.addAttribute("post", post);
+		
+		model.addAttribute("layout", "./shared/layout.admin.vm");
+		
+		return null;
+	}
+	
+	/**
+	 * @brief
+	 * 사진 태그 입력 처리
+	 */
+	@RequestMapping(value = "/phototag/{postId}", method = RequestMethod.POST)
+	public String insertPhotoTagSubmit(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("postId") long postId,
+			@ModelAttribute("command") PostVO postVO,
+			BindingResult result) {
+		
+		
+		
+		return null;
+	}
+	
+	
+	
 	
 	/**
 	 * @brief
