@@ -106,6 +106,7 @@ public class APIPostsController {
 		}
 		else {
 			document.put("success", true);
+			document.put("redirect", request.getRequestURL());
 		}
 		
 		

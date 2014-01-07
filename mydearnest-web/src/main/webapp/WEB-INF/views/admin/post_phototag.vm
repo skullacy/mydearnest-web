@@ -1,0 +1,92 @@
+<style>
+	.image_content{width:400px;  position:relative; background:#438505; display:inline-block; float:left; }
+	.link_content{display:inline-block; positionL:relative; width:450px; height:auto; border:1px solid #aaa; padding:15px; margin-left:10px;}
+	.link_input{width:400px; height:auto; position:relative; background:#333; padding:10px;}
+</style>
+
+
+<h2>사진업로드</h2>
+<form method="post" action="$request.contextPath/admin/write/upload" enctype="multipart/form-data">
+	<div class="image_content" style="display:inline-block; float:left;">
+		<img id="photo_upload" src="$request.contextPath/images/testphoto.jpg" width="400px"/>
+		<div class="link_input" style="display:none;">
+			<span style="color:#fff;">악세사리 태그</span>
+			<input style="margin-bottom:10px;" type="text" class="form-control" id="accessory_search" name="keyword" action="$request.contextPath/api/category/search.ajax" placeholder="악세사리 태그검색">
+			<span style="color:#fff; ">타이틀입력</span>
+			<input type="text" style="margin-bottom:10px;" class="form-control" id="title_info" placeholder="타이틀" >
+			<span style="color:#fff;">링크입력</span>
+			<input type="text" class="form-control" id="dummy_info" placeholder="링크">
+			<a class="btn btn-success" id="linksubmit_button" style="margin-top:10px; position:relative;">추가</a>
+		</div>
+	</div>
+	<div class="link_content">
+		<label for="source" style="color:#444;">출처</label>
+		<input type="text" id="source" name="source"class="form-control" placeholder="출처입력">
+		<label for="tag_list" style="color:#444; margin-top:10px;">악세사리 링크</label>
+		<div class="tag_list"></div>
+		<div class="photoTag_ori" style="display:none; float:left;">
+			<a class="tag_label btn btn-default btn-xl" href="#" style="margin-top:10px;" >
+				<span style="color:#2960ff">X </span>
+				<span class="accessory_label"></span>
+				<span class="accessory_title"></span>
+			</a>
+			<input type="hidden" name="posX1" value="" />
+			<input type="hidden" name="posY1" value="" />
+			<input type="hidden" name="posX2" value="" />
+			<input type="hidden" name="posY2" value="" />
+			<input type="hidden" name="postTagId" value="" />
+			<input type="hidden" name="title" value="" />
+			<input type="hidden" name="info" value="" />
+		</div>
+	</div>
+	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:relative; left:310px" value="등록하기" />
+</form>
+
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/photoupload.js"></script>	
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.imgareaselect.pack.js"></script>
+<script type="text/javascript">
+function preview(img, selection) {
+    if (!selection.width || !selection.height)
+        return;
+    
+    var scaleX = 100 / selection.width;
+    var scaleY = 100 / selection.height;
+
+    $('#preview img').css({
+        width: Math.round(scaleX * 300),
+        height: Math.round(scaleY * 300),
+        marginLeft: -Math.round(scaleX * selection.x1),
+        marginTop: -Math.round(scaleY * selection.y1)
+    });
+
+	$('input[name=posX1]').val(selection.x1);
+	$('input[name=posY1]').val(selection.y1);
+	$('input[name=posX2]').val(selection.x2);
+	$('input[name=posY2]').val(selection.y2);
+
+    console.log(selection.x1+" x1");
+    console.log(selection.y1+" y1");
+    console.log(selection.x2+" x2");
+    console.log(selection.y2+" y2");
+    console.log(selection.width);
+    console.log(selection.height);
+}
+
+$(function () {
+    $('#photo_upload').imgAreaSelect({ 
+    	aspectRatio: '1:1', handles: false,
+        fadeSpeed: 200, onSelectChange: preview, 
+        onSelectEnd: function (img, selection) {
+    		$('.link_input').css('display','block');
+    		
+    	}
+    
+    });
+     
+        
+});
+
+
+
+
+</script>
