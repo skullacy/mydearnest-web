@@ -30,13 +30,13 @@
 				<span class="accessory_label"></span>
 				<span class="accessory_title"></span>
 			</a>
-			<input type="hidden" name="posX1" value="" />
-			<input type="hidden" name="posY1" value="" />
-			<input type="hidden" name="posX2" value="" />
-			<input type="hidden" name="posY2" value="" />
-			<input type="hidden" name="postTagId" value="" />
-			<input type="hidden" name="title" value="" />
-			<input type="hidden" name="info" value="" />
+			<input type="hidden" class="posX1" value="" />
+			<input type="hidden" class="posY1" value="" />
+			<input type="hidden" class="posX2" value="" />
+			<input type="hidden" class="posY2" value="" />
+			<input type="hidden" class="postTagId" value="" />
+			<input type="hidden" class="title" value="" />
+			<input type="hidden" class="info" value="" />
 		</div>
 	</div>
 	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:relative; left:310px" value="등록하기" />
@@ -59,10 +59,10 @@ function preview(img, selection) {
         marginTop: -Math.round(scaleY * selection.y1)
     });
 
-	$('.photoTag_ori input[name=posX1]').val(selection.x1);
-	$('.photoTag_ori input[name=posY1]').val(selection.y1);
-	$('.photoTag_ori input[name=posX2]').val(selection.x2);
-	$('.photoTag_ori input[name=posY2]').val(selection.y2);
+	$('.photoTag_ori input.posX1').val(selection.x1);
+	$('.photoTag_ori input.posY1').val(selection.y1);
+	$('.photoTag_ori input.posX2').val(selection.x2);
+	$('.photoTag_ori input.posY2').val(selection.y2);
 
     console.log(selection.x1+" x1"); 
     console.log(selection.y1+" y1");
