@@ -39,6 +39,9 @@ $(function(){
 		
 		var tag = $('.photoTag_ori').clone();
 		tag.removeClass('photoTag_ori');
+		tag.find('input').each(function(){
+			$(this).attr('name', $(this).attr('class'));
+		});
 		tag.find('.accessory_label').text(label);
 		tag.find('.accessory_title').text(' ('+title+') ');
 		tag.find('input[name=postTagId]').val(value);
