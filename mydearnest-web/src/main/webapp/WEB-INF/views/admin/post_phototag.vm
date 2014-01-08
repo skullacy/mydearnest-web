@@ -11,7 +11,7 @@
 		<img id="photo_upload" src="$request.contextPath/mdn-image/get/$post.id" width="400px"/>
 		<div class="link_input" style="display:none;">
 			<span style="color:#fff;">악세사리 태그</span>
-			<input style="margin-bottom:10px;" type="text" class="form-control" id="accessory_search" name="keyword" action="$request.contextPath/api/category/search.ajax" placeholder="악세사리 태그검색">
+			<input style="margin-bottom:10px;" type="text" class="form-control" id="accessory_search" name="keyword" action="$request.contextPath/api/category/search.ajax?type=accessory" placeholder="악세사리 태그검색">
 			<span style="color:#fff; ">타이틀입력</span>
 			<input type="text" style="margin-bottom:10px;" class="form-control" id="title_info" placeholder="타이틀" >
 			<span style="color:#fff;">링크입력</span>
