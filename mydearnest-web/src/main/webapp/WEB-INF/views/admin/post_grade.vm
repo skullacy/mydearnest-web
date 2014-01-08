@@ -2,16 +2,15 @@
 <style>
 	.photocontainer {
     	width:400px;
-    	height:600px;
+    	height:1000px;
     	position:relative;
     	display:inline-block;
     	float:left;
-    	background:#237849;
     }    
         
     #radarChart {
-        width: 450px;
-        height:450px;
+        width: 360px;
+        height:360px;
         position: relative;
         display:inline-block;
         margin-left:20px;
@@ -21,32 +20,42 @@
 </style>
 
 <div class="photocontainer">
-<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" />
+<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px" />
 </div>		
 <div id="radarChart"></div>
+<div style="position:relative; display:inline-block; margin-left:20px;">
+	<form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" onkeypress="return event.keyCode!=13">
+	
+		
+		<label for="feelModern">모던함</label>
+		#springBind("command.feelModern")
+		<input type="text" class="form-control" name="feelModern" id="feelModern" value="$!status.value" style="width:100px; display:block; margin-"/>
+		
+		
+		<label for="feelModern">고급스러움</label>
+		#springBind("command.feelLuxury")
+		<input type="text" class="form-control" name="feelLuxury" id="feelLuxury" value="$!status.value" style="width:100px; display:block;" />	
+		
+		<label for="feelModern">따듯함</label>
+		#springBind("command.feelWarm")
+		<input type="text" class="form-control" name="feelWarm" id="feelWarm" value="$!status.value" style="width:100px; display:block;"/>
+		
+		<label for="feelModern">빈티지</label>
+		#springBind("command.feelVintage")
+		<input type="text" class="form-control" name="feelVintage" id="feelVintage" value="$!status.value"style="width:100px; display:block;" />
+		
+		<label for="feelModern">귀여움</label>
+		#springBind("command.feelCute")
+		<input type="text" class="form-control" name="feelCute" id="feelCute" value="$!status.value"style="width:100px; display:block;" />
 
-<form action="$request.contextPath/admin/write/grade/$post.id" method="post">
-#springBind("command.feelModern")
-<input type="text" name="feelModern" id="feelModern" value="$!status.value" />
-
-#springBind("command.feelLuxury")
-<input type="text" name="feelLuxury" id="feelLuxury" value="$!status.value" />
-
-#springBind("command.feelWarm")
-<input type="text" name="feelWarm" id="feelWarm" value="$!status.value" />
-
-#springBind("command.feelVintage")
-<input type="text" name="feelVintage" id="feelVintage" value="$!status.value" />
-
-#springBind("command.feelCute")
-<input type="text" name="feelCute" id="feelCute" value="$!status.value" />
-#if($pagetype == "update")
-<input type="hidden" name="pagetype" value="update" />
-#end
-<input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px; position:relative; left:300px;" />
-
-</form>
-
+	
+		#if($pagetype == "update")
+		<input type="hidden" name="pagetype" value="update" />
+		#end
+	
+		<input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px; position:relative; " />
+	</form>
+</div>
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.spidergraph.js"></script>
 <script>
 
