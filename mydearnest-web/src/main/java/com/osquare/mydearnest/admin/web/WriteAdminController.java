@@ -118,7 +118,7 @@ public class WriteAdminController {
 		
 		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
-		return null;
+		return "admin/post_phototag";
 	}
 	
 	/**
