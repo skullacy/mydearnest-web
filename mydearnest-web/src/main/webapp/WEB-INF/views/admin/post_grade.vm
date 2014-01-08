@@ -20,7 +20,7 @@
 </style>
 
 <div class="photocontainer">
-<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px" />
+<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400" style="width:400px" />
 </div>		
 <div id="radarChart"></div>
 <div style="position:relative; display:inline-block; margin-left:20px;">

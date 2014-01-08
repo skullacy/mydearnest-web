@@ -35,6 +35,9 @@
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>
+<div id="mdnmsg">
+</div>
+
 	
 	$screen_content
 	

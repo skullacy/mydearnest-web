@@ -61,7 +61,7 @@ $(function(){
 		$('#accessory_search').removeAttr("disabled");
 		$('#accessory_search').data('');
 		$('#accessory_search').val('');
-		$('#title_info').val('');
+		$('#title_info').val('');  
 		$('#dummy_info').val('');
 		
 		

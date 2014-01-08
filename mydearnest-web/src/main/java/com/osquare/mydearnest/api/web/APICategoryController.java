@@ -57,12 +57,15 @@ public class APICategoryController {
 	
 	@RequestMapping("/search.ajax")
 	public ResponseEntity<String> searchKeyword(Model model, HttpServletResponse response,
-			@RequestParam(value = "keyword", required = false) String keyword) {
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "type", required = false) String type){
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type",	"application/json; charset=UTF-8");
 		
-		Collection<TagCategory> tagCategories = adminTagCateService.getMatchedTagCategories(keyword);
+		if(type == null) type = "all";
+		
+		Collection<TagCategory> tagCategories = adminTagCateService.getMatchedTagCategories(keyword, type);
 		
 		JSONObject document = new JSONObject();
 		try {

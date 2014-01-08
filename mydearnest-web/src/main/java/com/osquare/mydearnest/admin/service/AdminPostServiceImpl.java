@@ -82,6 +82,7 @@ public class AdminPostServiceImpl implements AdminPostService {
 				tmpPost = itr.next();
 				Hibernate.initialize(tmpPost.getPostGrade());
 				Hibernate.initialize(tmpPost.getPostTag());
+				Hibernate.initialize(tmpPost.getPhotoTags());
 			}
 			
 			

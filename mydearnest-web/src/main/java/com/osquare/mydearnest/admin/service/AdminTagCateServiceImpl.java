@@ -130,7 +130,7 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 	}
 
 	@Override
-	public Collection<TagCategory> getMatchedTagCategories(String keyword) {
+	public Collection<TagCategory> getMatchedTagCategories(String keyword, String type) {
 		
 		String keywordReplaced = StringUtils.replaceEngPos(keyword);
 		
@@ -138,10 +138,18 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 		
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
-		
+		Criteria cr = null;
 		try {
-			Criteria cr = session.createCriteria(TagCategory.class)
-									.add(Restrictions.like("keyword", keywordReplaced, MatchMode.ANYWHERE));
+			if("all".equals(type)) {
+				cr = session.createCriteria(TagCategory.class)
+						.add(Restrictions.like("keyword", keywordReplaced, MatchMode.ANYWHERE));
+			}
+			else {
+				cr = session.createCriteria(TagCategory.class)
+						.add(Restrictions.eq("type", type))
+						.add(Restrictions.like("keyword", keywordReplaced, MatchMode.ANYWHERE));
+			}
+			
 			
 			result = cr.list();
 			

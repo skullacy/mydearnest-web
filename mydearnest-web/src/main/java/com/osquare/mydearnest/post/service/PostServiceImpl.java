@@ -22,6 +22,10 @@ import javax.annotation.Resource;
 
 
 
+
+
+
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -45,12 +49,14 @@ import com.osquare.mydearnest.entity.Category;
 import com.osquare.mydearnest.entity.Folder;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Notification;
+import com.osquare.mydearnest.entity.PhotoTag;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostComment;
 import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.PostLove;
 import com.osquare.mydearnest.entity.PostRank;
 import com.osquare.mydearnest.entity.PostTag;
+import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.post.vo.RefPost;
 import com.osquare.mydearnest.profile.vo.CommentVO;
@@ -353,6 +359,127 @@ public class PostServiceImpl implements PostService {
 		return result;
 	}
 	
+	@Override
+	public Post createPostPhotoTag(Post post, Account account, PostVO postVO) {
+		
+		Post result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			PhotoTag photoTag;
+			Criteria cr;
+			TagCategory tagCategory;
+			for(int i = 0; i < postVO.getPostTagId().length; i++ ) {
+				post = (Post) session.get(Post.class, post.getId());
+				post.setPhotoTagCount(post.getPhotoTagCount() + 1);
+				session.merge(post);
+				
+				photoTag = null;
+				photoTag = new PhotoTag();
+				
+				cr = session.createCriteria(TagCategory.class)
+						.add(Restrictions.eq("id", postVO.getPostTagId()[i]));
+				
+				tagCategory = (TagCategory) cr.uniqueResult();
+				
+				photoTag.setAccount(account);
+				photoTag.setPost(post);
+				
+				photoTag.setTagCategory(tagCategory);
+				
+				photoTag.setTitle(postVO.getTitle()[i]);
+				photoTag.setInfo(postVO.getInfo()[i]);
+				photoTag.setPosX1(postVO.getPosX1()[i]);
+				photoTag.setPosX2(postVO.getPosX2()[i]);
+				photoTag.setPosY1(postVO.getPosY1()[i]);
+				photoTag.setPosY2(postVO.getPosY2()[i]);
+				
+				session.persist(photoTag);
+			}
+			
+			result = post;
+			
+			session.getTransaction().commit();
+			
+		}
+		catch (Exception e){
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		
+		checkPostPublishable(post);
+		
+		return result;
+	}
+
+	@Override
+	public PostGrade createPostGrade(Post post1, Account account, PostVO postVO) {
+	
+		PostGrade result = null;
+		Post post = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+	
+		try {
+			
+			post = (Post) session.get(Post.class, post1.getId());
+			post.setGradeCount(post.getGradeCount() + 1);
+			session.merge(post);
+			
+			result = new PostGrade();
+			result.setAccount(account);
+			result.setPost(post);
+			result.setFeelCute(postVO.getFeelCute());
+			result.setFeelWarm(postVO.getFeelWarm());
+			result.setFeelModern(postVO.getFeelModern());
+			result.setFeelVintage(postVO.getFeelVintage());
+			result.setFeelLuxury(postVO.getFeelLuxury());
+			result.setCreatedAt(new Date());
+			
+			session.persist(result);
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		checkPostPublishable(post);
+		
+		return result;
+	}
+
+	@Override
+	public PostGrade updatePostGrade(Post post1, Account account, PostVO postVO) {
+		
+		PostGrade result = getMyPostGradeByPost(account, post1);
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		
+		try {
+			
+			result.setFeelCute(postVO.getFeelCute());
+			result.setFeelWarm(postVO.getFeelWarm());
+			result.setFeelModern(postVO.getFeelModern());
+			result.setFeelVintage(postVO.getFeelVintage());
+			result.setFeelLuxury(postVO.getFeelLuxury());
+			
+			session.update(result);
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		checkPostPublishable(post1);
+		
+		return result;
+	}
+
 	@Override 
 	public Post removePostByMode(Long postId, String editMode, Long drawerId) {
 		Post result = null;
@@ -858,73 +985,6 @@ public class PostServiceImpl implements PostService {
 		
 	}
 	
-	
-	@Override
-	public PostGrade createPostGrade(Post post1, Account account, PostVO postVO) {
-
-		PostGrade result = null;
-		Post post = null;
-		Session session = sessionFactory.getCurrentSession();
-		session.getTransaction().begin();
-
-		try {
-			
-			post = (Post) session.get(Post.class, post1.getId());
-			post.setGradeCount(post.getGradeCount() + 1);
-			session.merge(post);
-			
-			result = new PostGrade();
-			result.setAccount(account);
-			result.setPost(post);
-			result.setFeelCute(postVO.getFeelCute());
-			result.setFeelWarm(postVO.getFeelWarm());
-			result.setFeelModern(postVO.getFeelModern());
-			result.setFeelVintage(postVO.getFeelVintage());
-			result.setFeelLuxury(postVO.getFeelLuxury());
-			result.setCreatedAt(new Date());
-			
-			session.persist(result);
-			session.getTransaction().commit();
-		}
-		catch(Exception ex) {
-			session.getTransaction().rollback();
-			ex.printStackTrace();
-		}
-		
-		checkPostPublishable(post);
-		
-		return result;
-	}
-	
-	@Override
-	public PostGrade updatePostGrade(Post post1, Account account, PostVO postVO) {
-		
-		PostGrade result = getMyPostGradeByPost(account, post1);
-		Session session = sessionFactory.getCurrentSession();
-		session.getTransaction().begin();
-		
-		
-		try {
-			
-			result.setFeelCute(postVO.getFeelCute());
-			result.setFeelWarm(postVO.getFeelWarm());
-			result.setFeelModern(postVO.getFeelModern());
-			result.setFeelVintage(postVO.getFeelVintage());
-			result.setFeelLuxury(postVO.getFeelLuxury());
-			
-			session.update(result);
-			session.getTransaction().commit();
-		}
-		catch(Exception ex) {
-			session.getTransaction().rollback();
-			ex.printStackTrace();
-		}
-		
-		checkPostPublishable(post1);
-		
-		return result;
-	}
-
 	
 	@Override
 	public Long getPrevPostId(Long postId, String ref) {
