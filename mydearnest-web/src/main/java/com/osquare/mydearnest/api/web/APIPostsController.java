@@ -72,6 +72,14 @@ public class APIPostsController {
 		return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
 	}
 	
+	
+	/**
+	 * @brief
+	 * 구글 확장프로그램(Google extension)용 업로드 api
+	 * @등록 실패시 message type
+	 * 1: 로그인이 필요.
+	 * 2: 등록중 오류 발생.
+	 */
 	@RequestMapping(value = "/upload.ge", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadGE(MultipartHttpServletRequest request, HttpServletResponse response) {
 		
@@ -85,10 +93,10 @@ public class APIPostsController {
 		
 		JSONObject document = new JSONObject();
 		
-		
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
 		if (!(authentication.getPrincipal() instanceof SignedDetails)) {
 			document.put("success", false);
+			document.put("message", "1");
 			return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
 		}
 
@@ -103,10 +111,11 @@ public class APIPostsController {
 		
 		if(post == null) {
 			document.put("success", false);
+			document.put("message", "2");
 		}
 		else {
 			document.put("success", true);
-			document.put("redirect", request.getRequestURL());
+			document.put("redirect", "http://mydearnest.com/admin/write/phototag/"+post.getId());
 		}
 		
 		

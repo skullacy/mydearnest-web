@@ -109,7 +109,7 @@ public class PhotoTag implements Serializable {
 		return posY1;
 	}
 
-	public void setPosY(long posY1) {
+	public void setPosY1(long posY1) {
 		this.posY1 = posY1;
 	}
 	
