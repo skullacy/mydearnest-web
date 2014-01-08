@@ -133,6 +133,38 @@ public class WriteAdminController {
 		
 		
 		
+		model.addAttribute("success", false);
+		
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
+		Post post = postService.getPostById(postId);
+
+		model.addAttribute("account", account);
+		model.addAttribute("command", postVO);
+
+//		new PostGradeValidator().validate(postVO, result);
+//		
+		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			model.addAttribute("errors", result.getAllErrors());
+		}
+		else {
+			
+			Post postResult = postService.createPostPhotoTag(post, account, postVO);
+			if ( postResult == null) {
+				model.addAttribute("success", false);
+			}
+			else {
+				model.addAttribute("success", true);
+				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+			}
+		}
+		
+
 		return null;
 	}
 	

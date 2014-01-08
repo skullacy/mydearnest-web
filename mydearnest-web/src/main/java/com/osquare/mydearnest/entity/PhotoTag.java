@@ -26,7 +26,7 @@ public class PhotoTag implements Serializable {
 	private Account account;
 	private Post post;
 	
-	private PostTag postTag;
+	private TagCategory tagCategory;
 	private String title;
 	private String info;
 	
@@ -68,13 +68,13 @@ public class PhotoTag implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "POSTTAG_ID", nullable = false)
-	public PostTag getPostTag() {
-		return postTag;
+	@JoinColumn(name = "TAGCATEGORY_ID", nullable = false)
+	public TagCategory getTagCategory() {
+		return tagCategory;
 	}
 
-	public void setPostTag(PostTag postTag) {
-		this.postTag = postTag;
+	public void setTagCategory(TagCategory tagCategory) {
+		this.tagCategory = tagCategory;
 	}
 	
 	@Column(name = "TITLE", nullable = true)

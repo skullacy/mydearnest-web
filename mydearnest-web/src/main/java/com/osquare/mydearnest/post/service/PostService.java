@@ -36,6 +36,7 @@ public interface PostService {
 	
 	Post createPostUpload(Account account, ImageSource imageSource, PostVO postVO);
 	Post createPostDetail(Post post, Account account, PostVO postVO);
+	Post createPostPhotoTag(Post post, Account account, PostVO postVO);
 	PostGrade createPostGrade(Post post, Account account, PostVO postVO);
 	PostGrade updatePostGrade(Post post, Account account, PostVO postVO);
 	Post checkPostPublishable(Post post);
