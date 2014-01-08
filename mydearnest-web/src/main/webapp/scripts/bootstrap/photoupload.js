@@ -38,7 +38,7 @@ $(function(){
 		var info = $('#dummy_info').val();
 		
 		var tag = $('.photoTag_ori').clone();
-		tag.removeClass('photoTag_ori').addClass('photoTag');
+		tag.removeClass('photoTag_ori');
 		tag.find('.accessory_label').text(label);
 		tag.find('.accessory_title').text(' ('+title+') ');
 		tag.find('input[name=postTagId]').val(value);
@@ -54,7 +54,7 @@ $(function(){
 		tag.show();
 		
 		$('.link_input').css('display','none');
-		tag.removeClass('photoTag').addClass('photoTagphotoTag_ori');
+		
 		$('#accessory_search').removeAttr("disabled");
 		$('#accessory_search').data('');
 		$('#accessory_search').val('');
