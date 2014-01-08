@@ -6,9 +6,9 @@
 
 
 <h2>사진업로드</h2>
-<form method="post" action="$request.contextPath/admin/write/phototag/$post.imageSource.id" enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+<form method="post" action="$request.contextPath/admin/write/phototag/$post.id" enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
 	<div class="image_content" style="display:inline-block; float:left;">
-		<img id="photo_upload" src="$request.contextPath/mdn-image/get/$post.id" width="400px"/>
+		<img id="photo_upload" src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px"/>
 		<div class="link_input" style="display:none;">
 			<span style="color:#fff;">악세사리 태그</span>
 			<input style="margin-bottom:10px;" type="text" class="form-control" id="accessory_search" name="keyword" action="$request.contextPath/api/category/search.ajax?type=accessory" placeholder="악세사리 태그검색">
