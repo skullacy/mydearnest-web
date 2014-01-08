@@ -6,7 +6,6 @@
     	position:relative;
     	display:inline-block;
     	float:left;
-    	background:#237849;
     }    
         
     #radarChart {
@@ -21,7 +20,7 @@
 </style>
 
 <div class="photocontainer">
-<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" />
+<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400" style="width:400px" />
 </div>		
 <div id="radarChart"></div>
 
