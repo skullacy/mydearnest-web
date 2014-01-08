@@ -34,8 +34,9 @@
     	text-align:center;
     }
 </style>
+
 <div class="photocontainer">
-	<img src="$request.contextPath/mdn-image/get/$post.id" width="400px" height="600px" id="test"/>
+	<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px" height="600px" id="test"/>
 </div>		
 <div class="infoInput">
 	<form class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/$post.id" method="post" onkeypress="return event.keyCode!=13">
