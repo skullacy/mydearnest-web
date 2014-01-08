@@ -15,7 +15,7 @@
 				<div id="profile_image">
 				
 					#if($command.imageSourceId)
-					<img src="$request.contextPath/user-image/thumb/$command.imageSourceId?w=140&h=140&t=crop" id="thumb_view" />
+					<img src="$request.contextPath/mdn-image/thumb/$command.imageSourceId?w=140&h=140&t=crop" id="thumb_view" />
 					#else
 					<img src="$request.contextPath/images/profile/profile_none_img.png" id="thumb_view" />
 					#end

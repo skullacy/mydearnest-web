@@ -23,10 +23,11 @@
 	<script type="text/javascript" src="' + $request.contextPath + '/scripts/application/mxb.modal.js"></script>
 
 	<script type="text/javascript" src="' + $request.contextPath + '/scripts/client/frame.js"></script>
+	<script type="text/javascript" src="/scripts/fortest/jquery.spidergraph.js"></script>
 ')
 
 <div id="body">
-
+	
 	<div id="header">
 		<div id="top_area" style="position:relative; z-index:99;">
 			<div class="wrap">
@@ -60,7 +61,7 @@
 							<li data-submenu="true" class="login_info has-submenu w120">
 								<div class="thm_c">
 									#if($user_image_id && $user_image_id > 0)
-									<img src="$request.contextPath/user-image/thumb/$user_image_id?w=60&h=60&t=crop" width="30" height="30" class="i_thumb" />
+									<img src="$request.contextPath/mdn-image/thumb/$user_image_id?w=60&h=60&t=crop" width="30" height="30" class="i_thumb" />
 									#else
 									<img src="$request.contextPath/images/profile/profile_none_img.png" width="30" height="30" class="i_thumb" />
 									#end

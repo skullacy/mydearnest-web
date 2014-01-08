@@ -1,0 +1,19 @@
+<h2>태그입력</h2>
+
+<form action="$request.contextPath/admin/category/create" method="post" role="form">
+  <fieldset>
+  	<label for="disabledTextInput">태그종류</label>
+	<select name="type" class="form-control" style="margin-bottom:20px;">
+	  <option value="home">홈</option>
+	  <option value="accessory">악세사리</option>
+	  <option value="size">평수</option>
+	  <option value="tone">톤</option>
+	</select>
+ 
+    <div class="form-group">
+      <label for="disabledTextInput">추가할 태그 입력</label>
+      <input type="text" name="title" id="disabledTextInput" class="form-control" placeholder="추가할 태그를 입력하세요">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </fieldset>
+</form>

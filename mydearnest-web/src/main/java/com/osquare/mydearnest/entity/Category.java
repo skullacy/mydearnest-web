@@ -25,8 +25,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class Category implements Serializable {
 
 	private long id;
-	private String group;
+	private String sort;
 	private String content;
+	private String searchTag;
 	private Long imageId;
 	private long parentId;
 	private long orderIndex;
@@ -45,13 +46,13 @@ public class Category implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "GROUP", nullable = false)
-	public String getGroup() {
-		return group;
+	@Column(name = "SORT", nullable = false)
+	public String getSort() {
+		return sort;
 	}
 
-	public void setGroup(String group) {
-		this.group = group;
+	public void setSort(String group) {
+		this.sort = group;
 	}
 
 	@Column(name = "CONTENT", nullable = false)
@@ -62,8 +63,9 @@ public class Category implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
 
-	@Column(name = "IMAGE_ID", nullable = true)
+	@Column(name = "IMAGE_ID", nullable = false)
 	public Long getImageId() {
 		return imageId;
 	}
@@ -99,12 +101,12 @@ public class Category implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
-	public Set<Post> getPosts() {
-		return posts;
+	@Column(name = "SEARCHTAG", nullable = false)
+	public String getSearchTag() {
+		return searchTag;
 	}
 
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
+	public void setSearchTag(String searchTag) {
+		this.searchTag = searchTag;
 	}
 }

@@ -1,0 +1,72 @@
+<h2>느낌평가하기</h2>
+<style>
+	.photocontainer {
+    	width:400px;
+    	height:600px;
+    	position:relative;
+    	display:inline-block;
+    	float:left;
+    }    
+        
+    #radarChart {
+        width: 450px;
+        height:450px;
+        position: relative;
+        display:inline-block;
+        margin-left:20px;
+    }
+ 
+    
+</style>
+
+<div class="photocontainer">
+<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400" style="width:400px" />
+</div>		
+<div id="radarChart"></div>
+
+<form action="$request.contextPath/admin/write/grade/$post.id" method="post">
+#springBind("command.feelModern")
+<input type="text" name="feelModern" id="feelModern" value="$!status.value" />
+
+#springBind("command.feelLuxury")
+<input type="text" name="feelLuxury" id="feelLuxury" value="$!status.value" />
+
+#springBind("command.feelWarm")
+<input type="text" name="feelWarm" id="feelWarm" value="$!status.value" />
+
+#springBind("command.feelVintage")
+<input type="text" name="feelVintage" id="feelVintage" value="$!status.value" />
+
+#springBind("command.feelCute")
+<input type="text" name="feelCute" id="feelCute" value="$!status.value" />
+#if($pagetype == "update")
+<input type="hidden" name="pagetype" value="update" />
+#end
+<input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px; position:relative; left:300px;" />
+
+</form>
+
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.spidergraph.js"></script>
+<script>
+
+	
+    $('#radarChart').spidergraph({
+        'fields': ['모던함','귀여움','빈티지','고급스러움','따뜻함'],
+        'gridcolor': 'rgba(20,20,20,1)'   
+       
+    }).spidergraph('setactivedata', { 
+        'strokecolor': 'rgba(124,209,210,0.8)',
+        'fillcolor': 'rgba(151,254,255,0.6)',
+        'data': [$('#feelModern').val(), $('#feelCute').val(), $('#feelVintage').val(), $('#feelLuxury').val(), $('#feelWarm').val()],
+         'linear': true
+    });
+    
+    $('#radarChart').bind('spiderdatachange', function( ev, data ) {
+     	$('#feelModern').val(data[0]);
+     	$('#feelCute').val(data[1]);
+     	$('#feelVintage').val(data[2]);
+     	$('#feelLuxury').val(data[3]);
+     	$('#feelWarm').val(data[4]);
+	});
+
+</script>

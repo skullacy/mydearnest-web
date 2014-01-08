@@ -15,11 +15,9 @@ var printObj = typeof JSON != "undefined" ? JSON.stringify : function(obj) {
 };
  
 $(document).ready(function (){
-	var tpl = ($("#folderTpl").val().replace(/%s/, "folderId").replace(/%s/, "folderId"));
-	$("#folder_view").html(tpl);
-	$("#folderId").selectbox();
 	
 	$("#dialog_folder form").submit(function (e) {
+		
 		
 		if(!$("input[name='name']", this).val()) {
 			alert("폴더이름을 입력해주세요.");
@@ -62,23 +60,19 @@ $(document).ready(function (){
 			return;
 		}
 		
-		if ($(this).val().indexOf("fake") > 0) {
-			var reader = new FileReader();
-	        reader.onload = function (e) {
-	            $("#thumb_view").attr("src", e.target.result);
-				$("#thumb_view").load();
-	        }
-			reader.readAsDataURL(this.files[0]);			
-		}
-		else {
-			$("#thumb_view").attr("src", $(this).val());
+		var reader = new FileReader();
+		console.log(reader);
+        reader.onload = function (e) {
+            $("#thumb_view").attr("src", e.target.result);
 			$("#thumb_view").load();
-		}
+        }
+		reader.readAsDataURL(this.files[0]);			
 		
 		$("#thumb_button").hide();
 	});
 	
 	$("#thumb_view").load(function () {
+		console.log('onLoad');
 		$("#thumb_view").css({"maxWidth" : "auto", "maxHeight" : "auto"});
 		if ($("#thumb_view").width() > $("#thumb_view").height()) {
 			$("#thumb_view").css({"maxWidth" : "100%"});
@@ -95,6 +89,49 @@ $(document).ready(function (){
 	
 	$("#thumbnail").change();
 	$(".selectbox").selectbox({ effect: "slide", speed: 200 });
+	
+	$('#position_search').autocomplete({
+		focus: function() {
+			return false;
+		},
+		source: function(request, response) {
+			$.ajax({
+				url: $('#position_search').attr('action'),
+				dataType: "json",
+				data: $('#position_search').serialize(),
+				success: function (result) {
+					response( $.map(result.data, function(item) {
+						return {
+							label: item.name,
+							value: item.id
+						}
+					}));
+				}
+			});
+		},
+		select: function(event, ui) {
+			console.log(event);
+			console.log(ui);
+			$('#position_search').val('');
+			var tag = $('.tagList').children('.tag_ori').clone();
+			console.log(tag);
+			tag.removeClass('tag_ori').addClass('tag').data('value', ui.item.value);
+			tag.children('.tag_label').text(ui.item.label);
+			tag.children('.position_hidden').removeClass('position_hidden')
+				.attr('name', 'position').val(ui.item.value);
+			
+			$('.tagList').append(tag);
+			tag.show();
+			return false;
+		}
+	});
+	
+	$('a.delete_tag').live('click', function() {
+		$(this).parent('.tag').remove();
+		return false;
+	});
+	
+	
 	
 	$(window).resize(function () {
 		if ($("#thumb_case").height() > 0)

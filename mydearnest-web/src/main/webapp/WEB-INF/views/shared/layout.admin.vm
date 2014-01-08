@@ -1,67 +1,45 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=8">
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-	<meta http-equiv="Pragma" content="no-cache" />
-	<meta http-equiv="Expires" content="0" />
 	
-	<title>패션놀이터 :: FindFashion.kr</title>
+	<title>Ggumim :: 꾸밈</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/bootstrap/bootstrap-theme.min.css"/>
+	<link rel="stylesheet" href="$request.contextPath/stylesheets/bootstrap/bootstrap.css"  media="screen"/>
+	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/bootstfont.css"/>
+	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/jquery-ui-1.10.3.custom.min.css"/>
+	<link rel="stylesheet" href="$request.contextPath/stylesheets/bootstrap/ImageColorPicker.css" type="text/css" media="screen" charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/bootstrap/imgareaselect-default.css"/>
 	
-	<link rel="stylesheet" type="text/css" href="$request.contextPath/stylesheets/default.css"/>
+	<script type="text/javascript" src="$request.contextPath/scripts/jquery-2.0.3.min.js"></script>
+	<script type="text/javascript" src="$request.contextPath/scripts/jquery-ui-1.10.3.custom.min.js"></script>
+	<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/bootstrap.min.js"></script>
 	
-	<script type="text/javascript" src="$request.contextPath/scripts/jquery-1.9.0.min.js"></script>
-	<script type="text/javascript" src="$request.contextPath/scripts/default.js"></script>
-	<script type="text/javascript" src="$request.contextPath/scripts/messages/ko-kr.js"></script>
 	
-	<script type="text/javascript">
-		context_path = "$request.contextPath";
-		session_id = "$request.session.id";
-		#if($sec.principal == "Guest")
-		is_signed = false;
-		#else
-		is_signed = true;
-		account_id = $sec.accountId;
-		#end
-	</script>
 	
-	$!head
 	
-</head>
-<body>
 
-	<div id="header">
-		<div class="wrap">
-			<div class="logo">
-				<img src="$request.contextPath/images/admin/logo.png" />
-			</div>
-			<div class="gnb">
-				<ul>
-	  			<li#if($page_on == "member") class="selected"#end>
-	  				<a href="$request.contextPath/admin/member">
-		  				<img src="$request.contextPath/images/admin/menu01_off.png" class="off" />
-		  				<img src="$request.contextPath/images/admin/menu01_on.png" class="on" />
-	  				</a>
-	  			</li>
-	  			<li#if($page_on == "post") class="selected"#end>
-	  				<a href="$request.contextPath/admin/post">
-		  				<img src="$request.contextPath/images/admin/menu02_off.png" class="off" />
-		  				<img src="$request.contextPath/images/admin/menu02_on.png" class="on" />
-	  				</a>
-	  			</li>
-	  			<li>
-	  				<a href="$request.contextPath/">
-		  				<img src="$request.contextPath/images/admin/menu03_off.png" class="off" />
-		  				<img src="$request.contextPath/images/admin/menu03_on.png" class="on" />
-	  				</a>
-	  			</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<div id="container">
+</head>
+<body style="padding:10px;">
+
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <a class="navbar-brand" href="/admin">홈</a>
+  </div>
+ 
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/admin/management">관리</a></li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
+<div id="mdnmsg">
+</div>
+
+	
 	$screen_content
-	</div>
+	
 </body>
 </html>

@@ -40,7 +40,7 @@
 	    		</div>
 	    		#else
 	    		<div id="imagePreviewC">
-		    		<img id="imagePreview" class="no_editor" src="$request.contextPath/user-image/get/$command.imageId">
+		    		<img id="imagePreview" class="no_editor" src="$request.contextPath/mdn-image/get/$command.imageId">
 	    		</div>
 	    		#end
     		#else

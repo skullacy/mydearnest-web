@@ -4,7 +4,7 @@ $(document).ready(function() {
 
 	$('#file_upload').uploadify({
 		'swf'				: context_path + '/scripts/uploadify/uploadify.swf',
-		'uploader'  		: context_path + '/user-image/create.ajax;jsessionid=' + session_id,
+		'uploader'  		: context_path + '/mdn-image/create.ajax;jsessionid=' + session_id,
 		'fileObjName' 		: "filedata",
 		'buttonText'		: "",
 		'height'			: 21,
@@ -19,7 +19,7 @@ $(document).ready(function() {
 			if(result)
 			{
 				$("#imageSourceId").val(result.imageId);
-				var src = context_path + "/user-image/thumb/" + result.imageId + "?w=60&h=60&t=crop";
+				var src = context_path + "/mdn-image/thumb/" + result.imageId + "?w=60&h=60&t=crop";
 				src += Math.floor(Math.random() * 100);
 				$("#person_thumb").attr("src", src);
 			}
@@ -50,7 +50,7 @@ $(document).ready(function() {
 		
 	var src = context_path + "/images/profile/profile_none_img.png";
 	if ($($("#person_thumb").prev()).val())
-		src = context_path + "/user-image/thumb/" + $("#person_thumb").prev().val() + "?w=60&h=60&t=crop";
+		src = context_path + "/mdn-image/thumb/" + $("#person_thumb").prev().val() + "?w=60&h=60&t=crop";
 	$("#person_thumb").attr("src", src);
 	$("#person_thumb").show();
 	

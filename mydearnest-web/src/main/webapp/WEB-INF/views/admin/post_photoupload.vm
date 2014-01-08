@@ -1,0 +1,59 @@
+<style>
+	.image_content{width:400px;  position:relative; background:#eee; display:inline-block; float:left; }
+	.link_content{display:inline-block; positionL:relative; width:450px; height:auto; border:1px solid #aaa; padding:15px; margin-left:10px;}
+	.link_input{width:400px; height:auto; position:relative; background:#333; padding:10px;}
+</style>
+
+
+<h2>사진업로드</h2>
+
+<form method="post" action="$request.contextPath/admin/write/upload" enctype="multipart/form-data">
+	<div class="image_content" style="width:400px; height:auto; position:relative; display:inline-block; float:left;">
+		<img id="thumb_view" width="400px" style="display:bloack; position:relative; z-index:1; left:50%; top:50%;" />
+	    <input type="file" id="thumbnail" name="thumbnail" style="width:400px; " />
+	</div>
+	
+	<div class="link_content">
+		<label for="source" style="color:#444;">출처</label>
+		<input type="text" id="source" name="source"class="form-control" placeholder="출처입력">
+	</div>
+	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:absolute; left:720px" value="등록하기" />
+</form>
+
+<script>
+$("#thumbnail").change(function (){
+		if (!$(this).val()) return;
+		var ext = $(this).val().substring($(this).val().lastIndexOf(".") + 1).toLowerCase();
+		if (ext != "jpg" && ext != "gif" && ext != "png" && ext != "jpeg") {
+			alert("이미지 파일이 아닙니다.");
+			return;
+		}
+		
+		var reader = new FileReader();
+		console.log(reader);
+        reader.onload = function (e) {
+            $("#thumb_view").attr("src", e.target.result);
+			$("#thumb_view").load();
+        }
+		reader.readAsDataURL(this.files[0]);			
+		
+		$("#thumb_button").hide();
+	});
+	
+	$("#thumb_view").load(function () {
+		console.log('onLoad');
+		$("#thumb_view").css({"maxWidth" : "auto", "maxHeight" : "auto"});
+		if ($("#thumb_view").width() > $("#thumb_view").height()) {
+			$("#thumb_view").css({"maxWidth" : "100%"});
+		}
+		else {
+			$("#thumb_view").css({"maxHeight" : "100%"});
+		}
+		$("#thumb_view").css({
+			marginLeft: -($("#thumb_view").width() / 2) + "px"
+		});
+		$("#thumb_view").css("display", "block");
+	});
+	
+	$("#thumbnail").change();
+</script>

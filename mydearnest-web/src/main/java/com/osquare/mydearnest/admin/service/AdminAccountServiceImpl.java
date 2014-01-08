@@ -73,7 +73,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 
 		try {
 			Criteria cr = session.createCriteria(Account.class)
-					.add(Restrictions.eq("userId", userId))
+					.add(Restrictions.eq("id", Long.valueOf(userId)))
 					.setMaxResults(1);
 			
 			result = (Account) cr.uniqueResult();

@@ -27,7 +27,7 @@ import com.osquare.mydearnest.post.vo.ProfileImageQue;
 import com.osquare.mydearnest.post.vo.UploadBean;
 
 @Controller
-@RequestMapping("/user-image/")
+@RequestMapping("/mdn-image/")
 public class ImageController {
 	
 	@Autowired private FileService fileService;

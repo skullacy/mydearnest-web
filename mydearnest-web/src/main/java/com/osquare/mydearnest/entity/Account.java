@@ -97,7 +97,7 @@ public class Account implements Serializable {
 		this.role = role;
 	}
 
-	@Column(name = "NAME", nullable = false)
+	@Column(name = "NAME", nullable = true)
 	public String getName() {
 		return name;
 	}

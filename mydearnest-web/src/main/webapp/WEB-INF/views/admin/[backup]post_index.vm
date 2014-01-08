@@ -51,7 +51,7 @@
 	  		<tr>
 		  		<td class="user"><a href="/#/profile/$item.account.userId" target="_blank">$!item.account.userId</a></td>
 		  		<td class="thumb">
-			  		<a href="/#/show/$item.id" target="_blank"><img src="http://findfashion.kr/user-image/thumb/$item.imageSource.id?w=78&h=78&t=crop" /></a>
+			  		<a href="/#/show/$item.id" target="_blank"><img src="http://findfashion.kr/mdn-image/thumb/$item.imageSource.id?w=78&h=78&t=crop" /></a>
 		  		</td>
 		  		<td class="contents">
 		  		<a href="/#/show/$item.id" target="_blank">

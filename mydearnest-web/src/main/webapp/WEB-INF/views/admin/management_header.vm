@@ -1,0 +1,8 @@
+<h2>admin 맴버 관리 페이지</h2>
+
+<div class="btn-group" style="float:right; margin-bottom:10px;">
+  <a class="btn btn-default" href="/admin/category/list">태그관리</a>
+ 
+</div>
+
+

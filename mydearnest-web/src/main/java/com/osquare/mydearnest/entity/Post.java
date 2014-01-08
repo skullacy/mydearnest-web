@@ -13,8 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -29,32 +27,44 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class Post implements Serializable {
 
 	private long id;
-	private Category category;
 	private Account account;
 	
 	private ImageSource imageSource;
 	private int imageWidth;
 	private int imageHeight;
 	
-	private String title;
-	private String description;
-	
-	private long goodCount;
-	private long commentCount;
-	private long drawerCount;
+	private String source;
 	
 	private Date createdAt;
 	private Date deletedOn;
+	private Boolean checkSum;
 	
-	private Set<Folder> folders = new HashSet<Folder>(0);
 	
-	private Set<Notification> notifications = new HashSet<Notification>(0);
+
+	
+	//포스트 관련 수치들
+	private long goodCount;
+	private long commentCount;
+	private long gradeCount;
+	private long photoTagCount;
 	private Set<PostLove> postLoves = new HashSet<PostLove>(0);
 	private Set<PostComment> postComments = new HashSet<PostComment>(0);
-	
 	private Set<PostView> postViews = new HashSet<PostView>(0);
-	private Set<PostRank> postRanks = new HashSet<PostRank>(0);
 	
+	//사진 평가모음
+	private Set<PostGrade> postGrades = new HashSet<PostGrade>(0);
+	
+	//포스트 태그모음(중복입력 가능한것들)
+	private Set<PostTag> postTags = new HashSet<PostTag>(0);
+	
+	//사진 태그모음
+	private Set<PhotoTag> photoTags = new HashSet<PhotoTag>(0);
+	
+	//단일입력만 가능한 것들
+	private int tagSize;
+	private int tagTone;
+	private int theme;
+	private int spaceType;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -67,16 +77,6 @@ public class Post implements Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CATEGORY_ID", nullable = false)
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ACCOUNT_ID", nullable = false)
 	public Account getAccount() {
@@ -85,15 +85,6 @@ public class Post implements Serializable {
 
 	public void setAccount(Account account) {
 		this.account = account;
-	}
-
-	@Column(name = "TITLE", nullable = false)
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -124,13 +115,49 @@ public class Post implements Serializable {
 		this.imageHeight = imageHeight;
 	}
 
-	@Column(name = "DESCRIPTION", nullable = false)
-	public String getDescription() {
-		return description;
+	@Column(name = "SOURCE", columnDefinition="TEXT", nullable = false)
+	public String getSource() {
+		return source;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setSource(String source) {
+		this.source = source;
+	}
+	
+	@Column(name = "SIZE", nullable = true)
+	public int getTagSize() {
+		return tagSize;
+	}
+
+	public void setTagSize(int tagSize) {
+		this.tagSize = tagSize;
+	}
+
+	@Column(name = "TONE", nullable = true)
+	public int getTagTone() {
+		return tagTone;
+	}
+
+	public void setTagTone(int tagTone) {
+		this.tagTone = tagTone;
+	}
+
+	@Column(name = "THEME", nullable = true)
+	public int getTheme() {
+		return theme;
+	}
+
+	public void setTheme(int theme) {
+		this.theme = theme;
+	}
+
+	@Column(name = "SPACETYPE", nullable = true)
+	public int getSpaceType() {
+		return spaceType;
+	}
+
+	public void setSpaceType(int spaceType) {
+		this.spaceType = spaceType;
 	}
 
 	@Column(name = "GOOD_COUNT", nullable = false)
@@ -151,13 +178,22 @@ public class Post implements Serializable {
 		this.commentCount = commentCount;
 	}
 
-	@Column(name = "DRAWER_COUNT", nullable = false)
-	public long getDrawerCount() {
-		return drawerCount;
+	@Column(name = "GRADE_COUNT", nullable = false)
+	public long getGradeCount() {
+		return gradeCount;
 	}
 
-	public void setDrawerCount(long drawerCount) {
-		this.drawerCount = drawerCount;
+	public void setGradeCount(long gradeCount) {
+		this.gradeCount = gradeCount;
+	}
+	
+	@Column(name = "PHOTOTAG_COUNT", nullable = false)
+	public long getPhotoTagCount() {
+		return photoTagCount;
+	}
+
+	public void setPhotoTagCount(long photoTagCount) {
+		this.photoTagCount = photoTagCount;
 	}
 
 	@Column(name = "CREATED_AT", nullable = false)
@@ -178,15 +214,6 @@ public class Post implements Serializable {
 		this.deletedOn = deletedOn;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-	public Set<Notification> getNotifications() {
-		return notifications;
-	}
-
-	public void setNotifications(Set<Notification> notifications) {
-		this.notifications = notifications;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
 	public Set<PostLove> getPostLoves() {
 		return postLoves;
@@ -215,24 +242,46 @@ public class Post implements Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-	public Set<PostRank> getPostRanks() {
-		return postRanks;
+	public Set<PostGrade> getPostGrade() {
+		return postGrades;
+	}
+	
+	public void setPostGrade(Set<PostGrade> postGrades) {
+		this.postGrades = postGrades;
 	}
 
-	public void setPostRanks(Set<PostRank> postRanks) {
-		this.postRanks = postRanks;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+	public Set<PostTag> getPostTag() {
+		return postTags;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "POST_FOLDER", joinColumns = { @JoinColumn(name = "POST_ID", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "FOLDER_ID", nullable = false, updatable = false) })
-	public Set<Folder> getFolders() {
-		return folders;
+	public void setPostTag(Set<PostTag> postTags) {
+		this.postTags = postTags;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+	public Set<PhotoTag> getPhotoTags() {
+		return photoTags;
 	}
 
-	public void setFolders(Set<Folder> folders) {
-		this.folders = folders;
+	public void setPhotoTags(Set<PhotoTag> photoTags) {
+		this.photoTags = photoTags;
 	}
 
+	@Column(name = "CHECKSUM", nullable = true)
+	public Boolean getCheckSum() {
+		return checkSum;
+	}
+
+	public void setCheckSum(Boolean checkSum) {
+		this.checkSum = checkSum;
+	}
+
+	
+
+	
+	
+	
 	
 	
 	

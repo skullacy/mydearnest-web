@@ -156,12 +156,15 @@ public class PostsController {
 			
 			if (account.getFacebookId() != null && !account.getFacebookId().isEmpty()) {
 				String url = "http://findfashion.kr/show/" + postId + ".fb";
-				String postMessage = post.getDescription() + "를 좋아합니다.";
+				
+				//기존방식 주석처리
+				String postMessage = /*post.getDescription() +*/ "를 좋아합니다.";
 				
 				FacebookServiceProvider facebookProvider = new FacebookServiceProvider(pm.get("social.facebook.appId"), pm.get("social.facebook.appSecret"));
 				Facebook facebook = facebookProvider.getApi(jsonObject.getString("facebook_accessToken"));
-				FacebookLink fbLink = new FacebookLink(url, post.getTitle(), "", post.getDescription());
-				facebook.feedOperations().postLink(postMessage, fbLink);
+//				//기존방식 주석처리
+//				FacebookLink fbLink = new FacebookLink(url, post.getTitle(), "", post.getDescription());
+//				facebook.feedOperations().postLink(postMessage, fbLink);
 			}
 
 		}

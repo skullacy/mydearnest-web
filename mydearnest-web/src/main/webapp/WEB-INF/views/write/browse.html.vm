@@ -13,20 +13,11 @@
 ')
 
 <div class="additem_content">
-	<textarea style="display:none;" id="folderTpl" name="folderTpl">
-		#springBind("command.folderId")
-		<select name="folderId" class="selectbox" data-has-folder="true">
-			<option value="">선택하세요</option>
-			#foreach($haveFolder in $haveFolders)
-			<option value="$haveFolder.id"#if($status.value==$haveFolder.id) selected="selected"#end>$haveFolder.name</option>
-			#end
-		</select>
-	</textarea>
 	
 	<iframe id="post_submit" name="post_submit" style="display:none;"></iframe>
 	<form method="post" action="$request.contextPath/write/submit" enctype="multipart/form-data" target="post_submit">
 
-    <div class="thumb_container">
+    <div class="thumb_container" style="float:left;">
 		<img id="thumb_view" style="display:none; position:absolute; z-index:1; left:50%; top:50%;" />
     	<img id="thumb_case" src="$request.contextPath/images/additem/image_background.png" style="width:100%; position:relative; z-index:10;" />
     	<div id="thumb_button" style="width:110px; height:40px; overflow:hidden; left:50%; top:50%; margin-left:-55px; margin-top:-20px; position:absolute; z-index:11;">
@@ -47,23 +38,98 @@
 				<div class="clear">
 				</div>
 			</div>
-			#springBind("command.folderId")
-			<div id="folder_container" class="item">
-				<label for="folderId">서랍</label>
-				<div id="folder_view">
+			<style>
+				.tag	{float:left; border:1px solid #ccc; padding:2px; margin:2px;}
+			</style>
+			#springBind("command.position")
+			<div class="item">
+				<label for="position_search">공간</label>
+				<input type="text" id="position_search" name="position_search" action="$request.contextPath/api/category/search.ajax" />
+				<span>$sec.authorType</span>
+				<input type="hidden" id="position" name="position" value="$!status.value" />
+				
+				<div class="tagList" style="width:100%; height:auto; padding:3px; overflow:auto; ">
+					<div class="tag_ori" style="display:none">
+						<span class="tag_label"></span>
+						<a class="delete_tag" href="#">X</a>
+						<input type="hidden" class="position_hidden" />
+					</div>
 				</div>
 			</div>
-			#springBind("command.category")
+			
+			#springBind("command.homeSize")
 			<div class="item">
-				<label for="category">카테고리</label>
-	        	<select id="category" name="category" class="selectbox">
-					#foreach($category in $rootCategories)
-	        		<option value="$category.id">$category.content</option>
-					#end
-	        	</select>
+				<label for="title">평수</label>
+				<select id="homeSize" name="homeSize">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</select>
+				<div class="clear">
+				</div>
+			</div>
+			#springBind("command.areaType")
+			<div class="item">
+				<label for="title">내/외부</label>
+				<select id="areaType" name="areaType">
+					<option value="0">indoor</option>
+					<option value="1">outdoor</option>
+				</select>
+				<div class="clear">
+				</div>
+			</div>
+			#springBind("command.accessory")
+			<div class="item">
+				<label for="title">액세서리</label>
+				<input type="accessory" id="accessory" name="accessory" value="$!status.value" class="txt" />
+				<div class="clear">
+				</div>
+			</div>
+			
+			#springBind("command.feelModern")
+			<div class="item">
+				<label for="desc">모던</label>
+				<input type="text" name="feelModern" id="feelModern" class="txt" value="$!status.value" />
+				<div class="clear">
+				</div>
+			</div>
+			#springBind("command.feelLuxury")
+			<div class="item">
+				<label for="desc">럭셔리</label>
+				<input type="text" name="feelLuxury" id="feelLuxury" class="txt" value="$!status.value" />
+				<div class="clear">
+				</div>
+			</div>
+			#springBind("command.feelCute")
+			<div class="item">
+				<label for="desc">아기자기</label>
+				<input type="text" name="feelCute" id="feelCute" class="txt" value="$!status.value" />
+				<div class="clear">
+				</div>
+			</div>
+			#springBind("command.feelVintage")
+			<div class="item">
+				<label for="desc">빈티지</label>
+				<input type="text" name="feelVintage" id="feelVintage" class="txt" value="$!status.value" />
+				<div class="clear">
+				</div>
+			</div>
+			#springBind("command.feelWarm")
+			<div class="item">
+				<label for="desc">따뜻함</label>
+				<input type="text" name="feelWarm" id="feelWarm" class="txt" value="$!status.value" />
+				<div class="clear">
+				</div>
+			</div>
+			#springBind("command.source")
+			<div class="item">
+				<label for="desc">출처</label>
+				<input type="text" name="source" id="source" class="txt" value="$!status.value" />
+				<div class="clear">
+				</div>
 			</div>
 			#springBind("command.desc")
-			<div class="item last pad">
+			<div class="item pad last">
 				<label for="desc">상세소개</label>
 				<textarea name="desc" id="desc" class="txt">$!status.value</textarea>
 				<div class="clear">
@@ -72,13 +138,7 @@
 		</fieldset>
 		
     	<div style="padding:10px 0px;">
-			<input type="submit" class="submit" value="파인드">
+			<input type="submit" class="submit" value="등록">
 		</div>
 
-    </div>
-    
-    <div class="clear">
-    </div>
 
-	</form>
-</div>

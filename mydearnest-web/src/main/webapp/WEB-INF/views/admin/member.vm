@@ -1,0 +1,50 @@
+#parse("./admin/management_header.vm")
+<table class="table table-striped table-bordered" style="margin-top:20px; text-align:center;">
+ 	<thead>
+	 	<tr style="font-weight:bold;">
+	  		<th>이름</th>
+	  		<th>이메일</th>
+	  		<th>정보입력</th>
+	  		<th>느낌평가</th>
+	  		<th>게시물관리</th>
+	  		<th>권한관리</th>
+	 	</tr>
+	</thead>
+	<tbody>
+		#foreach($item in $items)
+	 	<tr>
+	 		<td>$!item.name</td>
+	 		<td>$!item.email</td>
+	 		<td>
+	 			32개
+	 		</td>
+	 		<td>
+	 			100개
+	 		</td>
+	 		<td>
+	 			<a href="#">link</a>
+	 		</td>
+	 		<td>
+	  			<select class="role_update" data-userid="$item.id">
+		  			<option value="ROLE_USER" #if($item.role == "ROLE_USER") selected="selected"#end>사용자</option>
+		  			<option value="ROLE_MODIFIER" #if($item.role == "ROLE_MODIFIER") selected="selected"#end>사진수정전용</option>
+		  			<option value="ROLE_UPLOADER" #if($item.role == "ROLE_UPLOADER") selected="selected"#end>업로더</option>
+		  			<option value="ROLE_ADMIN" #if($item.role == "ROLE_ADMIN") selected="selected"#end>관리자</option>
+	  			</select>
+	  		</td>
+	 	</tr>
+	 	#end
+	 </tbody>
+</table>
+
+<script type="text/javascript" src="$request.contextPath/scripts/admin.js"></script>
+
+<div class="paginate">
+	#foreach($i in [1..$pages])
+	#if($i == $page)
+	<strong>$i</strong>
+	#else
+	<a href="$request.contextPath/admin/management/member?page=$i">$i</a>
+	#end
+	#end
+</div>

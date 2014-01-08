@@ -18,8 +18,17 @@ import javax.annotation.Resource;
 
 
 
+
+
+
+
+
+
+
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,10 +49,14 @@ import com.osquare.mydearnest.entity.Category;
 import com.osquare.mydearnest.entity.Folder;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Notification;
+import com.osquare.mydearnest.entity.PhotoTag;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostComment;
+import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.PostLove;
 import com.osquare.mydearnest.entity.PostRank;
+import com.osquare.mydearnest.entity.PostTag;
+import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.post.vo.RefPost;
 import com.osquare.mydearnest.profile.vo.CommentVO;
@@ -133,20 +146,119 @@ public class PostServiceImpl implements PostService {
 		
 		return folder;
 	}
-
+	
+//	@Override
+//	public Post createPost(Account account, ImageSource imageSource, PostVO postVO) {
+//
+//		Post post = null;
+//		Session session = sessionFactory.getCurrentSession();
+//		session.getTransaction().begin();
+//
+//		try {
+////			Category category = new Category();
+////			category.setId(postVO.getCategory());
+//			
+//			post = new Post();
+//			post.setAccount(account);
+//			post.setImageSource(imageSource);
+//			
+//			post.setImageWidth(imageSource.getWidth());
+//			post.setImageHeight(imageSource.getHeight());
+//			
+////			post.setCategory(category);
+//
+//			post.setTitle(postVO.getTitle());
+//			post.setDescription(postVO.getDesc());
+//
+//			post.setCreatedAt(new Date());
+//			
+//			post.setPosition(postVO.getPosition());
+//			post.setHomeSize(postVO.getHomeSize());
+//			post.setAreaType(postVO.getAreaType());
+//			post.setAccessory(postVO.getAccessory());
+//			
+//			
+//			
+//			session.persist(post);
+//			
+//			
+//			session.getTransaction().commit();
+//			
+//			this.createPostGrade(post, account, postVO);
+//		}
+//		catch(Exception ex) {
+//			session.getTransaction().rollback();
+//			ex.printStackTrace();
+//		}
+//		
+//		return post;
+//	}
 	@Override
-	public Post createPost(Account account, ImageSource imageSource, PostVO postVO) {
-
-		Folder folder = this.getFolder(postVO.getFolderId());
-
+	public Post checkPostPublishable(Post post) {
+		Post result = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			
+			Criteria cr = null;
+			cr = session.createCriteria(Account.class)
+					.add(Restrictions.eq("role", "ROLE_ADMIN"))
+					.setProjection(Projections.rowCount());
+			
+			Long maxGrader = (Long) cr.uniqueResult();
+			
+			
+			cr = session.createCriteria(PostTag.class)
+					.add(Restrictions.eq("post", post))
+					.setProjection(Projections.rowCount());
+			
+			Long postTagCount = (Long) cr.uniqueResult();
+			
+			System.out.println(maxGrader);
+			System.out.println(post.getGradeCount() == maxGrader);
+			System.out.println(post.getSpaceType() >= 0);
+			System.out.println(post.getTagSize() >= 0);
+			System.out.println(post.getTagTone() >= 0);
+			System.out.println(post.getTheme() >= 0);
+			System.out.println(postTagCount >= 4);
+			
+			Boolean checkSum = (
+						post.getGradeCount() == maxGrader &&
+						post.getSpaceType() >= 0 &&
+						post.getTagSize() >= 0 &&
+						post.getTagTone() >= 0 &&
+						post.getTheme() >= 0 &&
+						postTagCount >= 4
+					);
+			
+			cr = session.createCriteria(Post.class)
+					.add(Restrictions.eq("id", post.getId()));
+			
+			result = (Post) cr.uniqueResult();
+			result.setCheckSum(checkSum);
+			
+			session.update(result);
+					
+			session.getTransaction().commit();
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return post;
+		
+	}
+	
+	@Override
+	public Post createPostUpload(Account account, ImageSource imageSource,
+			PostVO postVO) {
 		Post post = null;
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
-
+		
 		try {
-			Category category = new Category();
-			category.setId(postVO.getCategory());
-			
 			post = new Post();
 			post.setAccount(account);
 			post.setImageSource(imageSource);
@@ -154,29 +266,179 @@ public class PostServiceImpl implements PostService {
 			post.setImageWidth(imageSource.getWidth());
 			post.setImageHeight(imageSource.getHeight());
 			
-			post.setCategory(category);
-
-			post.setTitle(postVO.getTitle());
-			post.setDescription(postVO.getDesc());
-
+			post.setSource(postVO.getSource());
+			
 			post.setCreatedAt(new Date());
-			post.getFolders().add(folder);
+			
 			session.persist(post);
 			
-			session.refresh(folder);
+			session.getTransaction().commit();
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		checkPostPublishable(post);
+		
+		return post;
+	}
+
+	@Override
+	public Post createPostDetail(Post post, Account account, PostVO postVO) {
+		
+		Post result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		Collection<PostTag> dResult = null;
+		
+		try {
 			
-			folder.setCount(folder.getPosts().size() + 1);
-			session.merge(folder);
+				
+			Criteria cr = session.createCriteria(PostTag.class)
+					.add(Restrictions.eq("post", post));
 			
-			Notification notification = new Notification();
-			notification.setAccount(account);
-			notification.setPost(post);
-			notification.setPostMode("ADD");
-			notification.setPostWriter(account);
-			notification.setCreatedAt(new Date());
-			notification.setConfirmedAt(new Date());
-			session.persist(notification);
+			dResult = cr.list();
+			for(PostTag postTag : dResult) {
+				session.delete(postTag);
+			}
 			
+			PostTag postTag = null;
+			
+			for(long tagId : postVO.getTagAccessory()) {
+				postTag = null;
+				postTag = new PostTag();
+				postTag.setPost(post);
+				postTag.setAccount(account);
+				postTag.setTagCateId(tagId);
+				
+				session.persist(postTag);
+			}
+			
+			for(long tagId : postVO.getTagHome()) {
+				postTag = null;
+				postTag = new PostTag();
+				postTag.setPost(post);
+				postTag.setAccount(account);
+				postTag.setTagCateId(tagId);
+				
+				session.persist(postTag);
+			}
+			
+			for(String value : postVO.getTagColor()) {
+				postTag = null;
+				postTag = new PostTag();
+				postTag.setPost(post);
+				postTag.setAccount(account);
+				postTag.setNonCateType("color");
+				postTag.setValue(value);
+				
+				session.persist(postTag);
+			}
+			
+			result = post;
+			result.setTagSize(postVO.getTagSize());
+			result.setTagTone(postVO.getTagTone());
+			result.setTheme(postVO.getTheme());
+			result.setSpaceType(postVO.getSpaceType());
+			
+			session.update(result);
+			
+			
+			
+			session.getTransaction().commit();
+			
+			
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		checkPostPublishable(post);
+		
+		return result;
+	}
+	
+	@Override
+	public Post createPostPhotoTag(Post post, Account account, PostVO postVO) {
+		
+		Post result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			PhotoTag photoTag;
+			Criteria cr;
+			TagCategory tagCategory;
+			for(int i = 0; i < postVO.getPostTagId().length; i++ ) {
+				post = (Post) session.get(Post.class, post.getId());
+				post.setPhotoTagCount(post.getPhotoTagCount() + 1);
+				session.merge(post);
+				
+				photoTag = null;
+				photoTag = new PhotoTag();
+				
+				cr = session.createCriteria(TagCategory.class)
+						.add(Restrictions.eq("id", postVO.getPostTagId()[i]));
+				
+				tagCategory = (TagCategory) cr.uniqueResult();
+				
+				photoTag.setAccount(account);
+				photoTag.setPost(post);
+				
+				photoTag.setTagCategory(tagCategory);
+				
+				photoTag.setTitle(postVO.getTitle()[i]);
+				photoTag.setInfo(postVO.getInfo()[i]);
+				photoTag.setPosX1(postVO.getPosX1()[i]);
+				photoTag.setPosX2(postVO.getPosX2()[i]);
+				photoTag.setPosY1(postVO.getPosY1()[i]);
+				photoTag.setPosY2(postVO.getPosY2()[i]);
+				
+				session.persist(photoTag);
+			}
+			
+			result = post;
+			
+			session.getTransaction().commit();
+			
+		}
+		catch (Exception e){
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		
+		checkPostPublishable(post);
+		
+		return result;
+	}
+
+	@Override
+	public PostGrade createPostGrade(Post post1, Account account, PostVO postVO) {
+	
+		PostGrade result = null;
+		Post post = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+	
+		try {
+			
+			post = (Post) session.get(Post.class, post1.getId());
+			post.setGradeCount(post.getGradeCount() + 1);
+			session.merge(post);
+			
+			result = new PostGrade();
+			result.setAccount(account);
+			result.setPost(post);
+			result.setFeelCute(postVO.getFeelCute());
+			result.setFeelWarm(postVO.getFeelWarm());
+			result.setFeelModern(postVO.getFeelModern());
+			result.setFeelVintage(postVO.getFeelVintage());
+			result.setFeelLuxury(postVO.getFeelLuxury());
+			result.setCreatedAt(new Date());
+			
+			session.persist(result);
 			session.getTransaction().commit();
 		}
 		catch(Exception ex) {
@@ -184,9 +446,40 @@ public class PostServiceImpl implements PostService {
 			ex.printStackTrace();
 		}
 		
-		return post;
+		checkPostPublishable(post);
+		
+		return result;
 	}
-	
+
+	@Override
+	public PostGrade updatePostGrade(Post post1, Account account, PostVO postVO) {
+		
+		PostGrade result = getMyPostGradeByPost(account, post1);
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		
+		try {
+			
+			result.setFeelCute(postVO.getFeelCute());
+			result.setFeelWarm(postVO.getFeelWarm());
+			result.setFeelModern(postVO.getFeelModern());
+			result.setFeelVintage(postVO.getFeelVintage());
+			result.setFeelLuxury(postVO.getFeelLuxury());
+			
+			session.update(result);
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		checkPostPublishable(post1);
+		
+		return result;
+	}
+
 	@Override 
 	public Post removePostByMode(Long postId, String editMode, Long drawerId) {
 		Post result = null;
@@ -199,34 +492,34 @@ public class PostServiceImpl implements PostService {
 			SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 			
 			result = (Post) session.get(Post.class, postId);
-			if (editMode.equals("love")) {
-					
-				PostLove postLove = (PostLove) session.createCriteria(PostLove.class)
-					.add(Restrictions.eq("post", result))
-					.add(Restrictions.eq("account", session.get(Account.class, principal.getAccountId())))
-					.setMaxResults(1).uniqueResult();
-				
-				session.delete(postLove);
-			}
-			else if (editMode.equals("folder")) {
-				
-				Folder folder = (Folder) session.get(Folder.class, drawerId);
-				folder.getPosts().remove(result);
-				folder.setCount(folder.getPosts().size());
-				session.merge(folder);
-				
-				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
-			}
-			else if (editMode.equals("post")) {
-				
-				for(Folder folder : result.getFolders()) {
-					folder.setCount(folder.getPosts().size());
-					session.merge(folder);
-				}
-
-				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
-				
-			}
+//			if (editMode.equals("love")) {
+//					
+//				PostLove postLove = (PostLove) session.createCriteria(PostLove.class)
+//					.add(Restrictions.eq("post", result))
+//					.add(Restrictions.eq("account", session.get(Account.class, principal.getAccountId())))
+//					.setMaxResults(1).uniqueResult();
+//				
+//				session.delete(postLove);
+//			}
+//			else if (editMode.equals("folder")) {
+//				
+//				Folder folder = (Folder) session.get(Folder.class, drawerId);
+//				folder.getPosts().remove(result);
+//				folder.setCount(folder.getPosts().size());
+//				session.merge(folder);
+//				
+//				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
+//			}
+//			else if (editMode.equals("post")) {
+//				
+//				for(Folder folder : result.getFolders()) {
+//					folder.setCount(folder.getPosts().size());
+//					session.merge(folder);
+//				}
+//
+//				if (result.getAccount().getId() == principal.getAccountId()) session.delete(result);
+//				
+//			}
 			
 			session.getTransaction().commit();
 		}
@@ -253,6 +546,9 @@ public class PostServiceImpl implements PostService {
 					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			
 			result = (Post) cr.uniqueResult();
+			
+			Hibernate.initialize(result.getPostTag());
+			
 			session.getTransaction().commit();
 		}
 		catch(Exception ex) {
@@ -482,6 +778,53 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
+	public Collection<PostGrade> getPostGradeByPost(Post post) {
+		Collection<PostGrade> postGrade = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(PostGrade.class)
+								.add(Restrictions.eq("post", post));
+			
+			postGrade = cr.list();
+		}
+		catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return postGrade;
+	}
+
+	@Override
+	public PostGrade getMyPostGradeByPost(Account account, Post post) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(PostGrade.class)
+								.setFetchMode("account", FetchMode.JOIN)
+								.add(Restrictions.eq("post", post))
+								.add(Restrictions.eq("account", account))
+								.setMaxResults(1);
+			
+			PostGrade postGrade = (PostGrade) cr.uniqueResult();
+			
+			session.getTransaction().commit();
+			return postGrade;
+		}
+		catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<PostComment> getCommentsByPost(Post post, Integer page) {
 
@@ -641,7 +984,7 @@ public class PostServiceImpl implements PostService {
 		}
 		
 	}
-
+	
 	
 	@Override
 	public Long getPrevPostId(Long postId, String ref) {
@@ -1044,6 +1387,8 @@ public class PostServiceImpl implements PostService {
 			return false;
 		}
 	}
+
+	
 
 
 
