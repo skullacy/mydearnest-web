@@ -33,10 +33,7 @@
 	    <intercept-url pattern="/admin*" access="ROLE_ADMIN" requires-channel="any" />
 	    <intercept-url pattern="/admin/**" access="ROLE_ADMIN" requires-channel="any" />
 	    
-	    <intercept-url pattern="/admin/manager*" access="ROLE_UPLOADER" requires-channel="any" />	    	    
-	    <intercept-url pattern="/admin/manager/**" access="ROLE_UPLOADER" requires-channel="any" />
-	    <intercept-url pattern="/admin/manager*" access="ROLE_MODIFIER" requires-channel="any" />	    	    
-	    <intercept-url pattern="/admin/manager/**" access="ROLE_MODIFIER" requires-channel="any" />
+	   
 	    
 	    	    
 	    <intercept-url pattern="/mypage*" access="ROLE_USER" requires-channel="any" />

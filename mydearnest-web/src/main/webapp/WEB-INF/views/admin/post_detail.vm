@@ -59,7 +59,7 @@
 					<td class="tag_home">
 					</td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="거실 사무실 한옥 옷장 정원 공부방" data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<button class="btn btn-default btn-xs feel-tooltip" data-content="#foreach($tag in $tagcate)#if($tag.type=="home")$tag.title  #end#end" data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
 					</td>
 				</tr>
 				<tr>
@@ -68,21 +68,21 @@
 					
 					</td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<button class="btn btn-default btn-xs feel-tooltip" data-content="#foreach($tag in $tagcate)#if($tag.type=="accessory")$tag.title  #end#end" data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
 					</td>
 				</tr>
 				<tr>
 					<td class="tag_name">평수</td>
 					<td class="tag_size"></td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<button class="btn btn-default btn-xs feel-tooltip" data-content="#foreach($tag in $tagcate)#if($tag.type=="size")$tag.title  #end#end" data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
 					</td>
 				</tr>
 				<tr>
 					<td class="tag_name">톤</td>
 					<td class="tag_tone"></td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<button class="btn btn-default btn-xs feel-tooltip" data-content="#foreach($tag in $tagcate)#if($tag.type=="tone")$tag.title  #end#end" data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
 					</td>
 				</tr>
 				<tr>
