@@ -5,7 +5,7 @@
 </style>
 
 
-<h2>사진업로드</h2>
+<h2>악세사리 태그입력(사진에 악세사리영역 드레그)</h2>
 <form method="post" action="$request.contextPath/admin/write/phototag/$post.id" enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
 	<div class="image_content" style="display:inline-block; float:left;">
 		<img id="photo_upload" src="$request.contextPath/mdn-image/get/$post.id" width="400px"/>
@@ -39,7 +39,12 @@
 			<input type="hidden" class="info" value="" />
 		</div>
 	</div>
-	<input type="submit" class="btn btn-primary btn-lg" style="vertical-align: bottom; display:block; width:150px; height:50px; margin-top:10px; position:relative; left:310px" value="등록하기" />
+	<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
+		<a class="btn btn-warning btn-lg" href="#">등록 > 느낌입력</a>
+		<a class="btn btn-warning btn-lg" href="#">등록 > 태그입력</a>
+		<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
+	</div>
+	
 </form>
 
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/photoupload.js"></script>	

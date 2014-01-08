@@ -119,8 +119,12 @@
 			
 		</div>
 		<a class="btn btn-default btn-lg" href="#" style="margin-top:10px; display:none;"><이전</a>
-		<input type="submit" class="btn btn-primary btn-lg" value="등록완료 다음>" style="margin-top:10px; position:relative; left:260px;" />	
 			
+		<div class="button-container" style="margin-top:30px; position:relative;">
+		<a class="btn btn-warning btn-lg" href="#">등록>느낌평가</a>
+		<a class="btn btn-warning btn-lg" href="#">등록>악세사리</a>
+		<input type="submit" class="btn btn-primary btn-lg" value="등록>다음사진" style="" />
+	</div>	
 	</form>
 </div>
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.ImageColorPicker.js"></script>					
