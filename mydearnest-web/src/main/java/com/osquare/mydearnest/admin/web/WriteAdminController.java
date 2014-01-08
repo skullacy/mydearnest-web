@@ -92,11 +92,11 @@ public class WriteAdminController {
 			}
 			else {
 				model.addAttribute("success", true);
-				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+				model.addAttribute("redirect_uri", request.getContextPath() + "/admin/write/submit.do");
 			}
 		}
 
-		return "account/join_detail_result";
+		return "redirect:/admin/";
 	}
 	
 	/**
@@ -160,12 +160,12 @@ public class WriteAdminController {
 			}
 			else {
 				model.addAttribute("success", true);
-				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+//				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
 			}
 		}
 		
 
-		return null;
+		return "redirect:/admin/";
 	}
 	
 	
@@ -235,12 +235,12 @@ public class WriteAdminController {
 			}
 			else {
 				model.addAttribute("success", true);
-				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+//				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
 			}
 		}
 		
 
-		return null;
+		return "redirect:/admin/";
 	}
 	
 	/**
@@ -319,12 +319,12 @@ public class WriteAdminController {
 			}
 			else {
 				model.addAttribute("success", true);
-				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
+//				model.addAttribute("redirect_uri", request.getContextPath() + "/write/complete.do");
 			}
 		}
 		
 		
-		return null;
+		return "redirect:/admin/";
 	}
 	
 	
@@ -415,10 +415,10 @@ public class WriteAdminController {
 //		return "account/join_detail_result";
 //	}
 //
-//	@RequestMapping(value = "/complete.do", method = RequestMethod.GET)
-//	public String complete(Model model, HttpServletRequest request, HttpServletResponse response) {
-//		model.addAttribute("layout", "shared/layout.blank.vm");
-//		return "write/complete";
-//	}
+	@RequestMapping(value = "/submit.do", method = RequestMethod.GET)
+	public String complete(Model model, HttpServletRequest request, HttpServletResponse response) {
+		model.addAttribute("layout", "shared/layout.blank.vm");
+		return "admin/submit";
+	}
 
 }

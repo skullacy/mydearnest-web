@@ -46,6 +46,7 @@ public class Post implements Serializable {
 	private long goodCount;
 	private long commentCount;
 	private long gradeCount;
+	private long photoTagCount;
 	private Set<PostLove> postLoves = new HashSet<PostLove>(0);
 	private Set<PostComment> postComments = new HashSet<PostComment>(0);
 	private Set<PostView> postViews = new HashSet<PostView>(0);
@@ -53,8 +54,11 @@ public class Post implements Serializable {
 	//사진 평가모음
 	private Set<PostGrade> postGrades = new HashSet<PostGrade>(0);
 	
-	//사진 태그모음(중복입력 가능한것들)
+	//포스트 태그모음(중복입력 가능한것들)
 	private Set<PostTag> postTags = new HashSet<PostTag>(0);
+	
+	//사진 태그모음
+	private Set<PhotoTag> photoTags = new HashSet<PhotoTag>(0);
 	
 	//단일입력만 가능한 것들
 	private int tagSize;
@@ -182,6 +186,15 @@ public class Post implements Serializable {
 	public void setGradeCount(long gradeCount) {
 		this.gradeCount = gradeCount;
 	}
+	
+	@Column(name = "PHOTOTAG_COUNT", nullable = false)
+	public long getPhotoTagCount() {
+		return photoTagCount;
+	}
+
+	public void setPhotoTagCount(long photoTagCount) {
+		this.photoTagCount = photoTagCount;
+	}
 
 	@Column(name = "CREATED_AT", nullable = false)
 	public Date getCreatedAt() {
@@ -245,6 +258,15 @@ public class Post implements Serializable {
 	public void setPostTag(Set<PostTag> postTags) {
 		this.postTags = postTags;
 	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+	public Set<PhotoTag> getPhotoTags() {
+		return photoTags;
+	}
+
+	public void setPhotoTags(Set<PhotoTag> photoTags) {
+		this.photoTags = photoTags;
+	}
 
 	@Column(name = "CHECKSUM", nullable = true)
 	public Boolean getCheckSum() {
@@ -254,6 +276,8 @@ public class Post implements Serializable {
 	public void setCheckSum(Boolean checkSum) {
 		this.checkSum = checkSum;
 	}
+
+	
 
 	
 	

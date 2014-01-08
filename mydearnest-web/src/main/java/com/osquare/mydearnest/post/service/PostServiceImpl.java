@@ -371,6 +371,10 @@ public class PostServiceImpl implements PostService {
 			Criteria cr;
 			TagCategory tagCategory;
 			for(int i = 0; i < postVO.getPostTagId().length; i++ ) {
+				post = (Post) session.get(Post.class, post.getId());
+				post.setPhotoTagCount(post.getPhotoTagCount() + 1);
+				session.merge(post);
+				
 				photoTag = null;
 				photoTag = new PhotoTag();
 				

@@ -21,7 +21,7 @@
 	</div>
 	<div class="link_content">
 		<label for="source" style="color:#444;">출처</label>
-		<input type="text" id="source" name="source"class="form-control" placeholder="출처입력">
+		<input type="text" id="source" name="source"class="form-control" placeholder="출처입력" value="$!post.source">
 		<label for="tag_list" style="color:#444; margin-top:10px;">악세사리 링크</label>
 		<div class="tag_list"></div>
 		<div class="photoTag_ori" style="display:none; float:left;">

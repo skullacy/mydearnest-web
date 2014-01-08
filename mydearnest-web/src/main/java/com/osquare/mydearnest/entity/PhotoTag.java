@@ -67,7 +67,7 @@ public class PhotoTag implements Serializable {
 		this.post = post;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TAGCATEGORY_ID", nullable = false)
 	public TagCategory getTagCategory() {
 		return tagCategory;
