@@ -59,10 +59,10 @@ function preview(img, selection) {
         marginTop: -Math.round(scaleY * selection.y1)
     });
 
-	$('input[name=posX1]').val(selection.x1);
-	$('input[name=posY1]').val(selection.y1);
-	$('input[name=posX2]').val(selection.x2);
-	$('input[name=posY2]').val(selection.y2);
+	$('.photoTag_ori input[name=posX1]').val(selection.x1);
+	$('.photoTag_ori input[name=posY1]').val(selection.y1);
+	$('.photoTag_ori input[name=posX2]').val(selection.x2);
+	$('.photoTag_ori input[name=posY2]').val(selection.y2);
 
     console.log(selection.x1+" x1");
     console.log(selection.y1+" y1");
@@ -78,11 +78,11 @@ $(function () {
         fadeSpeed: 200, onSelectChange: preview, 
         onSelectEnd: function (img, selection) {
     		$('.link_input').css('display','block');
-    		
+	    	
     	}
     
     });
-     
+   
         
 });
 

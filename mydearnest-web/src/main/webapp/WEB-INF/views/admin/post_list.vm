@@ -110,6 +110,7 @@
 	 			<a href="#">의자</a>
 	 			<a href="#">소파</a>
 	 			<a href="#">선반</a>
+	 			<a class="btn btn-success" href="/admin/write/phototag/$item.id" style="display:block; width:80px; position:relative; left:20px; margin-top:10px;">추가</a>
 	 		</td>
 	 		<td>
 	 			<a class="btn btn-success" href="/admin/write/detail/$item.id">수정</a>
