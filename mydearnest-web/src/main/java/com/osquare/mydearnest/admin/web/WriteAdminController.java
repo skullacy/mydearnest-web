@@ -101,7 +101,7 @@ public class WriteAdminController {
 			}
 		}
 
-		return "redirect:/admin/";
+		return "redirect:/admin/write/upload";
 	}
 	
 	/**

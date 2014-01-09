@@ -217,7 +217,7 @@ public class PostServiceImpl implements PostService {
 			Long postTagCount = (Long) cr.uniqueResult();
 			
 			System.out.println(maxGrader);
-			System.out.println(post.getGradeCount() == maxGrader);
+			System.out.println(post.getGradeCount() == maxGrader - 1);
 			System.out.println(post.getSpaceType() >= 0);
 			System.out.println(post.getTagSize() >= 0);
 			System.out.println(post.getTagTone() >= 0);
