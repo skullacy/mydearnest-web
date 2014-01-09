@@ -23,8 +23,9 @@
 <img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400" style="width:400px" />
 </div>		
 <div id="radarChart"></div>
+<form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" onkeypress="return event.keyCode!=13">
 <div style="position:relative; display:inline-block; margin-left:20px;">
-	<form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" onkeypress="return event.keyCode!=13">
+	
 	
 		
 		<label for="feelModern">모던함</label>
@@ -52,10 +53,16 @@
 		#if($pagetype == "update")
 		<input type="hidden" name="pagetype" value="update" />
 		#end
+		
 	
-		<input type="submit" class="btn btn-primary btn-lg" value="등록완료" style="margin-top:30px; position:relative; " />
-	</form>
 </div>
+<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
+		<a class="btn btn-warning btn-lg" href="#">등록 > 악세사리</a>
+		<a class="btn btn-warning btn-lg" href="#">등록 > 태그입력</a>
+		<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
+	</div>
+</form>
+
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.spidergraph.js"></script>
 <script>
 
