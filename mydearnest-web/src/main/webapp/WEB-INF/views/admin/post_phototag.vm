@@ -39,11 +39,52 @@
 			<input type="hidden" class="info" value="" />
 		</div>
 	</div>
-	<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
-		<a class="btn btn-warning btn-lg" href="#">등록 > 느낌평가</a>
-		<a class="btn btn-warning btn-lg" href="#">등록 > 태그입력</a>
-		<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
-	</div>
+	
+	#*클리핑 프로그램을 통해서 들어왔을 경우 다른 종류의 버튼*#
+	#if($fromClipping)
+		<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
+			<a class="btn btn-warning btn-lg" id="cancelUpload" href="#">삭제</a>
+			<input type="submit" class="btn btn-primary btn-lg" value="등록" />
+		</div>
+		<script>
+			$('#cancelUpload').click(function(){
+				var responseData = null;
+				jQuery.ajax({
+					url: "$request.contextPath/admin/write/upload/delete/$post.id",
+					type : "POST",
+					dataType: "json",
+					success: function(data) {
+						alert("성공적으로 삭제되었습니다.");
+						location.href = "$request.contextPath/admin/";
+					},
+					error: function(data) {
+						console.log(data);
+						responseData = JSON.parse(data.responseText);
+						//본인이 올린 사진이 아닐 경우
+						if(responseData.message == 12) {
+							alert("본인이 업로드한 사진이 아닙니다.");
+						}
+						//서버내부 에러 
+						else if(responseData.message == 13) {
+							alert("사진을 삭제하는 중 에러가 발생하였습니다.");
+						}
+						//알 수 없는 에
+						else {
+							alert("알 수 없는 에러가 발생하였습니다. 관리자에게 문의하여 주십시오");
+						}
+					}
+				}); 
+				return false;
+			});
+		</script>
+	#else
+		<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
+			<a class="btn btn-warning btn-lg" href="#">등록 > 느낌평가</a>
+			<a class="btn btn-warning btn-lg" href="#">등록 > 태그입력</a>
+			<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
+		</div>
+	#end
+	
 	
 </form>
 
