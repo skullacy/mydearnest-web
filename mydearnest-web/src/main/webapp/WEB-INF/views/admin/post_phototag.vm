@@ -40,7 +40,7 @@
 		</div>
 	</div>
 	<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
-		<a class="btn btn-warning btn-lg" href="#">등록 > 느낌입력</a>
+		<a class="btn btn-warning btn-lg" href="#">등록 > 느낌평가</a>
 		<a class="btn btn-warning btn-lg" href="#">등록 > 태그입력</a>
 		<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
 	</div>
