@@ -105,11 +105,16 @@ public class WriteAdminController {
 	 */
 	@RequestMapping(value = "/phototag/{postId}", method = RequestMethod.GET)
 	public String insertPhotoTag(Model model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "from", required = false) String from,
 			@PathVariable("postId") long postId) {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
+		
+		if("chromiumextension".equals(from)) {
+			model.addAttribute("enableDeleteBtn", true);
+		}
 		
 		//포스트 정보 가져오기
 		Post post = postService.getPostById(postId);
