@@ -5,7 +5,12 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -101,15 +106,76 @@ public class WriteAdminController {
 	
 	/**
 	 * @brief
+	 * 사진 업로드 취소처리 (Chrome Extension API)
+	 * @memo 
+	 * api컨트롤러에 올려야 정상이지만, 권한설정을 위해 해당 컨트롤러로 이동.
+	 */
+	@RequestMapping(value = "/upload/delete/{postId}", method = RequestMethod.POST)
+	public ResponseEntity<String> uploadPostDelete(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("postId") long postId) {
+		
+		
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add("Content-Type",	"application/json; charset=UTF-8");
+
+		JSONObject document = new JSONObject();
+		document.put("success", false);
+		
+		//1 : 성공
+		//10 : 로그인안됨.
+		//12 : 본인이 올린 사진이 아님.
+		//13 : 서버에서 사진 삭제중 에러발생함.
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) {
+			document.put("message", "10");
+			
+			return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.FORBIDDEN);
+		}
+		
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
+		//포스트 정보 가져오기
+		Post post = postService.getPostById(postId);
+		
+		//본인이 올린 사진이 아닐경우 해당 메세지 리턴.
+		if(post.getAccount().getId() != account.getId()) {
+			document.put("message", "12");
+			return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.FORBIDDEN);
+		}
+		
+		//포스트 삭제시 한번 더 유효성 체크(권한검사)를 실행한다.
+		Boolean result = postService.deletePost(postId);
+		
+		if(result) {
+			document.put("success", true);
+			document.put("message", "1");
+		}
+		else {
+			document.put("message", 13);
+		}
+		return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * @brief
 	 * 사진 태그 입력 화면
 	 */
 	@RequestMapping(value = "/phototag/{postId}", method = RequestMethod.GET)
 	public String insertPhotoTag(Model model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "from", required = false) String from,
 			@PathVariable("postId") long postId) {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
+		
+		//구글 확장프로그램을 통해서 해당 뷰에 접근 했을경우.
+		if("chromiumextension".equals(from)) {
+			model.addAttribute("fromClipping", true);
+		}
 		
 		//포스트 정보 가져오기
 		Post post = postService.getPostById(postId);
