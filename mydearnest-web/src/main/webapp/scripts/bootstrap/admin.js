@@ -157,5 +157,9 @@ $(function(){
 	});	
 		
 		
+	
+		
+		$('.feel-tooltip').popover('hide');
+		
 
 });
