@@ -2,7 +2,7 @@
 <style>
 	.photocontainer {
     	width:400px;
-    	height:600px;
+    	
     	position:relative;
     	display:inline-block;
     	float:left;
@@ -33,12 +33,21 @@
     	width:5px;
     	text-align:center;
     }
+    .tip-mousemove{position:fixed; width:auto; display:none; z-index:10;}
+  
 </style>
 <div class="photocontainer">
-	<img src="$request.contextPath/mdn-image/get/$post.id" width="400px" height="600px" id="test"/>
-</div>		
+	<div class="tip-mousemove">
+		<button class="color-teach btn btn-danger" ></button>
+	</div>
+	<img src="$request.contextPath/mdn-image/get/$post.id" width="400px" id="test"/>
+	
+</div>	
+
 <div class="infoInput">
+	
 	<form class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/$post.id" method="post" onkeypress="return event.keyCode!=13">
+		
 		<div class="form-group">
 			<div class="col-lg-10">
 			<span>태그입력</span>
@@ -46,7 +55,7 @@
 			</div>
 		</div>
 		<div class="tagResult">
-			<div style="display:none;" class="btn btn-default btn-xs tag_ori" style="">
+			<div style="display:none;" class="btn btn-default btn-xs tag_ori">
 				<span class="tag_label"></span>
 				<a class="delete_tag" href="#">X</a>
 				<input type="hidden" class="position_hidden" />
@@ -113,7 +122,13 @@
 				</tr>
 				<tr>
 					<td class="tag_name">색상</td>
-					<td class="tag_color"></td>
+					<td class="tag_color">
+						<a class="btn btn-success" id="color-select-btn">색상선택</a> 
+						<div class="color-space" style="display:inline;" data-click="0"></div>
+						<div class="color-space" style="display:inline;" data-click="1"></div>
+						<div class="color-space" style="display:inline;" data-click="2"></div>
+						<div class="color-space" style="display:inline;" data-click="3"></div>
+					</td>
 				</tr>
 			</table>
 			
@@ -126,7 +141,9 @@
 		<input type="submit" class="btn btn-primary btn-lg" value="등록>다음사진" style="" />
 	</div>	
 	</form>
+	
 </div>
+
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.ImageColorPicker.js"></script>					
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/admin.js"></script>	
 
@@ -223,6 +240,7 @@
 		
 		$(".tag_$!type").append(tag);
 		tag.show();
+		
 	#end
 	
 	
