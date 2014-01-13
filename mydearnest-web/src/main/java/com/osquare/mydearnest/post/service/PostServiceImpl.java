@@ -4,9 +4,11 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+
 
 
 
@@ -654,25 +656,37 @@ public class PostServiceImpl implements PostService {
 			}
 			
 			postList = cr.list();
+			session.getTransaction().commit();
 			
+			System.out.println("1");
 			if("grade".equals(type)) {
-				for(Post checkPost : postList) {
+				System.out.println(postList.size());
+				//순환중 객체 삭제를 하게되면 자기 자신을 삭제하고 Exception발생.  Iterator로 변경.
+				for(Iterator<Post> it = postList.iterator(); it.hasNext(); ) {
+					Post checkPost = it.next();
 					if(getMyPostGradeByPost(account, checkPost) != null) {
-						postList.remove(checkPost);
+						it.remove();
 					}
 				}
 			}
 			
+			if(postList.size() == 0 || postList == null) {
+				return null;
+			}
+			else {
+				//객체중 랜덤선택하는 코드.
+				Collections.shuffle(postList);
+				result = postList.iterator().next();
+			}
 			
-			//객체중 랜덤선택하는 코드.
-			Collections.shuffle(postList);
-			result = postList.iterator().next();
 			
-			session.getTransaction().commit();
+			
+			
 		}
 		catch (Exception e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
+			return null;
 		}
 		
 		
@@ -921,6 +935,9 @@ public class PostServiceImpl implements PostService {
 	public PostGrade getMyPostGradeByPost(Account account, Post post) {
 		
 		Session session = sessionFactory.getCurrentSession();
+		// 데이터를 가져오는 방식에 있어선 굳이 트랜잭션을 사용할 필요가 없다고 판단, 
+		// 다른 메소드에의 트랜잭션 과정에서 해당 메소드를 호출할시 예외가 발생하므로 일단 주석처리함.
+		// 2014.01.13 skullacy
 		session.getTransaction().begin();
 		
 		try {

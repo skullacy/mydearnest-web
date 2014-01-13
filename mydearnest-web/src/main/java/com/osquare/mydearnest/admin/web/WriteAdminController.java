@@ -334,11 +334,21 @@ public class WriteAdminController {
 			@PathVariable("postId") Long postId,
 			@RequestParam(value = "pagetype", required = false) String pagetype) {
 		
+		
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
 		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
 
 		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 		Account account = accountService.findAccountById(principal.getAccountId());
+		
+//		Post checkPost = postService.getPostByRandom(0, "grade", account);
+//		if(checkPost == null) {
+//			System.out.println("더할거없음");
+//		}
+//		else {
+//			System.out.println(checkPost.getId());
+//		}
+		
 		
 		Post post = postService.getPostById(postId);
 		model.addAttribute("post", post);
@@ -405,8 +415,16 @@ public class WriteAdminController {
 			}
 		}
 		
+		Post redirectPost = postService.getPostByRandom(0, "grade", account);
+		System.out.println(redirectPost);
+		if(redirectPost == null) {
+			return "redirect:/admin/";
+		}
+		else {
+			return "redirect:/admin/write/grade/" + redirectPost.getId();
+		}
 		
-		return "redirect:/admin/";
+		
 	}
 	
 	
