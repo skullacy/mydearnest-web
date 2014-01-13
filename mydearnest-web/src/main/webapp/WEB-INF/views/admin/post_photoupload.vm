@@ -6,7 +6,7 @@
 
 
 <h2>사진업로드</h2>
-<form method="post" action="$request.contextPath/admin/write/upload" enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+<form name="form" method="post" action="$request.contextPath/admin/write/upload" enctype="multipart/form-data" onkeypress="return event.keyCode!=13" onsubmit="return checkit(this);">
 	<div class="image_content" style="width:400px; height:auto; position:relative; display:inline-block; float:left;">
 		<img id="thumb_view" width="400px" style="display:bloack; position:relative; z-index:1; left:50%; top:50%;" />
 	    <input type="file" id="thumbnail" name="thumbnail" style="width:400px; " />
@@ -63,4 +63,14 @@ $("#thumbnail").change(function (){
 	});
 	
 	$("#thumbnail").change();
+	
+	function checkit(form){
+			if(!form.thumbnail.value){
+				alert('등록된 사진이 없습니다');
+				return false;
+			}
+			
+			form.submit();
+		}
+	
 </script>
