@@ -1,6 +1,8 @@
 
 $(function(){
 	$('#position_search').autocomplete({
+		delay: 0,
+		autoFocus: true,
 		focus: function(){
 			return false;	
 		},
