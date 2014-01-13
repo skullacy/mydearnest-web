@@ -57,9 +57,11 @@
 	
 </div>
 <div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
+		#if($sec.getAuthorType() == "ROLE_ADMIN")
 		<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="phototag" >등록 > 악세사리</a>
 		<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="detail" >등록 > 태그입력</a>
 		<input type="hidden" id="redirectTo" />
+		#end
 		<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
 	</div>
 </form>
