@@ -23,7 +23,7 @@
 <img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400" style="width:400px" />
 </div>		
 <div id="radarChart"></div>
-<form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" onkeypress="return event.keyCode!=13">
+<form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" id="data_form" onkeypress="return event.keyCode!=13">
 <div style="position:relative; display:inline-block; margin-left:20px;">
 	
 	
@@ -57,8 +57,11 @@
 	
 </div>
 <div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
-		<a class="btn btn-warning btn-lg" href="#">등록 > 악세사리</a>
-		<a class="btn btn-warning btn-lg" href="#">등록 > 태그입력</a>
+		#if($sec.getAuthorType() == "ROLE_ADMIN")
+		<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="phototag" >등록 > 악세사리</a>
+		<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="detail" >등록 > 태그입력</a>
+		<input type="hidden" id="redirectTo" />
+		#end
 		<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
 	</div>
 </form>
@@ -84,6 +87,12 @@
      	$('#feelVintage').val(data[2]);
      	$('#feelLuxury').val(data[3]);
      	$('#feelWarm').val(data[4]);
+	});
+	
+	 $('.submit_redirect').on('click', function() {
+		$('#redirectTo').attr('name', 'redirectType').val($(this).attr('data-redirectTo'));
+		$('#data_form').submit();
+		return false;
 	});
 
 </script>

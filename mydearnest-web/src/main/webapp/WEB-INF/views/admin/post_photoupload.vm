@@ -19,7 +19,7 @@
 		</div>
 		<div style="position:relative; margin-top:10px;">
 			<input type="submit" class="btn btn-primary btn-lg" value="등록하기" />
-			<a class="btn btn-warning btn-lg" href="#">취소</a>
+			<a class="btn btn-warning btn-lg" href="$request.contextPath/admin">취소</a>
 		</div>
 	</div>
 	

@@ -39,7 +39,7 @@
 	<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px" height="600px" id="test"/>
 </div>		
 <div class="infoInput">
-	<form class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/$post.id" method="post" onkeypress="return event.keyCode!=13">
+	<form class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/$post.id" method="post" id="data_form" onkeypress="return event.keyCode!=13">
 		<div class="form-group">
 			<div class="col-lg-10">
 			<span>태그입력</span>
@@ -122,10 +122,13 @@
 		<a class="btn btn-default btn-lg" href="#" style="margin-top:10px; display:none;"><이전</a>
 			
 		<div class="button-container" style="margin-top:30px; position:relative;">
-		<a class="btn btn-warning btn-lg" href="#">등록>느낌평가</a>
-		<a class="btn btn-warning btn-lg" href="#">등록>악세사리</a>
-		<input type="submit" class="btn btn-primary btn-lg" value="등록>다음사진" style="" />
-	</div>	
+			#if($sec.getAuthorType() == "ROLE_ADMIN")
+			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="grade">등록 > 느낌평가</a>
+			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="phototag">등록 > 악세사리</a>
+			<input type="hidden" id="redirectTo" />
+			#end
+			<input type="submit" class="btn btn-primary btn-lg" value="등록>다음사진" style="" />
+		</div>	
 	</form>
 </div>
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.ImageColorPicker.js"></script>					
@@ -226,6 +229,11 @@
 		tag.show();
 	#end
 	
+	 $('.submit_redirect').on('click', function() {
+		$('#redirectTo').attr('name', 'redirectType').val($(this).attr('data-redirectTo'));
+		$('#data_form').submit();
+		return false;
+	});
 	
 		
 		

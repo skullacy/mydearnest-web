@@ -47,6 +47,7 @@ public class Post implements Serializable {
 	private long commentCount;
 	private long gradeCount;
 	private long photoTagCount;
+	private long postTagCount;
 	private Set<PostLove> postLoves = new HashSet<PostLove>(0);
 	private Set<PostComment> postComments = new HashSet<PostComment>(0);
 	private Set<PostView> postViews = new HashSet<PostView>(0);
@@ -194,6 +195,15 @@ public class Post implements Serializable {
 
 	public void setPhotoTagCount(long photoTagCount) {
 		this.photoTagCount = photoTagCount;
+	}
+	
+	@Column(name = "POSTTAG_COUNT", nullable = false)
+	public long getPostTagCount() {
+		return postTagCount;
+	}
+
+	public void setPostTagCount(long postTagCount) {
+		this.postTagCount = postTagCount;
 	}
 
 	@Column(name = "CREATED_AT", nullable = false)

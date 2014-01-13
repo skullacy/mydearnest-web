@@ -101,7 +101,7 @@ public class WriteAdminController {
 			}
 		}
 
-		return "redirect:/admin/";
+		return "redirect:/admin/write/upload";
 	}
 	
 	/**
@@ -168,6 +168,7 @@ public class WriteAdminController {
 			@RequestParam(value = "from", required = false) String from,
 			@PathVariable("postId") long postId) {
 		
+		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
@@ -193,10 +194,10 @@ public class WriteAdminController {
 	 */
 	@RequestMapping(value = "/phototag/{postId}", method = RequestMethod.POST)
 	public String insertPhotoTagSubmit(Model model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "redirectType", required = false) String redirectType,
 			@PathVariable("postId") long postId,
 			@ModelAttribute("command") PostVO postVO,
 			BindingResult result) {
-		
 		
 		
 		model.addAttribute("success", false);
@@ -230,8 +231,28 @@ public class WriteAdminController {
 			}
 		}
 		
+		
+		//Submit 후 리다이렉트 지정되지 않은경우.
+		if(redirectType == null) {
+			
+			//미완료된 포스트중 랜덤 호출.
+			Post redirectPost = postService.getPostByRandom(0, "phototag", account);
+			
+			if(redirectPost == null) {
+				return "redirect:/admin";
+			}
+			else {
+				return "redirect:/admin/write/phototag/"+redirectPost.getId();
+			}
+			
+		}
+		else {
+			return "redirect:/admin/write/" + redirectType + "/" +  post.getId();
+		}
+		
+		
 
-		return "redirect:/admin/";
+		
 	}
 	
 	
@@ -269,6 +290,7 @@ public class WriteAdminController {
 	 */
 	@RequestMapping(value = "/detail/{postId}", method = RequestMethod.POST)
 	public String insertPostDetailSubmit(Model model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "redirectType", required = false) String redirectType,
 			@PathVariable("postId") Long postId,
 			@ModelAttribute("command") PostVO postVO,
 			BindingResult result) {
@@ -305,8 +327,29 @@ public class WriteAdminController {
 			}
 		}
 		
-
-		return "redirect:/admin/";
+		
+		
+		//Submit 후 리다이렉트 지정되지 않은경우.
+		if(redirectType == null) {
+			
+			//미완료된 포스트중 랜덤 호출.
+			Post redirectPost = postService.getPostByRandom(0, "detail", account);
+			
+			if(redirectPost == null) {
+				return "redirect:/admin";
+			}
+			else {
+				return "redirect:/admin/write/detail/"+redirectPost.getId();
+			}
+			
+		}
+		else {
+			return "redirect:/admin/write/" + redirectType + "/" +  post.getId();
+		}
+				
+		
+		
+				
 	}
 	
 	/**
@@ -318,11 +361,21 @@ public class WriteAdminController {
 			@PathVariable("postId") Long postId,
 			@RequestParam(value = "pagetype", required = false) String pagetype) {
 		
+		
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
 		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
 
 		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 		Account account = accountService.findAccountById(principal.getAccountId());
+		
+//		Post checkPost = postService.getPostByRandom(0, "grade", account);
+//		if(checkPost == null) {
+//			System.out.println("더할거없음");
+//		}
+//		else {
+//			System.out.println(checkPost.getId());
+//		}
+		
 		
 		Post post = postService.getPostById(postId);
 		model.addAttribute("post", post);
@@ -348,6 +401,7 @@ public class WriteAdminController {
 	@RequestMapping(value = "/grade/{postId}", method = RequestMethod.POST)
 	public String insertPostGrade(Model model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "pagetype", required = false) String pageType,
+			@RequestParam(value = "redirectType", required = false) String redirectType,
 			@PathVariable("postId") Long postId,
 			@ModelAttribute("command") PostVO postVO,
 			BindingResult result) {
@@ -389,8 +443,25 @@ public class WriteAdminController {
 			}
 		}
 		
+
+		//Submit 후 리다이렉트 지정되지 않은경우.
+		if(redirectType == null) {
+			
+			//미완료된 포스트중 랜덤 호출.
+			Post redirectPost = postService.getPostByRandom(0, "grade", account);
+			
+			if(redirectPost == null) {
+				return "redirect:/admin";
+			}
+			else {
+				return "redirect:/admin/write/grade/"+redirectPost.getId();
+			}
+			
+		}
+		else {
+			return "redirect:/admin/write/" + redirectType + "/" +  post.getId();
+		}
 		
-		return "redirect:/admin/";
 	}
 	
 	
