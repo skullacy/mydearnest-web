@@ -670,6 +670,7 @@ public class PostServiceImpl implements PostService {
 				}
 			}
 			
+			//postList.size가 1개가 남았음에도 불구하고 0을 반환. 0개일때도 0을 반환. 해당 문제 찾아낸 후 수정하기.
 			if(postList.size() == 0 || postList == null) {
 				return null;
 			}

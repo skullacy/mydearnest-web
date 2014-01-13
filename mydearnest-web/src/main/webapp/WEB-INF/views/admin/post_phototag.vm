@@ -6,7 +6,7 @@
 
 
 <h2>악세사리 태그입력(사진에 악세사리영역 드레그)</h2>
-<form method="post" action="$request.contextPath/admin/write/phototag/$post.id" enctype="multipart/form-data" onkeypress="return event.keyCode!=13">
+<form method="post" action="$request.contextPath/admin/write/phototag/$post.id" enctype="multipart/form-data" id="data_form" onkeypress="return event.keyCode!=13">
 	<div class="image_content" style="display:inline-block; float:left;">
 		<img id="photo_upload" src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px"/>
 		<div class="link_input" style="display:none;">
@@ -79,10 +79,12 @@
 		</script>
 	#else
 		<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
-			<a class="btn btn-warning btn-lg" href="#">등록 > 느낌평가</a>
-			<a class="btn btn-warning btn-lg" href="#">등록 > 태그입력</a>
+			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="grade" >등록 > 느낌평가</a>
+			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="detail" >등록 > 태그입력</a>
+			<input type="hidden" id="redirectTo" />
 			<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
 		</div>
+			
 	#end
 	
 	
@@ -109,13 +111,6 @@ function preview(img, selection) {
 	$('.photoTag_ori input.posY1').val(selection.y1);
 	$('.photoTag_ori input.posX2').val(selection.x2);
 	$('.photoTag_ori input.posY2').val(selection.y2);
-
-    console.log(selection.x1+" x1"); 
-    console.log(selection.y1+" y1");
-    console.log(selection.x2+" x2");
-    console.log(selection.y2+" y2");
-    console.log(selection.width);
-    console.log(selection.height);
 }
 
 $(function () {
@@ -128,6 +123,13 @@ $(function () {
     	}
     
     });
+    
+    $('.submit_redirect').on('click', function() {
+    	console.log($(this).attr('data-redirectTo'));
+		$('#redirectTo').attr('name', 'redirectType').val($(this).attr('data-redirectTo'));
+		$('#data_form').submit();
+		return false;
+	});
    
         
 });
