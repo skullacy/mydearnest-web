@@ -34,6 +34,8 @@
     	text-align:center;
     }
     .tip-mousemove{position:fixed; width:auto; display:none; z-index:10;}
+    .popover-content{width:150px;}
+    .btn-default{text-shadow:none !important;}
   
 </style>
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/admin.js"></script>	
@@ -69,7 +71,8 @@
 					<td class="tag_home">
 					</td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="거실 사무실 한옥 옷장 정원 공부방" data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<a href="#" class="btn btn-default btn-xs" rel="popover">?</a>
+						
 					</td>
 				</tr>
 				<tr>
@@ -78,21 +81,21 @@
 					
 					</td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<a class="btn btn-default btn-xs" href="#" rel="popover" data-original-title="">?</a>
 					</td>
 				</tr>
 				<tr>
 					<td class="tag_name">평수</td>
 					<td class="tag_size"></td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<a class="btn btn-default btn-xs" href="#" rel="popover" data-original-title="">?</a>
 					</td>
 				</tr>
 				<tr>
 					<td class="tag_name">톤</td>
 					<td class="tag_tone"></td>
 					<td class="question">
-						<button class="btn btn-default btn-xs feel-tooltip" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-placement="right" data-toggle="popover" data-container="body" type="button" data-original-title="" title="">?</button>
+						<a class="btn btn-default btn-xs" href="#" rel="popover" data-original-title="" >?</a>
 					</td>
 				</tr>
 				<tr>
@@ -142,7 +145,16 @@
 		<input type="submit" class="btn btn-primary btn-lg form_submit" value="등록>다음사진" style="" />
 	</div>	
 	</form>
-	
+	 <ul id="popover_content_wrapper" style="display:none;">
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; position:relative; margin:0 3px 7px 0px;">샤워부스</li>
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin-bottom:7px;  margin:0 3px 7px 0px;">키페드</li>
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; position:relative; margin:0 3px 7px 0px;">홈</li>
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin-bottom:7px;  margin:0 3px 7px 0px;">가구</li>
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; position:relative; margin:0 3px 7px 0px;">홈</li>
+	 </ul>
+	         
+         
+         
 </div>
 
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.ImageColorPicker.js"></script>					

@@ -145,10 +145,14 @@ $(function(){
 			$('.tip-mousemove').css('left', e.pageX + 10).css('top', e.pageY + 10).css('display', 'block');
 			
 		});
-	
 	});	
-		
-		$('.feel-tooltip').popover('hide');
+	$('.feel-tooltip').popover();
+	$('[rel=popover]').popover({
+		html : true,
+		content: function(){
+			return $('#popover_content_wrapper').html();
+		}
+	});	
 		
 		
 
