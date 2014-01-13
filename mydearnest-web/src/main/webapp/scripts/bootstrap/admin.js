@@ -155,8 +155,6 @@ $(function(){
 			return $('#popover_content_wrapper').html();
 		}
 	});	
-		
-		
 	
 		
 		$('.feel-tooltip').popover('hide');
