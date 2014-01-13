@@ -149,10 +149,13 @@ $(function(){
 		});
 	});	
 	$('.feel-tooltip').popover();
-	$('[rel=popover]').popover({
+	
+	$('.question a').popover({
 		html : true,
 		content: function(){
-			return $('#popover_content_wrapper').html();
+			var hint = $(this).attr('rel');
+			console.log(hint);
+			return $('#popover_'+hint).html();
 		}
 	});	
 	

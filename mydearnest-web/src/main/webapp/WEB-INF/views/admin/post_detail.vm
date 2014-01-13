@@ -70,30 +70,29 @@
 					<td class="tag_home">
 					</td>
 					<td class="question">
-						<a href="#" class="btn btn-default btn-xs" rel="popover">?</a>
+						<a href="#" class="btn btn-default btn-xs tagHint" rel="home">?</a>
 					</td>
 				</tr>
 				<tr>
 					<td class="tag_name">악세사리</td>
 					<td class="tag_accessory">
-					
 					</td>
 					<td class="question">
-						<a class="btn btn-default btn-xs" href="#" rel="popover" data-original-title="">?</a>
+						<a class="btn btn-default btn-xs tagHint"  href="#" rel="accessory" data-original-title="">?</a>
 					</td>
 				</tr>
 				<tr>
 					<td class="tag_name">평수</td>
 					<td class="tag_size"></td>
 					<td class="question">
-						<a class="btn btn-default btn-xs" href="#" rel="popover" data-original-title="">?</a>
+						<a class="btn btn-default btn-xs tagHint"  href="#" rel="size" data-original-title="">?</a>
 					</td>
 				</tr>
 				<tr>
 					<td class="tag_name">톤</td>
 					<td class="tag_tone"></td>
 					<td class="question">
-						<a class="btn btn-default btn-xs" href="#" rel="popover" data-original-title="" >?</a>
+						<a class="btn btn-default btn-xs tagHint"  href="#" rel="tone" data-original-title="" >?</a>
 					</td>
 				</tr>
 				<tr>
@@ -147,14 +146,32 @@
 		</div>	
 
 	</form>
-	 <ul id="popover_content_wrapper" style="display:none;">
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; position:relative; margin:0 3px 7px 0px;">샤워부스</li>
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin-bottom:7px;  margin:0 3px 7px 0px;">키페드</li>
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; position:relative; margin:0 3px 7px 0px;">홈</li>
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin-bottom:7px;  margin:0 3px 7px 0px;">가구</li>
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; position:relative; margin:0 3px 7px 0px;">홈</li>
+	#foreach($tag in $tagcate)
+		#if($tag.type=="home")
+	 <ul id="popover_home" style="display:none;">
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		
 	 </ul>
-	         
+	  	#end
+	  	#if($tag.type=="accessory")
+	 <ul id="popover_accessory" style="display:none;">
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		
+	 </ul>
+	 	#end
+	 #if($tag.type=="size")
+	<ul id="popover_size" style="display:none;">
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		
+	 </ul>
+	 #end
+	 #if($tag.type=="tone")
+	 <ul id="popover_tone" style="display:none;">
+		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		
+	 </ul>
+	 #end
+	#end       
          
 </div>
 
