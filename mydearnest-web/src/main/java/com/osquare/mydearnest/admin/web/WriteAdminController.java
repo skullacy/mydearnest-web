@@ -168,6 +168,7 @@ public class WriteAdminController {
 			@RequestParam(value = "from", required = false) String from,
 			@PathVariable("postId") long postId) {
 		
+		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
@@ -196,7 +197,6 @@ public class WriteAdminController {
 			@PathVariable("postId") long postId,
 			@ModelAttribute("command") PostVO postVO,
 			BindingResult result) {
-		
 		
 		
 		model.addAttribute("success", false);
@@ -230,8 +230,18 @@ public class WriteAdminController {
 			}
 		}
 		
+		//미완료된 포스트중 랜덤 호출.
+		Post redirectPost = postService.getPostByRandom(0, "phototag", account);
+		
+		if(redirectPost == null) {
+			return "redirect:/admin";
+		}
+		else {
+			return "redirect:/admin/write/phototag/"+redirectPost.getId();
+		}
+		
 
-		return "redirect:/admin/";
+		
 	}
 	
 	
@@ -305,8 +315,14 @@ public class WriteAdminController {
 			}
 		}
 		
-
-		return "redirect:/admin/";
+		Post redirectPost = postService.getPostByRandom(0, "detail", account);
+		if(redirectPost == null) {
+			return "redirect:/admin/";
+		}
+		else {
+			return "redirect:/admin/write/detail/" +redirectPost.getId();
+		}
+				
 	}
 	
 	/**

@@ -2,10 +2,14 @@ package com.osquare.mydearnest.post.service;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+
+
+
 
 
 
@@ -282,7 +286,11 @@ public class PostServiceImpl implements PostService {
 		
 		return post;
 	}
-
+	
+	/**
+	 * @memo
+	 * 리팩토링 필요함.
+	 */
 	@Override
 	public Post createPostDetail(Post post, Account account, PostVO postVO) {
 		
@@ -294,6 +302,8 @@ public class PostServiceImpl implements PostService {
 		
 		try {
 			
+			post = (Post) session.get(Post.class, post.getId());
+			
 				
 			Criteria cr = session.createCriteria(PostTag.class)
 					.add(Restrictions.eq("post", post));
@@ -303,9 +313,16 @@ public class PostServiceImpl implements PostService {
 				session.delete(postTag);
 			}
 			
+			post.setPostTagCount(0);
+			session.merge(post);
+			
 			PostTag postTag = null;
 			
 			for(long tagId : postVO.getTagAccessory()) {
+				
+				post.setPostTagCount(post.getPostTagCount() + 1);
+				session.merge(post);
+				
 				postTag = null;
 				postTag = new PostTag();
 				postTag.setPost(post);
@@ -316,6 +333,9 @@ public class PostServiceImpl implements PostService {
 			}
 			
 			for(long tagId : postVO.getTagHome()) {
+				post.setPostTagCount(post.getPostTagCount() + 1);
+				session.merge(post);
+				
 				postTag = null;
 				postTag = new PostTag();
 				postTag.setPost(post);
@@ -326,6 +346,9 @@ public class PostServiceImpl implements PostService {
 			}
 			
 			for(String value : postVO.getTagColor()) {
+				post.setPostTagCount(post.getPostTagCount() + 1);
+				session.merge(post);
+				
 				postTag = null;
 				postTag = new PostTag();
 				postTag.setPost(post);
@@ -555,6 +578,103 @@ public class PostServiceImpl implements PostService {
 			session.getTransaction().rollback();
 			ex.printStackTrace();
 		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	/**
+	 * @brief
+	 * 랜덤 포스트 가져오기
+	 * @Integer checksum
+	 * 2 : 모든 포스트
+	 * 1 : 완료된 포스트
+	 * 0 : 미완료 포스
+	 */
+	public Post getPostByRandom(Integer checksum) {
+		List<Post> postList = null;
+		Post result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(Post.class)
+					.add(Restrictions.isNull("deletedOn"));
+			
+			if(checksum < 2) {
+				cr.add(Restrictions.eq("checkSum", checksum == 1 ? true : false));
+			}
+			
+			
+			postList = cr.list();
+			
+			//객체중 랜덤선택하는 코드.
+			Collections.shuffle(postList);
+			result = postList.iterator().next();
+			
+			System.out.println(result.getId());
+			
+			session.getTransaction().commit();
+		}
+		catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		
+		return result;
+	}
+	
+	@Override
+	public Post getPostByRandom(Integer checksum, String type, Account account) {
+		List<Post> postList = null;
+		Post result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(Post.class)
+					.add(Restrictions.isNull("deletedOn"));
+			
+			if(checksum < 2) {
+				cr.add(Restrictions.eq("checkSum", checksum == 1 ? true : false));
+			}
+			
+			
+			
+			
+			if("phototag".equals(type)) {
+				cr.add(Restrictions.eq("photoTagCount", Long.valueOf(0)));
+			}
+			else if("detail".equals(type)) {
+				System.out.println(type);
+				long minTagCount = 4;
+				cr.add(Restrictions.lt("postTagCount", minTagCount));
+			}
+			
+			postList = cr.list();
+			
+			if("grade".equals(type)) {
+				for(Post checkPost : postList) {
+					if(getMyPostGradeByPost(account, checkPost) != null) {
+						postList.remove(checkPost);
+					}
+				}
+			}
+			
+			
+			//객체중 랜덤선택하는 코드.
+			Collections.shuffle(postList);
+			result = postList.iterator().next();
+			
+			session.getTransaction().commit();
+		}
+		catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
 		
 		return result;
 	}
@@ -796,7 +916,7 @@ public class PostServiceImpl implements PostService {
 		
 		return postGrade;
 	}
-
+	
 	@Override
 	public PostGrade getMyPostGradeByPost(Account account, Post post) {
 		

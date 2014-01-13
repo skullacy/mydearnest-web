@@ -33,6 +33,8 @@ public interface PostService {
 	Collection<Post> getPostsByLove(Account account, Integer page);
 	
 	Post getPostById(Long postId);
+	Post getPostByRandom(Integer checksum);
+	Post getPostByRandom(Integer checksum, String type, Account account);
 	
 	Post createPostUpload(Account account, ImageSource imageSource, PostVO postVO);
 	Post createPostDetail(Post post, Account account, PostVO postVO);
