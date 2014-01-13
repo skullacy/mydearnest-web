@@ -48,7 +48,6 @@
 </div>	
 
 <div class="infoInput">
-	
 	<form name="form" class="form-horizontal" role="form" action="$request.contextPath/admin/write/detail/$post.id" method="post" id="data_form" onkeypress="return event.keyCode!=13" onsubmit="return checkit(this);">
 		
 		<div class="form-group">
@@ -146,6 +145,7 @@
 			#end
 			<input type="submit" class="btn btn-primary btn-lg" value="등록>다음사진" style="" />
 		</div>	
+
 	</form>
 	 <ul id="popover_content_wrapper" style="display:none;">
 		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; position:relative; margin:0 3px 7px 0px;">샤워부스</li>
