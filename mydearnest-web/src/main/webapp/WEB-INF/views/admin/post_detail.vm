@@ -144,33 +144,29 @@
 			#end
 			<input type="submit" class="btn btn-primary btn-lg" value="등록>다음사진" style="" />
 		</div>	
-
 	</form>
+	
 	#foreach($tag in $tagcate)
 		#if($tag.type=="home")
-	 <ul id="popover_home" style="display:none;">
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-		
-	 </ul>
-	  	#end
-	  	#if($tag.type=="accessory")
-	 <ul id="popover_accessory" style="display:none;">
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-		
-	 </ul>
-	 	#end
-	 #if($tag.type=="size")
-	<ul id="popover_size" style="display:none;">
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-		
-	 </ul>
-	 #end
-	 #if($tag.type=="tone")
-	 <ul id="popover_tone" style="display:none;">
-		<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-		
-	 </ul>
-	 #end
+			<ul id="popover_home" style="display:none;">
+				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+			</ul>
+		#end
+		#if($tag.type=="accessory")
+			<ul id="popover_accessory" style="display:none;">
+				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+			</ul>
+		#end
+		#if($tag.type=="size")
+			<ul id="popover_size" style="display:none;">
+				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+			</ul>
+		#end
+		#if($tag.type=="tone")
+			<ul id="popover_tone" style="display:none;">
+				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+			</ul>
+		#end
 	#end       
          
 </div>
