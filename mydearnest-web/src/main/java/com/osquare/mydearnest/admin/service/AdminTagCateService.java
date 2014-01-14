@@ -21,6 +21,9 @@ public interface AdminTagCateService {
 	
 	//태그 생성하기
 	TagCategory createTagCategory(TagCategoryVO tagCateVO);
+	TagCategory updateTagCategory(TagCategoryVO tagCateVO, long tagCateId);
+	
+	Boolean deleteTagCategory(long tagCateId);
 	
 	//Autocomplete에서 검색되는 태그들 리턴해주기
 	Collection<TagCategory> getMatchedTagCategories(String keyword, String type);

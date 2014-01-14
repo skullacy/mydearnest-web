@@ -1,6 +1,7 @@
 package com.osquare.mydearnest.admin.web;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -180,6 +181,15 @@ public class WriteAdminController {
 		
 		//포스트 정보 가져오기
 		Post post = postService.getPostById(postId);
+		Collection<TagCategory> tagCate = adminTagCateService.getTagCategories();
+		HashMap<String, TagCategory> tagCateHashMap = new HashMap<String, TagCategory>();
+		
+		for(TagCategory tc : tagCate) {
+			tagCateHashMap.put(String.valueOf(tc.getId()), tc);
+		}
+		
+		model.addAttribute("tagcate", tagCateHashMap);
+		model.addAttribute("photoTags", post.getPhotoTags());
 		
 		model.addAttribute("post", post);
 		

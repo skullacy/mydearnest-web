@@ -8,8 +8,31 @@
 <h2>악세사리 태그입력(사진에 악세사리영역 드레그)</h2>
 <form method="post" action="$request.contextPath/admin/write/phototag/$post.id" enctype="multipart/form-data" id="data_form" onkeypress="return event.keyCode!=13">
 	<div class="image_content" style="display:inline-block; float:left;">
-		<img id="photo_upload" src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px"/>
+		<div class="image_canvas" style="width:400px; min-height:100px; position:relative;"> 
+			<img id="photo" src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px"/>
+			<div id="overlayContainer" style="position:absolute; top:0px; left:0px; width:400px; min-height:100%;">
+				<div id="tagContainer" style="width:100%; height:100%; position:relative">
+					<style>
+						.overlayTag.active			{border:1px solid #f00 !important;}
+					</style>
+					<div class="overlayTag_ori" style="border: 1px solid #ccc; position:absolute; display:none">
+					</div>
+					#foreach($photoTag in $photoTags)
+					#set($width = $photoTag.posX2 - $photoTag.posX1)
+					#set($height = $photoTag.posY2 - $photoTag.posY1)
+					<div class="overlayTag" style="border:1px solid #ccc; position:absolute; top:${photoTag.posY1}px; left: ${photoTag.posX1}px; width:${width}px; height: ${height}px" data-id="$photoTag.getTagCategory().getId()" data-title="$photoTag.title">
+					</div>
+					#end
+				</div>
+			</div>
+		</div>
+		
 		<div class="link_input" style="display:none;">
+			<input type="hidden" id="select_posX1" value="" />
+			<input type="hidden" id="select_posY1" value="" />
+			<input type="hidden" id="select_posX2" value="" />
+			<input type="hidden" id="select_posY2" value="" />
+			
 			<span style="color:#fff;">악세사리 태그</span>
 			<input style="margin-bottom:10px;" type="text" class="form-control" id="accessory_search" name="keyword" action="$request.contextPath/api/category/search.ajax?type=accessory" placeholder="악세사리 태그검색">
 			<span style="color:#fff; ">타이틀입력</span>
@@ -17,13 +40,31 @@
 			<span style="color:#fff;">링크입력</span>
 			<input type="text" class="form-control" id="dummy_info" placeholder="링크">
 			<a class="btn btn-success" id="linksubmit_button" style="margin-top:10px; position:relative;">추가</a>
+			<a class="btn btn-warning" id="linksubmit_init" style="margin-top:10px; position:relative;">다시입력</a>
 		</div>
 	</div>
 	<div class="link_content">
 		<label for="source" style="color:#444;">출처</label>
 		<input type="text" id="source" name="source"class="form-control" placeholder="출처입력" value="$!post.source">
 		<label for="tag_list" style="color:#444; margin-top:10px;">악세사리 링크</label>
-		<div class="tag_list"></div>
+		<div class="tag_list">
+			#foreach($photoTag in $photoTags)
+			<div class="photoTag" style="float:left;">
+				<a class="tag_label btn btn-default btn-xl" href="#" style="margin-top:10px;" >
+					<span style="color:#2960ff">X </span>
+					<span class="accessory_label">$tagcate.get("$photoTag.getTagCategory().getId()").getTitle()</span>
+					<span class="accessory_title"> ($photoTag.title) </span>
+				</a>
+				<input type="hidden" name="posX1" value="$photoTag.posX1" />
+				<input type="hidden" name="posY1" value="$photoTag.posY1" />
+				<input type="hidden" name="posX2" value="$photoTag.posX2" />
+				<input type="hidden" name="posY2" value="$photoTag.posY2" />
+				<input type="hidden" name="postTagId" value="$photoTag.getTagCategory().getId()" />
+				<input type="hidden" name="title" value="$photoTag.title" />
+				<input type="hidden" name="info" value="$photoTag.info" />
+			</div>
+			#end
+		</div>
 		<div class="photoTag_ori" style="display:none; float:left;">
 			<a class="tag_label btn btn-default btn-xl" href="#" style="margin-top:10px;" >
 				<span style="color:#2960ff">X </span>
@@ -96,48 +137,10 @@
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/photoupload.js"></script>	
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.imgareaselect.pack.js"></script>
 <script type="text/javascript">
-function preview(img, selection) {
-    if (!selection.width || !selection.height)
-        return;
-    
-    var scaleX = 100 / selection.width;
-    var scaleY = 100 / selection.height;
-
-    $('#preview img').css({
-        width: Math.round(scaleX * 300),
-        height: Math.round(scaleY * 300),
-        marginLeft: -Math.round(scaleX * selection.x1),
-        marginTop: -Math.round(scaleY * selection.y1)
-    });
-
-	$('.photoTag_ori input.posX1').val(selection.x1);
-	$('.photoTag_ori input.posY1').val(selection.y1);
-	$('.photoTag_ori input.posX2').val(selection.x2);
-	$('.photoTag_ori input.posY2').val(selection.y2);
-}
-
-$(function () {
-    $('#photo_upload').imgAreaSelect({ 
-    	aspectRatio: '1:1', handles: false,
-        fadeSpeed: 200, onSelectChange: preview, 
-        onSelectEnd: function (img, selection) {
-    		$('.link_input').css('display','block');
-	    	
-    	}
-    
-    });
-    
     $('.submit_redirect').on('click', function() {
     	console.log($(this).attr('data-redirectTo'));
 		$('#redirectTo').attr('name', 'redirectType').val($(this).attr('data-redirectTo'));
 		$('#data_form').submit();
 		return false;
 	});
-   
-        
-});
-
-
-
-
 </script>

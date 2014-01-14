@@ -38,9 +38,27 @@
 	 				#end
 	  		</td>
 	  		<td>
-	  			<a href="#">수정</a>
+	  			<a class="btn btn-success" href="$request.contextPath/admin/category/update/$item.id">수정</a>
+	  			<a class="btn btn-warning btn_deleteTag" data-id="$item.id">삭제</a>
 	  		</td>
 	 	</tr>
 	 	#end
 	 </tbody>
 </table>
+
+<script>
+	$('.btn_deleteTag').click(function() {
+		if(!confirm("삭제하시겠습니까?")) return false;
+		jQuery.ajax({
+			url: "$request.contextPath/admin/category/remove/"+$(this).attr('data-id'),
+			dataType: "Json",
+			data: $('#position_search').serialize(),
+			success: function(data){
+				console.log(data);
+			
+			}
+		});
+		
+	});
+
+</script>

@@ -1,10 +1,18 @@
 package com.osquare.mydearnest.admin.web;
 
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -17,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.osquare.mydearnest.admin.service.AdminAccountService;
 import com.osquare.mydearnest.admin.service.AdminTagCateService;
+import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.TagCategoryVO;
 
@@ -61,6 +70,8 @@ public class CategoryAdminController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String insertTagSubmit(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("command") TagCategoryVO tagCateVO,
+			@RequestParam(value = "submitType", required = false) String submitType,
+			@RequestParam(value = "submitId", required = false) long tagCateId,
 			BindingResult result) {
 		
 		model.addAttribute("success", false);
@@ -70,7 +81,14 @@ public class CategoryAdminController {
 			model.addAttribute("errors", result.getAllErrors());
 		}
 		else {
-			TagCategory tagCate = adminTagCateService.createTagCategory(tagCateVO);
+			TagCategory tagCate;
+			if("update".equals(submitType)) {
+				tagCate = adminTagCateService.updateTagCategory(tagCateVO, tagCateId);	
+			}
+			else {
+				tagCate = adminTagCateService.createTagCategory(tagCateVO);	
+			}
+			
 			if(tagCate == null) {
 				model.addAttribute("success", false);
 			}
@@ -90,9 +108,31 @@ public class CategoryAdminController {
 	public String updateTag(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("cateId") Long cateId) {
 		
-		return null;
+		TagCategory tagCate = adminTagCateService.getTagInfo(cateId);
+		
+		model.addAttribute("tagInfo", tagCate);
+		
+		return "admin/tag_create";
 	}
 	
+	//카테고리 삭제 처리
+	@RequestMapping(value = "/remove/{cateId}", method = RequestMethod.GET)
+	public ResponseEntity<String> removeTag(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("cateId") Long cateId) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add("Content-Type",	"application/json; charset=UTF-8");
+		
+		JSONObject document = new JSONObject();
+		
+		Boolean result = adminTagCateService.deleteTagCategory(cateId);
+		
+		document.put("success", result);
+
+		return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
+		
+	}
+
 
 	
 	/**

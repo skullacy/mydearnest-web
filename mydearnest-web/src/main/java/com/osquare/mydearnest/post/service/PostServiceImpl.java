@@ -395,35 +395,54 @@ public class PostServiceImpl implements PostService {
 			PhotoTag photoTag;
 			Criteria cr;
 			TagCategory tagCategory;
-			for(int i = 0; i < postVO.getPostTagId().length; i++ ) {
-				post = (Post) session.get(Post.class, post.getId());
-				post.setPhotoTagCount(post.getPhotoTagCount() + 1);
-				session.merge(post);
-				
-				photoTag = null;
-				photoTag = new PhotoTag();
-				
-				cr = session.createCriteria(TagCategory.class)
-						.add(Restrictions.eq("id", postVO.getPostTagId()[i]));
-				
-				tagCategory = (TagCategory) cr.uniqueResult();
-				
-				photoTag.setAccount(account);
-				photoTag.setPost(post);
-				
-				photoTag.setTagCategory(tagCategory);
-				
-				photoTag.setTitle(postVO.getTitle()[i]);
-				photoTag.setInfo(postVO.getInfo()[i]);
-				photoTag.setPosX1(postVO.getPosX1()[i]);
-				photoTag.setPosX2(postVO.getPosX2()[i]);
-				photoTag.setPosY1(postVO.getPosY1()[i]);
-				photoTag.setPosY2(postVO.getPosY2()[i]);
-				
-				session.persist(photoTag);
+			Collection<PhotoTag> dResult = null;
+			
+			post = (Post) session.get(Post.class, post.getId());
+			
+			
+			cr = session.createCriteria(PhotoTag.class)
+					.add(Restrictions.eq("post", post));
+			
+			dResult = cr.list();
+			for(PhotoTag dPhotoTag : dResult) {
+				session.delete(dPhotoTag);
 			}
 			
-			result = post;
+			post.setPhotoTagCount(0);
+			session.merge(post);
+			
+			if(postVO.getPostTagId() != null) {
+				for(int i = 0; i < postVO.getPostTagId().length; i++ ) {
+					post = (Post) session.get(Post.class, post.getId());
+					post.setPhotoTagCount(post.getPhotoTagCount() + 1);
+					session.merge(post);
+					
+					photoTag = null;
+					photoTag = new PhotoTag();
+					
+					cr = session.createCriteria(TagCategory.class)
+							.add(Restrictions.eq("id", postVO.getPostTagId()[i]));
+					
+					tagCategory = (TagCategory) cr.uniqueResult();
+					
+					photoTag.setAccount(account);
+					photoTag.setPost(post);
+					
+					photoTag.setTagCategory(tagCategory);
+					
+					photoTag.setTitle(postVO.getTitle()[i]);
+					photoTag.setInfo(postVO.getInfo()[i]);
+					photoTag.setPosX1(postVO.getPosX1()[i]);
+					photoTag.setPosX2(postVO.getPosX2()[i]);
+					photoTag.setPosY1(postVO.getPosY1()[i]);
+					photoTag.setPosY2(postVO.getPosY2()[i]);
+					
+					session.persist(photoTag);
+				}
+				
+				result = post;
+			}
+			
 			
 			session.getTransaction().commit();
 			
@@ -573,6 +592,7 @@ public class PostServiceImpl implements PostService {
 			result = (Post) cr.uniqueResult();
 			
 			Hibernate.initialize(result.getPostTag());
+			Hibernate.initialize(result.getPhotoTags());
 			
 			session.getTransaction().commit();
 		}

@@ -25,6 +25,7 @@ public class TagCategory implements Serializable {
 	private String type;
 	private String keyword;
 	
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)

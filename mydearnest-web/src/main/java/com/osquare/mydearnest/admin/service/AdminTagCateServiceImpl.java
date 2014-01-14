@@ -95,7 +95,29 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 
 	@Override
 	public TagCategory getTagInfo(long id) {
-		return null;
+		TagCategory result = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria cr = session.createCriteria(TagCategory.class)
+					.add(Restrictions.eq("id", id));
+			
+			result = (TagCategory) cr.uniqueResult();
+			
+			session.getTransaction().commit();
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+			return null;
+		}
+		catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -127,6 +149,57 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 		
 		
 		return tagCate;
+	}
+	
+	@Override
+	public TagCategory updateTagCategory(TagCategoryVO tagCateVO, long tagCateId) {
+		
+		TagCategory tagCate = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			tagCate = (TagCategory) session.get(TagCategory.class, tagCateId);
+			
+			tagCate.setTitle(tagCateVO.getTitle());
+			tagCate.setType(tagCateVO.getType());
+			
+			String keyword = StringUtils.replaceEngPos(tagCateVO.getTitle());
+			tagCate.setKeyword(keyword);
+			
+			session.update(tagCate);
+			session.getTransaction().commit();
+		}
+		catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		
+		return tagCate;
+	}
+	
+	@Override
+	public Boolean deleteTagCategory(long tagCateId) {
+		Boolean result = false;
+		TagCategory tagCate;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			tagCate = (TagCategory) session.get(TagCategory.class, tagCateId);
+			
+			session.delete(tagCate);
+			session.getTransaction().commit();
+			result = true;
+		}
+		catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		
+		return result;
 	}
 
 	@Override
