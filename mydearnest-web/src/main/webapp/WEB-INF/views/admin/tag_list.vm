@@ -38,7 +38,7 @@
 	 				#end
 	  		</td>
 	  		<td>
-	  			<a href="#">수정</a>
+	  			<a href="$request.contextPath/admin/category/update/$item.id">수정</a>
 	  		</td>
 	 	</tr>
 	 	#end

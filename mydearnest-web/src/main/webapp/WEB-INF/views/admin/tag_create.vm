@@ -3,16 +3,20 @@
 <form action="$request.contextPath/admin/category/create" method="post" role="form">
   <fieldset>
   	<label for="disabledTextInput">태그종류</label>
+  	#if($tagInfo != "")
+  		<input type="hidden" name="submitType" value="update" />
+  		<input type="hidden" name="submitId" value="$tagInfo.id" />
+  	#end
 	<select name="type" class="form-control" style="margin-bottom:20px;">
-	  <option value="home">홈</option>
-	  <option value="accessory">악세사리</option>
-	  <option value="size">평수</option>
-	  <option value="tone">톤</option>
+	  <option value="home" #if($tagInfo.type == "home") selected="selected" #end>홈</option>
+	  <option value="accessory" #if($tagInfo.type == "accessory") selected="selected" #end>악세사리</option>
+	  <option value="size" #if($tagInfo.type == "size") selected="selected" #end>평수</option>
+	  <option value="tone" #if($tagInfo.type == "tone") selected="selected" #end>톤</option>
 	</select>
  
     <div class="form-group">
       <label for="disabledTextInput">추가할 태그 입력</label>
-      <input type="text" name="title" id="disabledTextInput" class="form-control" placeholder="추가할 태그를 입력하세요">
+      <input type="text" name="title" id="disabledTextInput" class="form-control" placeholder="추가할 태그를 입력하세요" value="$!tagInfo.title">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </fieldset>

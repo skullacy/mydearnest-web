@@ -61,6 +61,8 @@ public class CategoryAdminController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String insertTagSubmit(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("command") TagCategoryVO tagCateVO,
+			@RequestParam(value = "submitType", required = false) String submitType,
+			@RequestParam(value = "submitId", required = false) long tagCateId,
 			BindingResult result) {
 		
 		model.addAttribute("success", false);
@@ -70,7 +72,14 @@ public class CategoryAdminController {
 			model.addAttribute("errors", result.getAllErrors());
 		}
 		else {
-			TagCategory tagCate = adminTagCateService.createTagCategory(tagCateVO);
+			TagCategory tagCate;
+			if("update".equals(submitType)) {
+				tagCate = adminTagCateService.updateTagCategory(tagCateVO, tagCateId);	
+			}
+			else {
+				tagCate = adminTagCateService.createTagCategory(tagCateVO);	
+			}
+			
 			if(tagCate == null) {
 				model.addAttribute("success", false);
 			}
@@ -90,7 +99,11 @@ public class CategoryAdminController {
 	public String updateTag(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("cateId") Long cateId) {
 		
-		return null;
+		TagCategory tagCate = adminTagCateService.getTagInfo(cateId);
+		
+		model.addAttribute("tagInfo", tagCate);
+		
+		return "admin/tag_create";
 	}
 	
 
