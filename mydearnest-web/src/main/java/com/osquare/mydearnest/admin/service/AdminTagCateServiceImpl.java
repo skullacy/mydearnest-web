@@ -178,6 +178,29 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 		
 		return tagCate;
 	}
+	
+	@Override
+	public Boolean deleteTagCategory(long tagCateId) {
+		Boolean result = false;
+		TagCategory tagCate;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			tagCate = (TagCategory) session.get(TagCategory.class, tagCateId);
+			
+			session.delete(tagCate);
+			session.getTransaction().commit();
+			result = true;
+		}
+		catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		
+		return result;
+	}
 
 	@Override
 	public Collection<TagCategory> getMatchedTagCategories(String keyword, String type) {

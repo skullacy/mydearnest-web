@@ -1,10 +1,18 @@
 package com.osquare.mydearnest.admin.web;
 
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -17,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.osquare.mydearnest.admin.service.AdminAccountService;
 import com.osquare.mydearnest.admin.service.AdminTagCateService;
+import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.TagCategoryVO;
 
@@ -106,6 +115,24 @@ public class CategoryAdminController {
 		return "admin/tag_create";
 	}
 	
+	//카테고리 삭제 처리
+	@RequestMapping(value = "/remove/{cateId}", method = RequestMethod.GET)
+	public ResponseEntity<String> removeTag(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("cateId") Long cateId) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add("Content-Type",	"application/json; charset=UTF-8");
+		
+		JSONObject document = new JSONObject();
+		
+		Boolean result = adminTagCateService.deleteTagCategory(cateId);
+		
+		document.put("success", result);
+
+		return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
+		
+	}
+
 
 	
 	/**
