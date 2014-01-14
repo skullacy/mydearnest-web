@@ -40,6 +40,7 @@
 			<span style="color:#fff;">링크입력</span>
 			<input type="text" class="form-control" id="dummy_info" placeholder="링크">
 			<a class="btn btn-success" id="linksubmit_button" style="margin-top:10px; position:relative;">추가</a>
+			<a class="btn btn-warning" id="linksubmit_init" style="margin-top:10px; position:relative;">다시입력</a>
 		</div>
 	</div>
 	<div class="link_content">

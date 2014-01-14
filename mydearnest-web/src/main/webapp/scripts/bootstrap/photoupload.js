@@ -57,18 +57,25 @@ $(function(){
 			$('#select_posY2').val(selection.y2);
 		},
 		
-		dataInit: function() {
-			//재입력 가능하게 초기화
+		init: function() {
+			//포토태그 입력창 숨기기
 			$('.link_input').css('display','none');
+			//입력창 초기화
+			imgSelectFunction.dataInit();
+		},
+		
+		dataInit: function(initType) {
 			$('#accessory_search').removeAttr("disabled");
 			$('#accessory_search').data('');
 			$('#accessory_search').val('');
 			$('#title_info').val('');  
 			$('#dummy_info').val('');
-			$('.link_input input.posX1').val('');
-			$('.link_input input.posY1').val('');
-			$('.link_input input.posX2').val('');
-			$('.link_input input.posY2').val('');
+			if(!initType) {
+				$('.link_input input.posX1').val('');
+				$('.link_input input.posY1').val('');
+				$('.link_input input.posX2').val('');
+				$('.link_input input.posY2').val('');
+			}
 		},
 		
 		insertTag: function(data) {
@@ -89,9 +96,14 @@ $(function(){
 			tag.find('input[name=posY2]').val(data.posY2);
 			
 			
-			//태그 삭제이벤트 설정
+			//태그 삭제이벤트 설정(동적추가 이벤트의 경우 바로바로 객체마다 이벤트 설정하느라 해당 코드 추가함.)
+			//예전 jQuery live메소드가 deprecate되어 다른 메소드 찾아야함.
 			tag.click(function() {
 				imgSelectFunction.deleteTag(tag);
+			}).hover(function(){
+				imgSelectFunction.activeOverlayTag(tag);
+			}, function(){
+				imgSelectFunction.deActiveOverlayTag(tag);
 			});
 			
 			//태그 컨테이너에 추가후 보여주기
@@ -180,7 +192,7 @@ $(function(){
 		imgSelectFunction.insertOverlayTag(data);
 		
 		//재입력 가능하게 초기화
-		imgSelectFunction.dataInit();
+		imgSelectFunction.init();
 		
 		
 		//초기화 : 이미지선택영역 초기화
@@ -189,6 +201,10 @@ $(function(){
 		$('#overlayContainer').fadeIn(100);
 		
 		return false;
+	});
+	
+	$('#linksubmit_init').click(function() {
+		imgSelectFunction.dataInit('text');
 	});
 	
 	//태그 삭제이벤트 설정, 마우스오버시 오버레이태그 활성화
