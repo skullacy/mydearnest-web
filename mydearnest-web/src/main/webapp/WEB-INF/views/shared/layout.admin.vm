@@ -23,17 +23,16 @@
 <body style="padding:10px;">
 
 <nav class="navbar navbar-default" role="navigation">
-  <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="navbar-header">
-    <a class="navbar-brand" href="/admin">홈</a>
-  </div>
- 
-  <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse navbar-ex1-collapse">
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href="/admin/management">관리</a></li>
-    </ul>
-  </div><!-- /.navbar-collapse -->
+	<div class="navbar-header">
+		<a class="navbar-brand" href="/admin">홈</a>
+	</div>
+	 #if($sec.authorType == "ROLE_ADMIN")
+	<div class="collapse navbar-collapse navbar-ex1-collapse">
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="/admin/management">관리</a></li>
+		</ul>
+	</div>
+	#end
 </nav>
 <div id="mdnmsg">
 </div>

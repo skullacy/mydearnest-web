@@ -93,7 +93,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 			request.setAttribute("layout", "shared/layout.blank.vm");
 			return super.preHandle(request, response, handler); //프레임 씨워져서 왔으면 조건 제외
 		}
-
+		
 		response.setStatus(301);
 		response.setHeader("Location", request.getContextPath() + "/#" + request.getContextPath() + request.getPathInfo());
 		response.setHeader("Cache-Control", "no-store");

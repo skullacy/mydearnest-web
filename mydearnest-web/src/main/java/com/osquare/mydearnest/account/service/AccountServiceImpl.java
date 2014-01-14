@@ -15,6 +15,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -457,7 +458,27 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 
+	@Override
+	public long getTotalModifierCount() {
+		Long result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
 
+		try {
+			Criteria cr = session.createCriteria(Account.class)
+					.add(Restrictions.eq("role", "ROLE_MODIFIER"))
+					.setProjection(Projections.rowCount());
+			result = (Long) cr.uniqueResult();
+			
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
 
 
 }

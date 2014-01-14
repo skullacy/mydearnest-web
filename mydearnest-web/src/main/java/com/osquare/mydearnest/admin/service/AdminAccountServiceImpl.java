@@ -81,6 +81,18 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 			if (result != null) {
 				result.setRole(role);
 				session.merge(result);
+				
+				//권한이 MODIFIER일 경우 index 추가하기.
+				if("ROLE_MODIFIER".equals(role)) {
+					cr = session.createCriteria(Account.class)
+							.add(Restrictions.eq("role", "ROLE_MODIFIER"))
+							.setProjection(Projections.rowCount());
+					
+					result.setModifierIndex((Long) cr.uniqueResult());
+					
+					session.update(result);
+				}
+				
 			}
 			
 			session.getTransaction().commit();
