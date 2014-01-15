@@ -13,23 +13,23 @@
 	<tbody>
 		#foreach($item in $items)
 	 	<tr>
-	 		<td>$!item.name</td>
-	 		<td>$!item.email</td>
+	 		<td>$!item.account.name</td>
+	 		<td>$!item.account.email</td>
 	 		<td>
-	 			32개
+	 			$!item.detailCount 개
 	 		</td>
 	 		<td>
-	 			100개
+	 			$!item.gradeCount 개
 	 		</td>
 	 		<td>
 	 			<a href="#">link</a>
 	 		</td>
 	 		<td>
-	  			<select class="role_update" data-userid="$item.id">
-		  			<option value="ROLE_USER" #if($item.role == "ROLE_USER") selected="selected"#end>사용자</option>
-		  			<option value="ROLE_MODIFIER" #if($item.role == "ROLE_MODIFIER") selected="selected"#end>사진수정전용</option>
-		  			<option value="ROLE_UPLOADER" #if($item.role == "ROLE_UPLOADER") selected="selected"#end>업로더</option>
-		  			<option value="ROLE_ADMIN" #if($item.role == "ROLE_ADMIN") selected="selected"#end>관리자</option>
+	  			<select class="role_update" data-userid="$item.account.id">
+		  			<option value="ROLE_USER" #if($item.account.role == "ROLE_USER") selected="selected"#end>사용자</option>
+		  			<option value="ROLE_MODIFIER" #if($item.account.role == "ROLE_MODIFIER") selected="selected"#end>사진수정전용</option>
+		  			<option value="ROLE_UPLOADER" #if($item.account.role == "ROLE_UPLOADER") selected="selected"#end>업로더</option>
+		  			<option value="ROLE_ADMIN" #if($item.account.role == "ROLE_ADMIN") selected="selected"#end>관리자</option>
 	  			</select>
 	  		</td>
 	 	</tr>
@@ -39,12 +39,12 @@
 
 <script type="text/javascript" src="$request.contextPath/scripts/admin.js"></script>
 
-<div class="paginate">
+<ul class="pagination">
 	#foreach($i in [1..$pages])
-	#if($i == $page)
-	<strong>$i</strong>
-	#else
-	<a href="$request.contextPath/admin/management/member?page=$i">$i</a>
+		#if($i == $page)
+		<li class="active"><span>$i <span class="sr-only">(current)</span></span></li>
+		#else
+		<li><a href="$request.contextPath/admin/management/member?page=$i#if($request.getParameter("checksum") == 1)&checksum=$!request.getParameter("checksum")#end">$i</a></li>
+		#end
 	#end
-	#end
-</div>
+</ul>

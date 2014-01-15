@@ -170,12 +170,12 @@
 </table>
 
 
-<div class="paginate">
+<ul class="pagination">
 	#foreach($i in [1..$pages])
-	#if($i == $page)
-	<strong>$i</strong>
-	#else
-	<a href="$request.contextPath/admin/post/list?page=$i#if($request.getParameter("checksum") == 1)&checksum=$!request.getParameter("checksum")#end">$i</a>
+		#if($i == $page)
+		<li class="active"><span>$i <span class="sr-only">(current)</span></span></li>
+		#else
+		<li><a href="$request.contextPath/admin/post/list?page=$i#if($request.getParameter("checksum") == 1)&checksum=$!request.getParameter("checksum")#end">$i</a></li>
+		#end
 	#end
-	#end
-</div>
+</ul>

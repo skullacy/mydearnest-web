@@ -1,8 +1,21 @@
 package com.osquare.mydearnest.admin.service;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Resource;
+
+
+
+
+
+
+
+
+
 
 
 
@@ -12,8 +25,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.ResultTransformer;
+import org.hibernate.transform.RootEntityResultTransformer;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Service;
 
+import com.osquare.mydearnest.admin.vo.AdminAccountStatusVO;
 import com.osquare.mydearnest.entity.Account;
 
 @Service("adminAccountService")
@@ -23,16 +40,26 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<Account> findAccount(int page) {
-		Collection<Account> result = null;
+	public Collection<AdminAccountStatusVO> findAccount(int page) {
+		Collection<AdminAccountStatusVO> result = null;
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
 
 		try {
-			Criteria cr = session.createCriteria(Account.class)
-					.addOrder(Order.desc("createdAt"))
-					.setMaxResults(10).setFirstResult((page - 1) * 20);
-			result = cr.list();
+			List<AdminAccountStatusVO> queryResult = session.createQuery("SELECT account as account"
+					+ ", (SELECT COUNT(DISTINCT postTag.post) FROM PostTag postTag WHERE postTag.account.id = account.id) AS detailCount"
+					+ ", (SELECT COUNT(DISTINCT postGrade.post) FROM PostGrade postGrade WHERE postGrade.account.id = account.id) AS gradeCount"
+					+ " FROM Account account").setResultTransformer(Transformers.aliasToBean(AdminAccountStatusVO.class)).list();
+			
+//			Criteria cr = session.createCriteria(Account.class)
+//					.addOrder(Order.desc("createdAt"))
+//					.setMaxResults(10).setFirstResult((page - 1) * 10);
+//			result = cr.list();
+			
+//			setResultTransformer(Transformers.aliasToBean(AdminAccountStatusVO.class))
+//			, (SELECT count(DISTINCT postTag.post) from PostTag as postTag where postTag.account.id=account.id)
+			
+			result = queryResult;
 			
 			session.getTransaction().commit();
 		}
@@ -54,6 +81,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 			Criteria cr = session.createCriteria(Account.class)
 					.setProjection(Projections.rowCount());
 			result = (Long) cr.uniqueResult();
+			
 			
 			session.getTransaction().commit();
 		}
