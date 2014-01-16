@@ -6,6 +6,7 @@
 	<a class="btn btn-default" href="$request.getRequestURI()?type=accessory">Accessory</a>
 	<a class="btn btn-default" href="$request.getRequestURI()?type=size">평수</a>
 	<a class="btn btn-default" href="$request.getRequestURI()?type=tone">톤</a>
+	<a class="btn btn-default" href="$request.getRequestURI()?type=etc">기타</a>
 
 </div>
 
@@ -35,6 +36,8 @@
 	 					평수
 	 				#elseif($item.type == "tone")
 	 					톤
+ 					#elseif($item.type == "etc")
+ 						기타
 	 				#end
 	  		</td>
 	  		<td>

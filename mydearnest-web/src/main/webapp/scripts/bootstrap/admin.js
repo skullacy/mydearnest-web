@@ -1,3 +1,39 @@
+var color_click = 0;
+	var massages = ['비중이 50%이상인 색을 선택하세요','2번째로 비중이 높은 색을 선택하세요','3번째로 비중이 높은 색을 선택하세요','4번째로 비중이 높은 색을 선택하세요','색상 입력 완료!'];
+	function insertColorTag(container, color) {
+		var tag = $('.tagResult').children('.tag_ori').clone();
+		tag.removeClass('tag_ori').addClass('tag').data('value', color).css('background',color).css('color','#eeeeee').css('text-shadow','none');
+		tag.children('.tag_label').text(color);
+		tag.children('.position_hidden').removeClass('position_hidden')
+		.attr('name', 'tagColor').attr('value', color+color_click);
+		
+		tag.find('a.delete_tag').click(function(){
+			$(this).parent('.tag').remove();
+			findNextPosition();
+			return false;
+			
+		});
+		container.append(tag);
+		tag.show();
+	}
+	
+	
+	function findNextPosition() {
+		$('.color-space').each(function() {
+			console.log($(this).has('div.tag').length);
+			if($(this).has('div.tag').length == 0) {
+				color_click = $(this).data('click');
+				$('.color-teach').text(massages[color_click]);
+				return false;
+			}else {
+				color_click++;
+				$('.color-teach').text(massages[color_click]);
+			}
+		});
+	}
+
+
+
 
 $(function(){
 	$('#position_search').autocomplete({
@@ -50,93 +86,26 @@ $(function(){
 
 	});
 	
-	var color_click = 0;
-	var massages = ['비중이 50%이상인 색을 선택하세요','2번째로 비중이 높은 색을 선택하세요','3번째로 비중이 높은 색을 선택하세요','4번째로 비중이 높은 색을 선택하세요','색상 입력 완료!'];
-	function insertColorTag(container, color) {
-		var tag = $('.tagResult').children('.tag_ori').clone();
-		tag.removeClass('tag_ori').addClass('tag').data('value', color).css('background',color).css('color','#eeeeee').css('text-shadow','none');
-		tag.children('.tag_label').text(color);
-		tag.children('.position_hidden').removeClass('position_hidden')
-		.attr('name', 'tagColor').attr('value', color+color_click);
-		
-		tag.find('a.delete_tag').click(function(){
-			color_click = tag.parent('.color-space').data('click');
-			console.log(color_click);
-			$('.color-teach').text(massages[color_click]);
-			$(this).parent('.tag').remove();
-			return false;
-			
-		});
-		container.append(tag);
-		tag.show();
-	}
 	
-	var color_click = 0;
-	
-	function findNextPosition() {
-		$('.color-space').each(function() {
-			
-			if($(this).has('div.tag').length == 0) {
-				color_click = $(this).data('click');
-				$('.color-teach').text(massages[color_click]);
-				return false;
-			}
-		});
-	}
 	
 	
 	$('#color-select-btn').click(function(){
 		$(this).css('display','none');
-		$('.color-teach').text(massages[color_click]);
+		findNextPosition();
 		$("#test").ImageColorPicker({
-//			afterColorSelected: function(event, color){
-//				$('.color-space').each(function() {
-//					if($(this).has('div.tag').length == 0) {
-//						insertColorTag($(this), color);
-//						if(color_click == 3) {
-//							$('.color-teach').text(massages[color_click+1]);
-//						}
-//						else {
-//							findNextPosition();
-//						} 
-//							
-//						console.log(color_click);
-//						
-//						
-//						return false;
-//					}
-//					
-//				});
-//				
-//				if(false) {
-//				if(color_click < 4){
-//					
-//					console.log(color_click);
-//					var tag = $('.tagResult').children('.color-space').clone().children('.tag_ori');
-//					tag.parent('.color-space').attr('data-click', color_click );
-//					color_click++;
-//					console.log(color);
-//					console.log(event);
-//					console.log(tag);
-//					tag.removeClass('tag_ori').addClass('tag').data('value', color).css('background',color).css('color','#eeeeee').css('text-shadow','none');
-//					tag.children('.tag_label').text(color);
-//					$("#result_test").text(color);
-//					tag.children('.position_hidden').removeClass('position_hidden')
-//					.attr('name', 'tagColor').attr('value', color+color_click);
-//					tag.find('a.delete_tag').click(function(){
-//						color_click = tag.parent('.color-space').data('click');
-//						console.log(color_click);
-//						$('.color-teach').text(massages[color_click]);
-//						$(this).parent('.tag').remove();
-//						return false;
-//						
-//					});
-//					$('.color-teach').text(massages[color_click]);
-//					$('.tag_color').append(tag.parent('.color-space'));
-//					tag.show();
-//				}
-//				}
-//			}
+			afterColorSelected: function(event, color){
+				$('.color-space').each(function() {
+					if($(this).has('div.tag').length == 0) {
+						
+						insertColorTag($(this), color);
+						findNextPosition();
+							
+						return false;
+					}
+					
+				});
+				
+			}
 		});
 		$('body').mousemove(function(e){
 			
@@ -145,12 +114,17 @@ $(function(){
 		});
 	});	
 	$('.feel-tooltip').popover();
-	$('[rel=popover]').popover({
+	
+	$('.question a').popover({
 		html : true,
 		content: function(){
-			return $('#popover_content_wrapper').html();
+			var hint = $(this).attr('rel');
+			return $('#popover_'+hint).html();
 		}
 	});	
+	
+		
+		$('.feel-tooltip').popover('hide');
 		
 		
 
