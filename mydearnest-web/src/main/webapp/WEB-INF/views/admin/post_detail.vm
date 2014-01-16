@@ -201,20 +201,14 @@
 			$(".tag_$!type").append(tag);
 			tag.show();
 		#else
-			var tag = $('.tagResult').children('.tag_ori').clone();
-			tag.removeClass('tag_ori').addClass('tag').data('value', "$!postTag.value").css('background',"$!postTag.value");
-			tag.children('.tag_label').text("$!postTag.value");
-			$("#result_test").text("$!postTag.value");
-			tag.children('.position_hidden').removeClass('position_hidden')
-			.attr('name', 'tagColor').attr('value', "$!postTag.value");
-		
+			tag_value = "$!postTag.value";
+			color_value = tag_value.substr(0, 7);
+			index_value = tag_value.substr(-1, 1);
 			
-			tag.find('a.delete_tag').click(function(){
-				$(this).parent('.tag').remove();
-				return false;
-			});
-			$('.tag_color').append(tag);
-			tag.show();
+			
+			insertColorTag($(".color-space[data-click='"+ index_value + "']"), color_value);
+			
+			
 		#end
 	#end
 	

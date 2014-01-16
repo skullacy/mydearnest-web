@@ -106,7 +106,7 @@
 	 		<td>
 	 			#foreach($tag in $item.getPostTag())
 	 				#if($tag.getTagCateId() == 0 && $tag.getNonCateType() == "color")
-	 					<button type="button" style="display:block; background:$tag.getValue()" class="btn btn-default btn-xs">$tag.getValue()</button>
+	 					<button type="button" style="display:block; background:$tag.getValue().substring(0, 7)" class="btn btn-default btn-xs">$tag.getValue().substring(0, 7)</button>
 	 				#end
 	 			#end
 	 		</td>
