@@ -23,7 +23,7 @@
 <img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400" style="width:400px" />
 </div>		
 <div id="radarChart"></div>
-<form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" id="data_form" onkeypress="return event.keyCode!=13">
+<form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" id="data_form" onkeypress="return event.keyCode!=13" onsubmit="return checkit(this);">
 <div style="position:relative; display:inline-block; margin-left:20px;">
 	
 	
@@ -62,7 +62,7 @@
 		<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="detail" >등록 > 태그입력</a>
 		<input type="hidden" id="redirectTo" />
 		#end
-		<input type="submit" class="btn btn-primary btn-lg" value="등록 > 다음사진" />
+		<input type="submit" class="btn btn-primary btn-lg" id="form_submit" value="등록 > 다음사진" />
 	</div>
 </form>
 
@@ -94,5 +94,10 @@
 		$('#data_form').submit();
 		return false;
 	});
+	
+	function checkit(form) {
+		$('#form_submit').attr('disabled', 'disabled');
+		form.submit();
+	}
 
 </script>

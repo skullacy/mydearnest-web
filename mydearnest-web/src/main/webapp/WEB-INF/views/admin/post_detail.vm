@@ -142,7 +142,7 @@
 			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="phototag">등록 > 악세사리</a>
 			<input type="hidden" id="redirectTo" />
 			#end
-			<input type="submit" class="btn btn-primary btn-lg" value="등록>다음사진" style="" />
+			<input type="submit" class="btn btn-primary btn-lg" id="form_submit" value="등록>다음사진" style="" />
 		</div>	
 	</form>
 	
@@ -264,24 +264,30 @@
 		
 	#end
 		function checkit(form){
+			$('#form_submit').attr('disabled', 'disabled');
 			if(!form.tagHome){
 				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
 				return false;
 			}
 			if(!form.tagAccessory){
 				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
 				return false;
 			}
 			if(!form.tagSize){
 				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
 				return false;
 			}
 			if(!form.tagTone){
 				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
 				return false;
 			}
 			if(!form.tagColor){
 				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
 				return false;
 			}
 			form.submit();
@@ -292,5 +298,5 @@
 		$('#data_form').submit();
 		return false;
 	});
-		
+	
 </script>
