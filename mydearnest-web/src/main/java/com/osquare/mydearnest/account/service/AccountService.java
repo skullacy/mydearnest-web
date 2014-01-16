@@ -28,4 +28,6 @@ public interface AccountService {
 	Account refreshAccountPassword(String mailAddress);
 	void updateAccount(Account me);
 	
+	long getTotalModifierCount();
+	
 }

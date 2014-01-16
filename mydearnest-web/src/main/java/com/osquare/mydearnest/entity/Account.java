@@ -31,6 +31,7 @@ public class Account implements Serializable {
 
 	private boolean receiveMail;
 	private String role;
+	private long modifierIndex;
 
 	private String region;
 
@@ -95,6 +96,15 @@ public class Account implements Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+	@Column(name = "MODIFIER_INDEX", nullable = false)
+	public long getModifierIndex() {
+		return modifierIndex;
+	}
+
+	public void setModifierIndex(long modifierIndex) {
+		this.modifierIndex = modifierIndex;
 	}
 
 	@Column(name = "NAME", nullable = true)

@@ -1,12 +1,18 @@
 <h2>홈</h2>
 #parse("./admin/admin_header.vm")
 <div class="btn-group">
+  #if($sec.authorType != "ROLE_MODIFIER")
   <a class="btn btn-default" href="$request.getRequestURI()?checksum=2">전체</a>
+  #end
   <a class="btn btn-default" href="$request.getRequestURI()?checksum=1">완료</a>
   <a class="btn btn-default" href="$request.getRequestURI()?checksum=0">미완료</a>
  
 </div>
+
+#if($sec.authorType != "ROLE_MODIFIER")
 <a class="btn btn-default" href="/admin/write/upload" style="float:right;">사진 업로드</a>
+#end
+
 <table class="table table-striped table-bordered" style="margin-top:20px; text-align:center;">
  	<thead style="font-size:14px; background:#cccccc; font-weight:bold;">
  	<tr>
@@ -14,11 +20,15 @@
  			사진
  		</td>
  		<td>
- 			url
+ 			출처
  		</td>
+ 		#if($sec.authorType == "ROLE_ADMIN")
  		<td>
  			느낌평가
  		</td>
+ 		#end
+ 		
+ 		#if($sec.authorType != "ROLE_UPLOADER")
  		<td>
  			홈
  		</td>
@@ -40,12 +50,20 @@
  		<td>
  			색상
  		</td>
+ 		#end
+ 		
+ 		#if($sec.authorType != "ROLE_MODIFIER")
  		<td>
  			악세사리 링크
  		</td>
+ 		#end
+ 		
+ 		#if($sec.authorType != "ROLE_UPLOADER")
  		<td>
  			정보입력
  		</td>
+ 		#end
+ 		
  	</tr>
  	<thead>
  	<tbody style="padding:0; margin:0;">
@@ -55,16 +73,20 @@
 	 			<img src="$request.contextPath/mdn-image/thumb/$item.imageSource.id?w=70&h=70&t=crop" alt="..." class="img-rounded">
 	 		</td>
 	 		<td>
-	 			<a href="#">바로가기</a>
+	 			<a href="$item.source">바로가기</a>
 	 		</td>
+	 		#if($sec.authorType == "ROLE_ADMIN")
 	 		<td>
 	 			#set($isGrade = "false")
-	 			#foreach($grade in $item.postGrade)
-	 				#if($sec.accountId == $grade.account.id)
-	 					#set($isGrade = "true")
-	 				#end
+	 			#if($item.gradeCount > 0)
+		 			#foreach($grade in $item.postGrade)
+		 				#if($sec.accountId == $grade.account.id)
+		 					#set($isGrade = "true")
+		 				#end
+		 			#end
+	 				<p>$item.gradeCount 명이 평가함</p>
 	 			#end
-	 			<p>$item.gradeCount 명이 평가함</p>
+	 			
 	 			#if($isGrade == "true")
 	 			<p>평가한 사진</p>
 	 			<a class="btn btn-warning" href="/admin/write/grade/$item.id?pagetype=update">평가수정</a>
@@ -73,19 +95,27 @@
 	 			#end
 	 			
 	 		</td>
+	 		#end
+	 		
+	 		
+	 		#if($sec.authorType != "ROLE_UPLOADER")
 	 		<td>
-	 			#foreach($tag in $item.getPostTag())
-	 				#if($tagcate.get("$tag.getTagCateId()").getType() == "home")
-	 					<button type="button" style="display:block;" class="btn btn-default btn-xs">$tagcate.get("$tag.getTagCateId()").getTitle()</button>
-	 				#end
+	 			#if($item.postTagCount > 0)
+		 			#foreach($tag in $item.getPostTag())
+		 				#if($tagcate.get("$tag.getTagCateId()").getType() == "home")
+		 					<button type="button" style="display:block;" class="btn btn-default btn-xs">$tagcate.get("$tag.getTagCateId()").getTitle()</button>
+		 				#end
+		 			#end
 	 			#end
 	 		</td>
 	 		<td style="width:80px; text-align:center;">
-	 			#foreach($tag in $item.getPostTag())
-	 				#if($tagcate.get("$tag.getTagCateId()").getType() == "accessory")
-	 					<button type="button" style="display:block;" class="btn btn-default btn-xs">$tagcate.get("$tag.getTagCateId()").getTitle()</button>
-	 				#end
-	 			#end
+	 			#if($item.postTagCount > 0)
+		 			#foreach($tag in $item.getPostTag())
+		 				#if($tagcate.get("$tag.getTagCateId()").getType() == "accessory")
+		 					<button type="button" style="display:block;" class="btn btn-default btn-xs">$tagcate.get("$tag.getTagCateId()").getTitle()</button>
+		 				#end
+		 			#end
+		 		#end
 	 		</td>
 	 		<td>
 	 			#if($item.getTagSize() > 0)
@@ -104,25 +134,48 @@
 	 			#end
 	 		</td>
 	 		<td>
-	 			#foreach($tag in $item.getPostTag())
-	 				#if($tag.getTagCateId() == 0 && $tag.getNonCateType() == "color")
-	 					<button type="button" style="display:block; background:$tag.getValue()" class="btn btn-default btn-xs">$tag.getValue()</button>
-	 				#end
+				#if($item.postTagCount > 0)
+		 			#foreach($tag in $item.getPostTag())
+		 				#if($tag.getTagCateId() == 0 && $tag.getNonCateType() == "color")
+		 					<button type="button" style="display:block; background:$tag.getValue().substring(0, 7)" class="btn btn-default btn-xs">$tag.getValue().substring(0, 7)</button>
+		 				#end
+		 			#end
 	 			#end
 	 		</td>
+	 		#end
+	 		
+	 		#if($sec.authorType != "ROLE_MODIFIER")
 	 		<td>
 	 			<p>$item.photoTagCount 개의 사진태그</p>
-	 			#foreach($photoTag in $item.getPhotoTags())
-	 				<a href="#">$photoTag.getTagCategory().getTitle()</a>
-	 			#end
+	 			#if($item.photoTagCount > 0)
+		 			#foreach($photoTag in $item.getPhotoTags())
+		 				<a href="#">$photoTag.getTagCategory().getTitle()</a>
+		 			#end
+		 		#end
 	 			<a class="btn btn-success" href="/admin/write/phototag/$item.id" style="display:block; width:80px; position:relative; left:20px; margin-top:10px;">추가</a>
 	 		</td>
+	 		#end
+	 		
+	 		
+	 		#if($sec.authorType != "ROLE_UPLOADER")
 	 		<td>
 	 			<a class="btn btn-success" href="/admin/write/detail/$item.id">수정</a>
 	 		</td>
+	 		#end
+	 		
 	 	</tr>
 	 	#end
 	 	
 	 </tbody>
 </table>
 
+
+<ul class="pagination">
+	#foreach($i in [1..$pages])
+		#if($i == $page)
+		<li class="active"><span>$i <span class="sr-only">(current)</span></span></li>
+		#else
+		<li><a href="$request.contextPath/admin/post/list?page=$i#if($request.getParameter("checksum") == 1)&checksum=$!request.getParameter("checksum")#end">$i</a></li>
+		#end
+	#end
+</ul>

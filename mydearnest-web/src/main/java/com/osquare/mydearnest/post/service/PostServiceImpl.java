@@ -684,8 +684,10 @@ public class PostServiceImpl implements PostService {
 				//순환중 객체 삭제를 하게되면 자기 자신을 삭제하고 Exception발생.  Iterator로 변경.
 				for(Iterator<Post> it = postList.iterator(); it.hasNext(); ) {
 					Post checkPost = it.next();
-					if(getMyPostGradeByPost(account, checkPost) != null) {
-						it.remove();
+					if(checkPost.getGradeCount() > 0) {
+						if(getMyPostGradeByPost(account, checkPost) != null) {
+							it.remove();
+						}
 					}
 				}
 			}

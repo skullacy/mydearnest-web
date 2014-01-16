@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.junglebird.webframe.vo.SignedDetails;
+import com.osquare.mydearnest.account.service.AccountService;
 import com.osquare.mydearnest.admin.service.AdminAccountService;
 import com.osquare.mydearnest.admin.service.AdminPostService;
 import com.osquare.mydearnest.admin.service.AdminTagCateService;
+import com.osquare.mydearnest.entity.Account;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.TagCategory;
@@ -30,6 +32,7 @@ public class PostAdminController {
 	@Autowired private AdminAccountService adminAccountService;
 	@Autowired private AdminPostService adminPostService;
 	@Autowired private AdminTagCateService adminTagCateService;
+	@Autowired private AccountService accountService;
 	
 	
 	//사진 리스트 출력용 컨트롤러
@@ -40,17 +43,37 @@ public class PostAdminController {
 			@RequestParam(value="page", required = false) Integer page,
 			@RequestParam(value="order", required = false) String order) {
 		
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
 		if (page == null) page = 1;
 		if (order == null) order = "createdAt";
 		
 		//1 : 모든 조건 충족된 포스트, 0: 아직 게시조건에 충족안되는 포스트, 2: 모든 포스
-		if (checksum == null) checksum = 2;
+		//MODIFIER권한인 경우 특정 조건을 선택안했을시 checksum을 null상태 그대로 둔다. 밑에서 해당조건에 맞춰 미완성된것을 디폴트로 보여주기위해.
+		if (checksum == null && !"ROLE_MODIFIER".equals(account.getRole())) checksum = 2;
+		
+		
+		
 		
 		model.addAttribute("order", order);
 		model.addAttribute("page", page);
-		model.addAttribute("pages", Math.ceil((double)adminPostService.sizeOfPost() / 20));
+		model.addAttribute("pages", Math.ceil((double)adminPostService.sizeOfPost() / 10));
 		
-		Collection<Post> items = adminPostService.findPost(page, order, checksum);
+		//MODIFIER권한의 경우 위에서 checksum을 null로 세팅 해놨기 때문에 디폴트로 보여주는 것을 checksum = 0으로 보여준다.
+		Collection<Post> items = null;
+		if("ROLE_MODIFIER".equals(account.getRole()) && checksum == null) {
+			items = adminPostService.findPost(page, order, 0, account);
+		}
+		else {
+			items = adminPostService.findPost(page, order, checksum, account);
+		}
+		
+		
+		
 		Collection<TagCategory> tagCate = adminTagCateService.getTagCategories();
 		HashMap<String, TagCategory> tagCateHashMap = new HashMap<String, TagCategory>();
 		
