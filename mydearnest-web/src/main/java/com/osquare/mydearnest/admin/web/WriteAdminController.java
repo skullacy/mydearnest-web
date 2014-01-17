@@ -243,7 +243,26 @@ public class WriteAdminController {
 		}
 		
 		
-		return new RedirectHandler().getRedirectUrlForUploadProcess("phototag", redirectType, post, account);
+		//Submit 후 리다이렉트 지정되지 않은경우.
+		if(redirectType == null) {
+			
+			//미완료된 포스트중 랜덤 호출.
+			Post redirectPost = postService.getPostByRandom(0, "phototag", account);
+			
+			if(redirectPost == null) {
+				return "redirect:/admin";
+			}
+			else {
+				return "redirect:/admin/write/phototag/"+redirectPost.getId();
+			}
+			
+		}
+		else {
+			return "redirect:/admin/write/" + redirectType + "/" +  post.getId();
+		}
+		
+		
+
 		
 	}
 	
@@ -272,6 +291,7 @@ public class WriteAdminController {
 		
 		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
+//		return "testadmin/grade";
 		return "admin/post_detail";
 	}
 	
