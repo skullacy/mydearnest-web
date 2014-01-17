@@ -3,7 +3,7 @@
 <form action="$request.contextPath/admin/category/create" method="post" role="form">
   <fieldset>
   	<label for="disabledTextInput">태그종류</label>
-  	#if($tagInfo != "")
+  	#if($inputType == "update")
   		<input type="hidden" name="submitType" value="update" />
   		<input type="hidden" name="submitId" value="$tagInfo.id" />
   	#end

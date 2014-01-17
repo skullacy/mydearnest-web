@@ -18,7 +18,7 @@
 			<input type="text" id="source" name="source"class="form-control" placeholder="출처입력">
 		</div>
 		<div style="position:relative; margin-top:10px;">
-			<input type="submit" class="btn btn-primary btn-lg" value="등록하기" />
+			<input type="submit" class="btn btn-primary btn-lg" id="form_submit" value="등록하기" />
 			<a class="btn btn-warning btn-lg" href="$request.contextPath/admin">취소</a>
 		</div>
 	</div>
@@ -65,8 +65,10 @@ $("#thumbnail").change(function (){
 	$("#thumbnail").change();
 	
 	function checkit(form){
+			$('#form_submit').attr('disabled', 'disabled');
 			if(!form.thumbnail.value){
 				alert('등록된 사진이 없습니다');
+				$('#form_submit').removeAttr('disabled');
 				return false;
 			}
 			

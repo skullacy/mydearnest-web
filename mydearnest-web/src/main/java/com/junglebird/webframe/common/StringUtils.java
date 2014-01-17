@@ -1,5 +1,8 @@
 package com.junglebird.webframe.common;
 
+import java.nio.ByteBuffer;
+import java.util.UUID;
+
 public class StringUtils {
 
 	public static boolean isEmpty(String str) {

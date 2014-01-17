@@ -74,7 +74,11 @@ public class APICategoryController {
 				
 				for(TagCategory category : tagCategories) {
 					JSONObject object = new JSONObject();
-					object.put("id", category.getId());
+					
+					//javascript 숫자변수로 보내면 id가 짤리는 경우가 생김.
+					//스트링으로 변환하여 보낸다.
+					object.put("id", String.valueOf(category.getId()));
+					
 					object.put("title", category.getTitle());
 					object.put("type", category.getType());
 					array.add(object);

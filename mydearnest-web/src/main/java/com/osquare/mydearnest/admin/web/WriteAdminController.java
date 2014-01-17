@@ -305,7 +305,6 @@ public class WriteAdminController {
 			@ModelAttribute("command") PostVO postVO,
 			BindingResult result) {
 		
-		
 		model.addAttribute("success", false);
 		
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
@@ -322,6 +321,7 @@ public class WriteAdminController {
 //		new PostGradeValidator().validate(postVO, result);
 //		
 		if (result.hasErrors()) {
+			System.out.println("Write ERRORaslgdk;jasdl;fkasf");
 			System.out.println(result.getAllErrors());
 			model.addAttribute("errors", result.getAllErrors());
 		}

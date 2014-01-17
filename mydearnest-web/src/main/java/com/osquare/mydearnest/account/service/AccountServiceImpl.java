@@ -218,7 +218,9 @@ public class AccountServiceImpl implements AccountService {
 				account.setEnabled(false);
 				account.setCreatedAt(new Date());
 				
-				account.setId((Long) session.save(account));
+				//account.setId((Long) session.save(account));
+				
+				session.save(account);
 			}
 			else {
 				account.setPassword(passwordEncoder.encodePassword(accountVO.getPassword(), null));

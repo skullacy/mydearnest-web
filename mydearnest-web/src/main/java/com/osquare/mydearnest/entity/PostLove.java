@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 
 @SuppressWarnings("serial")
 @Entity
@@ -29,7 +30,8 @@ public class PostLove implements Serializable {
 	private Date createdAt;
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(generator="UUIDPKGenerator")
+	@GenericGenerator(name="UUIDPKGenerator", strategy="com.junglebird.webframe.common.PkGenerator")
 	@Column(name = "ID", unique = true, nullable = false)
 	public long getId() {
 		return id;
