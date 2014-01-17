@@ -46,7 +46,7 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 			ex.printStackTrace();
 		}
 		
-		return result;
+		return result; 
 	}
 
 	@Override
