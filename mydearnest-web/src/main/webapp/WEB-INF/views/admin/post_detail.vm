@@ -65,7 +65,7 @@
 			<table class="table table-striped table-bordered tag_table" style="margin-bottom:0px;">
 				<tr>
 					<td class="tag_name">
-						홈
+						공간
 					</td>
 					<td class="tag_home">
 					</td>
@@ -74,7 +74,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="tag_name">악세사리</td>
+					<td class="tag_name">가구</td>
 					<td class="tag_accessory">
 					</td>
 					<td class="question">
@@ -100,10 +100,10 @@
 					<td>
 						<div class="btn-group" data-toggle="buttons" >
 							<label class="btn btn-default btn-sm #if($post.getTheme() == 0) active #end">
-								<input type="radio" name="theme" value="0" #if($post.getTheme() == 0) checked="true" #end /> 있음
+								<input type="radio" name="theme" value="0" #if($post.getTheme() == 0) checked="true" #end /> 없음
 							</label>
 							<label class="btn btn-default btn-sm #if($post.getTheme() == 1) active #end">
-								<input type="radio" name="theme" value="1" #if($post.getTheme() == 1) checked="true" #end /> 없음
+								<input type="radio" name="theme" value="1" #if($post.getTheme() == 1) checked="true" #end /> 있음
 							</label>
 						</div>
 					</td>
@@ -124,11 +124,11 @@
 				<tr>
 					<td class="tag_name">색상</td>
 					<td class="tag_color">
-						<a class="btn btn-success" id="color-select-btn">색상선택</a> 
 						<div class="color-space" style="display:inline;" data-click="0"></div>
 						<div class="color-space" style="display:inline;" data-click="1"></div>
 						<div class="color-space" style="display:inline;" data-click="2"></div>
 						<div class="color-space" style="display:inline;" data-click="3"></div>
+						<a class="btn btn-success" id="color-select-btn" style="display:block; margin-top:10px;">색상 선택 힌트</a> 
 					</td>
 				</tr>
 			</table>
@@ -139,35 +139,41 @@
 		<div class="button-container" style="margin-top:30px; position:relative;">
 			#if($sec.getAuthorType() == "ROLE_ADMIN")
 			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="grade">등록 > 느낌평가</a>
-			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="phototag">등록 > 악세사리</a>
+			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="phototag">등록 > 가구링크</a>
 			<input type="hidden" id="redirectTo" />
 			#end
 			<input type="submit" class="btn btn-primary btn-lg" id="form_submit" value="등록>다음사진" style="" />
 		</div>	
 	</form>
-	
+	<ul id="popover_home" style="display:none;">
 	#foreach($tag in $tagcate)
 		#if($tag.type=="home")
-			<ul id="popover_home" style="display:none;">
-				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-			</ul>
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
 		#end
+	#end
+	</ul>
+	<ul id="popover_accessory" style="display:none;">
+	#foreach($tag in $tagcate)
 		#if($tag.type=="accessory")
-			<ul id="popover_accessory" style="display:none;">
-				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-			</ul>
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
 		#end
+	#end
+	</ul>
+	<ul id="popover_size" style="display:none;">
+	#foreach($tag in $tagcate)
 		#if($tag.type=="size")
-			<ul id="popover_size" style="display:none;">
-				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-			</ul>
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
 		#end
+	#end
+	</ul>
+	<ul id="popover_tone" style="display:none;">
+	#foreach($tag in $tagcate)
 		#if($tag.type=="tone")
-			<ul id="popover_tone" style="display:none;">
-				<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
-			</ul>
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
 		#end
-	#end       
+	#end
+	</ul>
+	
          
 </div>
 

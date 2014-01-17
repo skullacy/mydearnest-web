@@ -33,7 +33,8 @@
 			<input type="hidden" id="select_posX2" value="" />
 			<input type="hidden" id="select_posY2" value="" />
 			
-			<span style="color:#fff;">악세사리 태그</span>
+			<span style="color:#fff;">가구 태그</span>
+			<a class="btn btn-default btn-xs tagHint"  href="#" rel="accessory" data-original-title="" style="display:inline-block; position:absolute; top:35px; left:360px;">?</a>
 			<input style="margin-bottom:10px;" type="text" class="form-control" id="accessory_search" name="keyword" action="$request.contextPath/api/category/search.ajax?type=accessory" placeholder="악세사리 태그검색">
 			<span style="color:#fff; ">타이틀입력</span>
 			<input type="text" style="margin-bottom:10px;" class="form-control" id="title_info" placeholder="타이틀" >
@@ -46,7 +47,7 @@
 	<div class="link_content">
 		<label for="source" style="color:#444;">출처</label>
 		<input type="text" id="source" name="source"class="form-control" placeholder="출처입력" value="$!post.source">
-		<label for="tag_list" style="color:#444; margin-top:10px;">악세사리 링크</label>
+		<label for="tag_list" style="color:#444; margin-top:10px;">가구 링크</label>
 		<div class="tag_list">
 			#foreach($photoTag in $photoTags)
 			<div class="photoTag" style="float:left;">
@@ -80,6 +81,8 @@
 			<input type="hidden" class="info" value="" />
 		</div>
 	</div>
+	
+	
 	
 	#*클리핑 프로그램을 통해서 들어왔을 경우 다른 종류의 버튼*#
 	#if($fromClipping)
@@ -117,7 +120,8 @@
 				}); 
 				return false;
 			});
-		</script>
+		
+			</script>
 	#else
 		
 		<div class="button-container" style="margin-top:30px; position:relative; margin-left:20px;">
@@ -130,9 +134,15 @@
 		</div>
 			
 	#end
-	
-	
+	<ul id="popover_accessory" style="display:none;">
+	#foreach($tag in $tagcate)
+		#if($tag.type=="accessory")
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		#end
+	#end     
+	</ul>
 </form>
+  
 
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/photoupload.js"></script>	
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.imgareaselect.pack.js"></script>
@@ -143,4 +153,12 @@
 		$('#data_form').submit();
 		return false;
 	});
+		$('a.tagHint').popover({
+		html : true,
+		content: function(){
+			var hint = $(this).attr('rel');
+			return $('#popover_'+hint).html();
+		}
+	});	
+	
 </script>

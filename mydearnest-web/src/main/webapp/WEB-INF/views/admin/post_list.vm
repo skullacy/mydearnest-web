@@ -32,10 +32,10 @@
  		#end
  		#if($sec.authorType != "ROLE_UPLOADER")
  		<td>
- 			홈
+ 			공간
  		</td>
  		<td>
- 			악세사리
+ 			가구
  		</td>
  		<td>
  			평수
@@ -56,7 +56,7 @@
  		
  		#if($sec.authorType != "ROLE_MODIFIER")
  		<td>
- 			악세사리 링크
+ 			가구 링크
  		</td>
  		#end
  		

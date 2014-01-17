@@ -37,6 +37,7 @@ import com.osquare.mydearnest.post.service.PostService;
 import com.osquare.mydearnest.post.validator.PostGradeValidator;
 import com.osquare.mydearnest.post.validator.PostUploadValidator;
 import com.osquare.mydearnest.post.vo.PostVO;
+import com.osquare.mydearnest.util.handler.RedirectHandler;
 
 @Controller
 @RequestMapping("/admin/write")

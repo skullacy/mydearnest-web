@@ -8,8 +8,8 @@
   		<input type="hidden" name="submitId" value="$tagInfo.id" />
   	#end
 	<select name="type" class="form-control" style="margin-bottom:20px;">
-	  <option value="home">홈</option>
-	  <option value="accessory">악세사리</option>
+	  <option value="home">공간</option>
+	  <option value="accessory">가구</option>
 	  <option value="size">평수</option>
 	  <option value="tone">톤</option>
 	  <option value="etc">기타</option>

@@ -30,16 +30,11 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 		session.getTransaction().begin();
 		
 		try {
-			Criteria cr = null;
+			Criteria cr = session.createCriteria(TagCategory.class)
+					.setProjection(Projections.rowCount());
 			
-			if(type.isEmpty()) {
-				cr = session.createCriteria(TagCategory.class)
-						.setProjection(Projections.rowCount());
-			}
-			else {
-				cr = session.createCriteria(TagCategory.class)
-						.add(Restrictions.eq("type", type))
-						.setProjection(Projections.rowCount());
+			if(!type.isEmpty()) {
+				cr.add(Restrictions.eq("type", type));
 			}
 			
 			result = (Long) cr.uniqueResult();
@@ -51,7 +46,7 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 			ex.printStackTrace();
 		}
 		
-		return result;
+		return result; 
 	}
 
 	@Override
@@ -62,18 +57,12 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 
 		try {
 			
-			Criteria cr = null;
+			Criteria cr = session.createCriteria(TagCategory.class)
+//					.addOrder(Order.desc(order))
+					.setMaxResults(10).setFirstResult((page - 1) * 20);
 			
-			if(type.isEmpty()) {
-				cr = session.createCriteria(TagCategory.class)
-//						.addOrder(Order.desc(order))
-						.setMaxResults(10).setFirstResult((page - 1) * 20);
-			}
-			else {
-				cr = session.createCriteria(TagCategory.class)
-						.add(Restrictions.eq("type", type))
-//						.addOrder(Order.desc(order))
-						.setMaxResults(10).setFirstResult((page - 1) * 20);
+			if(!type.isEmpty()) {
+				cr.add(Restrictions.eq("type", type));
 			}
 			
 			result = cr.list();
@@ -133,10 +122,7 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 			tagCate.setTitle(tagCateVO.getTitle());
 			tagCate.setType(tagCateVO.getType());
 			
-//			System.out.println(StringUtils.replaceEngPos(tagCateVO.getTitle()));
-			
 			String keyword = StringUtils.replaceEngPos(tagCateVO.getTitle());
-			System.out.println(keyword);
 			tagCate.setKeyword(keyword);
 			
 			session.persist(tagCate);
