@@ -99,18 +99,26 @@ $(function(){
 		}
 	});
 	
-	
+	var view_hint = 0;
 	$('#color-select-btn').click(function(){
-		$(this).text('완료').removeClass('btn-success').addClass('btn-info');
-		findNextPosition();
-		
-		$('body').mousemove(function(e){
+		if(view_hint == 0){  
+			view_hint = 1; 
+			$(this).text('색상선택 힌트끄기').removeClass('btn-success').addClass('btn-info');
+			findNextPosition();
+			$('body').mousemove(function(e){
+				$('.tip-mousemove').css('left', e.pageX + 10).css('top', e.pageY + 10).css('display', 'block');
 			
-			$('.tip-mousemove').css('left', e.pageX + 10).css('top', e.pageY + 10).css('display', 'block');
+			});
+		}else{
+			view_hint = 0;
+			$(this).text('색상 선택 힌트 보기').removeClass('btn-info').addClass('btn-success');
+			$('body').mousemove(function(e){
+				$('.tip-mousemove').css('left', e.pageX + 10).css('top', e.pageY + 10).css('display', 'none');
 			
-		});
+			});
+		}
 	});	
-	$('.feel-tooltip').popover();
+	
 	
 	$('.question a').popover({
 		html : true,
@@ -121,7 +129,7 @@ $(function(){
 	});	
 	
 		
-		$('.feel-tooltip').popover('hide');
+		
 		
 		
 

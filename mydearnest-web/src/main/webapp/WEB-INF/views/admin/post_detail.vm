@@ -128,7 +128,7 @@
 						<div class="color-space" style="display:inline;" data-click="1"></div>
 						<div class="color-space" style="display:inline;" data-click="2"></div>
 						<div class="color-space" style="display:inline;" data-click="3"></div>
-						<a class="btn btn-success" id="color-select-btn" style="display:block; margin-top:10px;">색상선택</a> 
+						<a class="btn btn-success" id="color-select-btn" style="display:block; margin-top:10px;">색상 선택 힌트</a> 
 					</td>
 				</tr>
 			</table>
