@@ -78,8 +78,6 @@ public class PostAdminController {
 		HashMap<String, TagCategory> tagCateHashMap = new HashMap<String, TagCategory>();
 		
 		for(TagCategory tc : tagCate) {
-			System.out.println(String.valueOf(tc.getId()));
-			System.out.println(tc);
 			tagCateHashMap.put(String.valueOf(tc.getId()), tc);
 		}
 		

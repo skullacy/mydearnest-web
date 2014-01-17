@@ -222,14 +222,6 @@ public class PostServiceImpl implements PostService {
 			
 			Long postTagCount = (Long) cr.uniqueResult();
 			
-			System.out.println(maxGrader);
-			System.out.println(post.getGradeCount() == maxGrader - 1);
-			System.out.println(post.getSpaceType() >= 0);
-			System.out.println(post.getTagSize() >= 0);
-			System.out.println(post.getTagTone() >= 0);
-			System.out.println(post.getTheme() >= 0);
-			System.out.println(postTagCount >= 4);
-			
 			Boolean checkSum = (
 						post.getGradeCount() == maxGrader &&
 						post.getSpaceType() >= 0 &&
@@ -678,7 +670,6 @@ public class PostServiceImpl implements PostService {
 			postList = cr.list();
 			session.getTransaction().commit();
 			
-			System.out.println("1");
 			if("grade".equals(type)) {
 				System.out.println(postList.size());
 				//순환중 객체 삭제를 하게되면 자기 자신을 삭제하고 Exception발생.  Iterator로 변경.
