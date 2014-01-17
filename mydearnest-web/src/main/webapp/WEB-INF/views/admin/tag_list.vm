@@ -2,8 +2,8 @@
 
 <div class="btn-group">
 	<a class="btn btn-default" href="$request.getRequestURI()">전체</a>
-	<a class="btn btn-default" href="$request.getRequestURI()?type=home">Home</a>
-	<a class="btn btn-default" href="$request.getRequestURI()?type=accessory">Accessory</a>
+	<a class="btn btn-default" href="$request.getRequestURI()?type=home">공간</a>
+	<a class="btn btn-default" href="$request.getRequestURI()?type=accessory">가구</a>
 	<a class="btn btn-default" href="$request.getRequestURI()?type=size">평수</a>
 	<a class="btn btn-default" href="$request.getRequestURI()?type=tone">톤</a>
 	<a class="btn btn-default" href="$request.getRequestURI()?type=etc">기타</a>
@@ -31,7 +31,7 @@
 	 				#if($item.type == "home")
 	 					Home
 	 				#elseif($item.type == "accessory")
-	 					Accessory
+	 					가구
 	 				#elseif($item.type == "size")
 	 					평수
 	 				#elseif($item.type == "tone")
