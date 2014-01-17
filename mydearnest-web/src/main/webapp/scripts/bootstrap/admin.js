@@ -48,6 +48,7 @@ $(function(){
 				dataType: "Json",
 				data: $('#position_search').serialize(),
 				success: function(result){
+					console.log(result);
 					response($.map(result.data, function(item){
 						return{
 							label: item.title,

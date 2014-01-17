@@ -13,6 +13,9 @@
 <a class="btn btn-default" href="/admin/write/upload" style="float:right;">사진 업로드</a>
 #end
 
+<div id="testPostTag">
+</div>
+
 <table class="table table-striped table-bordered" style="margin-top:20px; text-align:center;">
  	<thead style="font-size:14px; background:#cccccc; font-weight:bold;">
  	<tr>
@@ -27,7 +30,6 @@
  			느낌평가
  		</td>
  		#end
- 		
  		#if($sec.authorType != "ROLE_UPLOADER")
  		<td>
  			홈
