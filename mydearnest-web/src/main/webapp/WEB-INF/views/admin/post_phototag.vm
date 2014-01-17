@@ -33,7 +33,7 @@
 			<input type="hidden" id="select_posX2" value="" />
 			<input type="hidden" id="select_posY2" value="" />
 			
-			<span style="color:#fff;">가구&소품 태그</span>
+			<span style="color:#fff;">가구 태그</span>
 			<a class="btn btn-default btn-xs tagHint"  href="#" rel="accessory" data-original-title="" style="display:inline-block; position:absolute; top:35px; left:360px;">?</a>
 			<input style="margin-bottom:10px;" type="text" class="form-control" id="accessory_search" name="keyword" action="$request.contextPath/api/category/search.ajax?type=accessory" placeholder="악세사리 태그검색">
 			<span style="color:#fff; ">타이틀입력</span>
@@ -47,7 +47,7 @@
 	<div class="link_content">
 		<label for="source" style="color:#444;">출처</label>
 		<input type="text" id="source" name="source"class="form-control" placeholder="출처입력" value="$!post.source">
-		<label for="tag_list" style="color:#444; margin-top:10px;">가구&소품 링크</label>
+		<label for="tag_list" style="color:#444; margin-top:10px;">가구 링크</label>
 		<div class="tag_list">
 			#foreach($photoTag in $photoTags)
 			<div class="photoTag" style="float:left;">
