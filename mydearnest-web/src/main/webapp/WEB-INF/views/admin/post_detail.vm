@@ -43,7 +43,7 @@
 	<div class="tip-mousemove">
 		<button class="color-teach btn btn-danger" ></button>
 	</div>
-	<img src="$request.contextPath/mdn-image/get/$post.id" width="400px" id="test"/>
+	<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px" id="test"/>
 	
 </div>	
 

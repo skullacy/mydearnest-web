@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 
 @SuppressWarnings("serial")
 @Entity
@@ -62,13 +63,16 @@ public class Post implements Serializable {
 	private Set<PhotoTag> photoTags = new HashSet<PhotoTag>(0);
 	
 	//단일입력만 가능한 것들
-	private int tagSize;
-	private int tagTone;
+	private long tagSize;
+	private long tagTone;
+	
+	
 	private int theme;
 	private int spaceType;
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(generator="UUIDPKGenerator")
+	@GenericGenerator(name="UUIDPKGenerator", strategy="com.junglebird.webframe.common.PkGenerator")
 	@Column(name = "ID", unique = true, nullable = false)
 	public long getId() {
 		return id;
@@ -126,20 +130,20 @@ public class Post implements Serializable {
 	}
 	
 	@Column(name = "SIZE", nullable = true)
-	public int getTagSize() {
+	public long getTagSize() {
 		return tagSize;
 	}
 
-	public void setTagSize(int tagSize) {
+	public void setTagSize(long tagSize) {
 		this.tagSize = tagSize;
 	}
 
 	@Column(name = "TONE", nullable = true)
-	public int getTagTone() {
+	public long getTagTone() {
 		return tagTone;
 	}
 
-	public void setTagTone(int tagTone) {
+	public void setTagTone(long tagTone) {
 		this.tagTone = tagTone;
 	}
 

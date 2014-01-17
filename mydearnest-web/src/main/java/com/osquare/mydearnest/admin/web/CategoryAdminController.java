@@ -1,12 +1,10 @@
 package com.osquare.mydearnest.admin.web;
 
 
-import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.osquare.mydearnest.admin.service.AdminAccountService;
 import com.osquare.mydearnest.admin.service.AdminTagCateService;
-import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.TagCategoryVO;
 
@@ -62,7 +59,7 @@ public class CategoryAdminController {
 	//카테고리 입력 화면
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String insertTag(Model model, HttpServletRequest request, HttpServletResponse response) {
-		
+		model.addAttribute("inputType", "create");
 		return "admin/tag_create";
 	}
 	
@@ -71,7 +68,7 @@ public class CategoryAdminController {
 	public String insertTagSubmit(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("command") TagCategoryVO tagCateVO,
 			@RequestParam(value = "submitType", required = false) String submitType,
-			@RequestParam(value = "submitId", required = false) long tagCateId,
+			@RequestParam(value = "submitId", required = false) Long tagCateId,
 			BindingResult result) {
 		
 		model.addAttribute("success", false);
@@ -81,6 +78,7 @@ public class CategoryAdminController {
 			model.addAttribute("errors", result.getAllErrors());
 		}
 		else {
+			
 			TagCategory tagCate;
 			if("update".equals(submitType)) {
 				tagCate = adminTagCateService.updateTagCategory(tagCateVO, tagCateId);	
@@ -110,6 +108,7 @@ public class CategoryAdminController {
 		
 		TagCategory tagCate = adminTagCateService.getTagInfo(cateId);
 		
+		model.addAttribute("inputType", "update");
 		model.addAttribute("tagInfo", tagCate);
 		
 		return "admin/tag_create";

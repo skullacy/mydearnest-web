@@ -24,30 +24,51 @@
 </div>		
 <div id="radarChart"></div>
 <form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" id="data_form" onkeypress="return event.keyCode!=13" onsubmit="return checkit(this);">
+<style>
+	.valueContainer		{width:80px; height:200px; float:left;}
+</style>
 <div style="position:relative; display:inline-block; margin-left:20px;">
 	
 	
 		
-		<label for="feelModern">모던함</label>
-		#springBind("command.feelModern")
-		<input type="text" class="form-control" name="feelModern" id="feelModern" value="$!status.value" style="width:100px; display:block; margin-"/>
+		<div class="valueContainer">
+			<label for="feelModern">모던함</label>
+			#springBind("command.feelModern")
+			<input type="text" class="form-control feelValue" name="feelModern" id="feelModern" value="$!status.value" style="width:100px; display:block; margin-"/>
+			<div class="sliderVertical"></div>
+		</div>		
+		
+		<div class="valueContainer">
+			<label for="feelModern">고급스러움</label>
+			#springBind("command.feelLuxury")
+			<input type="text" class="form-control feelValue" name="feelLuxury" id="feelLuxury" value="$!status.value" style="width:100px; display:block;" />	
+			<div class="sliderVertical"></div>
+		</div>		
+		
+		<div class="valueContainer">
+			<label for="feelModern">따듯함</label>
+			#springBind("command.feelWarm")
+			<input type="text" class="form-control feelValue" name="feelWarm" id="feelWarm" value="$!status.value" style="width:100px; display:block;"/>
+			<div class="sliderVertical"></div>
+		</div>		
+		
+		<div class="valueContainer">
+			<label for="feelModern">빈티지</label>
+			#springBind("command.feelVintage")
+			<input type="text" class="form-control feelValue" name="feelVintage" id="feelVintage" value="$!status.value"style="width:100px; display:block;" />
+			<div class="sliderVertical"></div>
+		</div>		
+		
+		<div class="valueContainer">
+			<label for="feelModern">귀여움</label>
+			#springBind("command.feelCute")
+			<input type="text" class="form-control feelValue" name="feelCute" id="feelCute" value="$!status.value"style="width:100px; display:block;" />
+			<div class="sliderVertical"></div>
+		</div>		
 		
 		
-		<label for="feelModern">고급스러움</label>
-		#springBind("command.feelLuxury")
-		<input type="text" class="form-control" name="feelLuxury" id="feelLuxury" value="$!status.value" style="width:100px; display:block;" />	
 		
-		<label for="feelModern">따듯함</label>
-		#springBind("command.feelWarm")
-		<input type="text" class="form-control" name="feelWarm" id="feelWarm" value="$!status.value" style="width:100px; display:block;"/>
 		
-		<label for="feelModern">빈티지</label>
-		#springBind("command.feelVintage")
-		<input type="text" class="form-control" name="feelVintage" id="feelVintage" value="$!status.value"style="width:100px; display:block;" />
-		
-		<label for="feelModern">귀여움</label>
-		#springBind("command.feelCute")
-		<input type="text" class="form-control" name="feelCute" id="feelCute" value="$!status.value"style="width:100px; display:block;" />
 
 	
 		#if($pagetype == "update")
@@ -87,6 +108,7 @@
      	$('#feelVintage').val(data[2]);
      	$('#feelLuxury').val(data[3]);
      	$('#feelWarm').val(data[4]);
+     	syncSliderWithText();
 	});
 	
 	 $('.submit_redirect').on('click', function() {
@@ -99,5 +121,33 @@
 		$('#form_submit').attr('disabled', 'disabled');
 		form.submit();
 	}
+	
+	function syncSliderWithText() {
+		$('#radarChart').spidergraph('setactivedata', {
+			'strokecolor': 'rgba(124,209,210,0.8)',
+	        'fillcolor': 'rgba(151,254,255,0.6)',
+	        'data': [$('#feelModern').val(), $('#feelCute').val(), $('#feelVintage').val(), $('#feelLuxury').val(), $('#feelWarm').val()],
+	         'linear': true
+		});
+		
+		$('.sliderVertical').each(function(){
+			$(this).slider({value: $(this).siblings('input').val()});
+		});
+	}
+	
+	$('.sliderVertical').slider({
+		orientation: "vertical",
+		min: 0,
+		max: 10,
+		value: $(this).siblings('input').val(),
+		slide: function(event, ui) {
+			$(this).siblings('input').val(ui.value);
+			syncSliderWithText();
+		}
+	
+	
+	});
+	
+	$('.feelValue').keyup(syncSliderWithText);
 
 </script>

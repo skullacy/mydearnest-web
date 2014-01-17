@@ -86,27 +86,23 @@ $(function(){
 
 	});
 	
-	
+	$("#test").ImageColorPicker({
+		afterColorSelected: function(event, color){
+			$('.color-space').each(function() {
+				if($(this).has('div.tag').length == 0) {
+					insertColorTag($(this), color);
+					findNextPosition();
+					return false;
+				}
+			});
+		}
+	});
 	
 	
 	$('#color-select-btn').click(function(){
 		$(this).css('display','none');
 		findNextPosition();
-		$("#test").ImageColorPicker({
-			afterColorSelected: function(event, color){
-				$('.color-space').each(function() {
-					if($(this).has('div.tag').length == 0) {
-						
-						insertColorTag($(this), color);
-						findNextPosition();
-							
-						return false;
-					}
-					
-				});
-				
-			}
-		});
+		
 		$('body').mousemove(function(e){
 			
 			$('.tip-mousemove').css('left', e.pageX + 10).css('top', e.pageY + 10).css('display', 'block');

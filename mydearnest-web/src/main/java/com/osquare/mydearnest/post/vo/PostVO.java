@@ -23,8 +23,8 @@ public class PostVO {
 	private long[] tagAccessory;
 	private String[] tagColor;
 		//단일입력해야 하는것들(POST스키마에 입력)
-	private int tagSize;
-	private int tagTone;
+	private long tagSize;
+	private long tagTone;
 	private int theme;
 	private int spaceType;
 	
@@ -110,16 +110,16 @@ public class PostVO {
 	public void setTagColor(String[] tagColor) {
 		this.tagColor = tagColor;
 	}
-	public int getTagSize() {
+	public long getTagSize() {
 		return tagSize;
 	}
-	public void setTagSize(int tagSize) {
+	public void setTagSize(long tagSize) {
 		this.tagSize = tagSize;
 	}
-	public int getTagTone() {
+	public long getTagTone() {
 		return tagTone;
 	}
-	public void setTagTone(int tagTone) {
+	public void setTagTone(long tagTone) {
 		this.tagTone = tagTone;
 	}
 	public int getTheme() {

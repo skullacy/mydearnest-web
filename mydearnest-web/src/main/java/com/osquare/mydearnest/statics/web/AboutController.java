@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.junglebird.webframe.common.StringUtils;
+
 @Controller
 @RequestMapping("/about")
 public class AboutController {
@@ -34,6 +36,7 @@ public class AboutController {
 
 	@RequestMapping("/tos")
 	public String tos(HttpServletResponse response) {
+		
 		return "about/tos";
 	}
 

@@ -18,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.junglebird.webframe.common.StringUtils;
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.account.service.AccountService;
 import com.osquare.mydearnest.entity.Account;
@@ -58,6 +59,8 @@ public class HomeController {
 			model.addAttribute("user_image_id", account.getImageId());
 		}
 		logger.info("2345");
+		
+		
 		
 		model.addAttribute("p", p);
 		
