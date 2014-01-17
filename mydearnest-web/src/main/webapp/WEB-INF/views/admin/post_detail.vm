@@ -100,10 +100,10 @@
 					<td>
 						<div class="btn-group" data-toggle="buttons" >
 							<label class="btn btn-default btn-sm #if($post.getTheme() == 0) active #end">
-								<input type="radio" name="theme" value="0" #if($post.getTheme() == 0) checked="true" #end /> 있음
+								<input type="radio" name="theme" value="0" #if($post.getTheme() == 0) checked="true" #end /> 없음
 							</label>
 							<label class="btn btn-default btn-sm #if($post.getTheme() == 1) active #end">
-								<input type="radio" name="theme" value="1" #if($post.getTheme() == 1) checked="true" #end /> 없음
+								<input type="radio" name="theme" value="1" #if($post.getTheme() == 1) checked="true" #end /> 있음
 							</label>
 						</div>
 					</td>
@@ -124,11 +124,11 @@
 				<tr>
 					<td class="tag_name">색상</td>
 					<td class="tag_color">
-						<a class="btn btn-success" id="color-select-btn">색상선택</a> 
 						<div class="color-space" style="display:inline;" data-click="0"></div>
 						<div class="color-space" style="display:inline;" data-click="1"></div>
 						<div class="color-space" style="display:inline;" data-click="2"></div>
 						<div class="color-space" style="display:inline;" data-click="3"></div>
+						<a class="btn btn-success" id="color-select-btn" style="display:block; margin-top:10px;">색상선택</a> 
 					</td>
 				</tr>
 			</table>

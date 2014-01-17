@@ -101,7 +101,7 @@ $(function(){
 	
 	
 	$('#color-select-btn').click(function(){
-		$(this).css('display','none');
+		$(this).text('완료').removeClass('btn-success').addClass('btn-info');
 		findNextPosition();
 		
 		$('body').mousemove(function(e){
