@@ -1,60 +1,54 @@
 package com.osquare.mydearnest.test.web;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.osquare.mydearnest.util.image.DominantColor;
+import com.osquare.mydearnest.util.image.DominantColors;
+
 @Controller
-@RequestMapping("/testAdmin")
+@RequestMapping("/test")
 public class TestController {
 	
-	@RequestMapping("/index")
-	public String adminIndex(Model model, HttpServletRequest request){
+	public static final double minDiff1 = 0.1;
+	public static final double minDiff2 = 0.9;
+	
+	@RequestMapping("/index/{testId}")
+	public String adminIndex(Model model, HttpServletRequest request,
+			@PathVariable("testId") String testFilename){
 		
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/index";
-	}
-	@RequestMapping("/management")
-	public String adminManagement(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/management";
-	}
-	@RequestMapping("/category/list")
-	public String tagList(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/taglist";
-	}
-	@RequestMapping("/category/create")
-	public String tagCreate(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/tagcreate";
-	}
-	
-	@RequestMapping("/write/upload")
-	public String photoUpload(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/photoupload";
-	}
-	
-	
-	@RequestMapping("/management/member")
-	public String memberManagement(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/member";
+		File fileDir = new File("/Users/skullacy/git/mydearnest-web/mydearnest-web/src/main/webapp/images/test");
+		File aFile = new File(fileDir, testFilename + ".jpg");
+		
+		BufferedImage img;
+		try {
+			img = ImageIO.read(aFile);
+			DominantColor[] test = DominantColors.getDominantColor(img, 4, minDiff1);
+			DominantColor[] test2 = DominantColors.getDominantColor(img, 4, minDiff2);
+			model.addAttribute("colors", test);
+			model.addAttribute("colors2", test2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		model.addAttribute("layout", "./shared/layout.blank.vm");
+		model.addAttribute("file", "/images/test/"+aFile.getName());
+		
+		
+		return "test/index";
 	}
 	
-	@RequestMapping("/write/grade")
-	public String feelUpload(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/grade";
-	}
-	
-	
-	@RequestMapping("/write/detail")
-	public String writeDetail(Model model, HttpServletRequest request){
-		model.addAttribute("layout", "./shared/layout.mdn.admin.vm");
-		return "testadmin/detail";
-	}
 }

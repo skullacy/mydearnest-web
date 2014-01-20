@@ -85,7 +85,7 @@
 						<value>/scripts/**</value>
 						<value>/images/**</value>
 						<value>/mdn-image/**</value>
-						<value>/testAdmin/**</value>
+						<value>/test/**</value>
 					</list>
 				</property>
 			</bean>
