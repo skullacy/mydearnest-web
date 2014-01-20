@@ -185,7 +185,7 @@
 	#foreach($postTag in $post.getPostTag())
 		#if($postTag.tagCateId > 0)
 			#set($title = "")
-			#set($type = "")
+			#set($type = "") 
 			#foreach($tagCate in $tagcate)
 				#if($tagCate.id == $postTag.tagCateId)
 					#set($title = $tagCate.title)
