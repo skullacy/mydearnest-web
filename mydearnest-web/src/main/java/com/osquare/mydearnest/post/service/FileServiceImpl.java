@@ -210,6 +210,10 @@ public class FileServiceImpl implements FileService {
 			result.setWidth(img.getWidth());
             result.setHeight(img.getHeight());
             
+            String rgb = getAveColor(tmpFile);
+            System.out.println("RGB_COLOR: "+rgb);
+            result.setAveColor(rgb);
+            
 			
 			//원이미지는 해당 ID/source로 저장. 
             AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
@@ -371,12 +375,16 @@ public class FileServiceImpl implements FileService {
 			System.out.println("getImageSource");
 			fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/source"), tmp_aFile);
 			System.out.println("getImageSource Complete");
+			
 		} catch(AmazonS3Exception s3e) {
 			if (s3e.getStatusCode() == 404) {
 				tmp_aFileExist = false;
 			} else {
 				throw s3e;
 			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		String thumbFile_location = file_location + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg";
@@ -501,6 +509,11 @@ public class FileServiceImpl implements FileService {
 			result.setFileLength(tmp_tFile.length());
 			result.setInputStream(new FileInputStream(tmp_tFile));
 			
+			
+			
+			
+	        
+			
 			//아마존에 만들어진 파일 업로드
 			PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), thumbFile_location, tmp_tFile);
 			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
@@ -605,6 +618,29 @@ public class FileServiceImpl implements FileService {
 			session.getTransaction().rollback();
 			ex.printStackTrace();
 		}
+	}
+	
+	public String getAveColor(File img) {
+		
+		String rgbHex;
+		try {
+			BufferedImage bufferedImg = ImageIO.read(img.toURI().toURL());
+			
+			BufferedImage tdestImg = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
+
+			Graphics2D g = tdestImg.createGraphics();
+			g.drawImage(bufferedImg, 0, 0, 1, 1, null);
+			
+	        rgbHex = "#"+Integer.toHexString(tdestImg.getRGB(0, 0)).substring(2);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			
+			rgbHex = "#FFFFFF";
+		}
+		
+		return rgbHex;
+        
 	}
 
 }

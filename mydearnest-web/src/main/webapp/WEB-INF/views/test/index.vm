@@ -1,20 +1,19 @@
-<style>
-	.chart_test		{width:300px; height:300px; border:1px solid #ccc; position:relative;}
-</style>
 
+<div style="min-width:700px; width:auto; height:auto; border:1px solid #ccc">
+	<img src="$file" />
+</div>
 
-<div class="chart_test"></div>
+<div style="width:700px; height:100px; background: #ccc;">
+	#foreach($cccc in $colors)
+		<div style="background:$cccc.getRGBHex(); width:$cccc.getPercent()%; height:100px; float:left">$cccc.getRGBHex()</div>
+	#end
+</div>
+<div style="width:700px; height:100px; background: #ccc;">
+	#foreach($cccc in $colors2)
+		<div style="background:$cccc.getRGBHex(); width:$cccc.getPercent()%; height:100px; float:left">$cccc.getRGBHex()</div>
+	#end
+</div>
 
-<script type="text/javascript">
-		$('.chart_test').spidergraph({
-			'fields' : ['모던함', '따뜻함', '귀여움', '고급스러움', '빈티지'],
-			'gridcolor' : 'rgba(20,20,20,1)'
-		});
-		
-		$('.chart_test').spidergraph('setactivedata', {
-			'strokecolor' : 'rgba(230,204,0,0.8)',
-			'fillcolor' : 'rgba(230,204,0,0.6)',
-			'data' : [5,4,9,8,1],
-			'linear' : true
-		});
-</script>
+#foreach($cccc in $colors)
+		$cccc.getPercentage()<br />
+	#end

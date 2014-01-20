@@ -31,10 +31,11 @@ public class ImageSource implements Serializable {
 	private String storagePath;
 	private long byteLength;
 	private String contentType;
+	private String aveColor;
 	private int width;
 	private int height;
 	private Date createdAt;
-
+	
 	private Set<Post> posts = new HashSet<Post>(0);
 	
 	@Id
@@ -92,6 +93,15 @@ public class ImageSource implements Serializable {
 
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
+	}
+	
+	@Column(name = "AVE_COLOR", nullable = true)
+	public String getAveColor() {
+		return aveColor;
+	}
+
+	public void setAveColor(String aveColor) {
+		this.aveColor = aveColor;
 	}
 
 	@Column(name = "WIDTH", nullable = false)

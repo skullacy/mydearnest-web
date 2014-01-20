@@ -577,6 +577,7 @@ public class PostServiceImpl implements PostService {
 			
 			Criteria cr = session.createCriteria(Post.class)
 					.setFetchMode("category", FetchMode.JOIN)
+					.setFetchMode("imageSource", FetchMode.JOIN)
 					.add(Restrictions.isNull("deletedOn"))
 					.add(Restrictions.eq("id", postId))
 					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
