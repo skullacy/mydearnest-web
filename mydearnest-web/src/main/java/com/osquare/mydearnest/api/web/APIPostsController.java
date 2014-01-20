@@ -115,7 +115,7 @@ public class APIPostsController {
 		}
 		else {
 			document.put("success", true);
-			document.put("redirect", "http://mydearnest.com/admin/write/phototag/"+post.getId());
+			document.put("redirect", request.getRequestURL() + "/admin/write/phototag/"+post.getId());
 		}
 		
 		

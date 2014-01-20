@@ -45,6 +45,7 @@ public class HomeController {
 		logger.info(model.toString());
 		logger.info(request.toString());
 		logger.info(response.toString());
+		logger.info(request.getRequestURL().toString());
 		logger.info(p);
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
