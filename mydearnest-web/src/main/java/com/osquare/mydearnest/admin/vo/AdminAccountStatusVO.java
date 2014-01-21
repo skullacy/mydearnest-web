@@ -1,8 +1,10 @@
 package com.osquare.mydearnest.admin.vo;
 
+import java.io.Serializable;
+
 import com.osquare.mydearnest.entity.Account;
 
-public class AdminAccountStatusVO {
+public class AdminAccountStatusVO implements Serializable {
 	
 	private Account account;
 	private long detailCount;

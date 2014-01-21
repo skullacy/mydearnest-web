@@ -73,6 +73,31 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 	}
 
 	@Override
+	public AdminAccountStatusVO getAccountStatus(Account account) {
+		AdminAccountStatusVO result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+
+		try {
+			AdminAccountStatusVO queryResult = (AdminAccountStatusVO) session.createQuery("SELECT account as account"
+					+ ", (SELECT COUNT(DISTINCT postTag.post) FROM PostTag postTag WHERE postTag.account.id = account.id) AS detailCount"
+					+ ", (SELECT COUNT(DISTINCT postGrade.post) FROM PostGrade postGrade WHERE postGrade.account.id = account.id) AS gradeCount"
+					+ ", (SELECT COUNT(*) FROM Post post WHERE post.account.id = account.id) AS postCount"
+					+ " FROM Account account WHERE account.id = :id").setResultTransformer(Transformers.aliasToBean(AdminAccountStatusVO.class)).setParameter("id", account.getId()).uniqueResult();
+
+			result = queryResult;
+			
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
 	public Long sizeOfAccount() {
 		Long result = null;
 		Session session = sessionFactory.getCurrentSession();

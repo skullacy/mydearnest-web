@@ -10,6 +10,7 @@ public interface AdminAccountService {
 
 	Long sizeOfAccount();
 	Collection<AdminAccountStatusVO> findAccount(int page);
+	AdminAccountStatusVO getAccountStatus(Account account);
 	Account updateRole(String userId, String role);
 
 
