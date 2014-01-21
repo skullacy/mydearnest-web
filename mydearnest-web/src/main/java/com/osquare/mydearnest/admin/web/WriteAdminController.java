@@ -300,8 +300,7 @@ public class WriteAdminController {
 		Account account = accountService.findAccountById(principal.getAccountId());
 		
 		
-		DetailModifyStatus.updateModifyStatus(account, post);
-		DetailModifyStatus.viewCurrentStatus();
+		if(!DetailModifyStatus.updateModifyStatus(account, post)) return "redirect:/admin";
 		
 		return "admin/post_detail";
 	}

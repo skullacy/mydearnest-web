@@ -39,7 +39,7 @@ public class DetailModifyStatus {
 		HashMap<String, String> currentModify = getCurrentModify();
 		if(currentModify != null) {
 			for(String currentAccountId : currentModify.keySet()) {
-				if(currentModify.get(currentAccountId).equals(postId)) return false;
+				if(currentModify.get(currentAccountId).equals(String.valueOf(postId))) return false;
 			}
 		}
 		return true;
