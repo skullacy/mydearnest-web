@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.junglebird.webframe.common.PropertiesManager;
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.account.service.AccountService;
 import com.osquare.mydearnest.entity.Account;
@@ -40,6 +41,7 @@ public class APIPostsController {
 	@Autowired private FileService fileService;
 	@Autowired private SessionFactory sessionFactory;
 	@Autowired private AccountService accountService;
+	@Autowired private PropertiesManager pm;
 
 	//현재 사용안함 (App 개발시 사용할 예정)
 	@RequestMapping("/list.json")
@@ -115,7 +117,7 @@ public class APIPostsController {
 		}
 		else {
 			document.put("success", true);
-			document.put("redirect", request.getRequestURL() + "/admin/write/phototag/"+post.getId());
+			document.put("redirect", pm.get("web_url") + "/admin/write/phototag/"+post.getId());
 		}
 		
 		

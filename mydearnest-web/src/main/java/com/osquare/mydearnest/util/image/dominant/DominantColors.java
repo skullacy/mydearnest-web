@@ -1,4 +1,4 @@
-package com.osquare.mydearnest.util.image;
+package com.osquare.mydearnest.util.image.dominant;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

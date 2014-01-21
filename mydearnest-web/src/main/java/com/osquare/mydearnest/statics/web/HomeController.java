@@ -18,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.junglebird.webframe.common.PropertiesManager;
 import com.junglebird.webframe.common.StringUtils;
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.account.service.AccountService;
@@ -36,6 +37,7 @@ public class HomeController {
 	@Autowired private AccountService accountService;
 	@Autowired private PostService postService;
 	@Autowired private CategoryService categoryService;
+	@Autowired private PropertiesManager pm;
 	
 	@RequestMapping("")
 	public String index(ModelMap model, @RequestParam(value = "p", required = false) String p, 
@@ -45,7 +47,7 @@ public class HomeController {
 		logger.info(model.toString());
 		logger.info(request.toString());
 		logger.info(response.toString());
-		logger.info(request.getRequestURL().toString());
+		logger.info(pm.get("web_url"));
 		logger.info(p);
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
