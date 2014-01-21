@@ -211,14 +211,22 @@
 			tag_value = "$!postTag.value";
 			color_value = tag_value.substr(0, 7);
 			index_value = tag_value.substr(-1, 1);
-			
-			
+						
 			insertColorTag($(".color-space[data-click='"+ index_value + "']"), color_value);
 			
 			
 		#end
 	#end
 	
+	index_value = 0;
+	#if($colors)
+		#foreach($colors in $colors)
+			hex_value = "$colors.getRGBHex()";
+			insertColorTag($(".color-space[data-click='"+ index_value + "']"), hex_value);
+			index_value += 1;
+		#end
+	#end
+
 	#if($!post.getTagTone() > 0)
 		#set($title = "")
 		#set($type = "")
