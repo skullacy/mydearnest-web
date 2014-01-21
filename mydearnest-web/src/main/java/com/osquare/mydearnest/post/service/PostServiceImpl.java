@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 
 
 
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -66,6 +67,7 @@ import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.post.vo.RefPost;
 import com.osquare.mydearnest.profile.vo.CommentVO;
+import com.osquare.mydearnest.util.DetailModifyStatus;
 
 @Service("postService")
 public class PostServiceImpl implements PostService {
@@ -663,7 +665,6 @@ public class PostServiceImpl implements PostService {
 				cr.add(Restrictions.eq("photoTagCount", Long.valueOf(0)));
 			}
 			else if("detail".equals(type)) {
-				System.out.println(type);
 				long minTagCount = 4;
 				cr.add(Restrictions.lt("postTagCount", minTagCount));
 			}
@@ -672,7 +673,6 @@ public class PostServiceImpl implements PostService {
 			session.getTransaction().commit();
 			
 			if("grade".equals(type)) {
-				System.out.println(postList.size());
 				//순환중 객체 삭제를 하게되면 자기 자신을 삭제하고 Exception발생.  Iterator로 변경.
 				for(Iterator<Post> it = postList.iterator(); it.hasNext(); ) {
 					Post checkPost = it.next();
@@ -691,11 +691,22 @@ public class PostServiceImpl implements PostService {
 			else {
 				//객체중 랜덤선택하는 코드.
 				Collections.shuffle(postList);
-				result = postList.iterator().next();
+				
+				Iterator<Post> iter = postList.iterator();
+				//상세수정인 경우 현재 수정중인 포스트와 비교하기
+				if("detail".equals(type)) {
+					while(iter.hasNext()) {
+						result = iter.next();
+						
+						//현재 수정중인 포스트가 아닌경우에 루프 탈출.
+						if(DetailModifyStatus.checkModifyStatus(result)) break;
+					}
+				} else {
+					//Detail수정이 아닌경우 첫번째 객체 반환.
+					result = iter.next();
+				}
+				
 			}
-			
-			
-			
 			
 		}
 		catch (Exception e) {

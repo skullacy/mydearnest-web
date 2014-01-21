@@ -37,6 +37,7 @@ import com.osquare.mydearnest.post.service.PostService;
 import com.osquare.mydearnest.post.validator.PostGradeValidator;
 import com.osquare.mydearnest.post.validator.PostUploadValidator;
 import com.osquare.mydearnest.post.vo.PostVO;
+import com.osquare.mydearnest.util.DetailModifyStatus;
 import com.osquare.mydearnest.util.handler.RedirectHandler;
 
 @Controller
@@ -274,7 +275,7 @@ public class WriteAdminController {
 	 * 사진 상세정보 입력 화면
 	 */
 	@RequestMapping(value = "/detail/{postId}" , method = RequestMethod.GET)
-	public String insertPostData(Model model, HttpServletRequest request, HttpServletResponse response,
+	public String insertPostDetail(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("postId") Long postId) {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -291,7 +292,17 @@ public class WriteAdminController {
 		
 		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
-//		return "testadmin/grade";
+		
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
+		
+		DetailModifyStatus.updateModifyStatus(account, post);
+		DetailModifyStatus.viewCurrentStatus();
+		
 		return "admin/post_detail";
 	}
 	
@@ -345,6 +356,8 @@ public class WriteAdminController {
 			
 			//미완료된 포스트중 랜덤 호출.
 			Post redirectPost = postService.getPostByRandom(0, "detail", account);
+			
+			DetailModifyStatus.releaseModifyStatus(account);
 			
 			if(redirectPost == null) {
 				return "redirect:/admin";

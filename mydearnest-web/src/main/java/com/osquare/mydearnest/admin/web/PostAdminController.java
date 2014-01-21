@@ -24,6 +24,7 @@ import com.osquare.mydearnest.entity.Account;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.TagCategory;
+import com.osquare.mydearnest.util.DetailModifyStatus;
 
 @Controller
 @RequestMapping("/admin/post")
@@ -53,26 +54,13 @@ public class PostAdminController {
 		if (order == null) order = "createdAt";
 		
 		//1 : 모든 조건 충족된 포스트, 0: 아직 게시조건에 충족안되는 포스트, 2: 모든 포스
-		//MODIFIER권한인 경우 특정 조건을 선택안했을시 checksum을 null상태 그대로 둔다. 밑에서 해당조건에 맞춰 미완성된것을 디폴트로 보여주기위해.
-		if (checksum == null && !"ROLE_MODIFIER".equals(account.getRole())) checksum = 2;
-		
-		
-		
+		if (checksum == null) checksum = 2;
 		
 		model.addAttribute("order", order);
 		model.addAttribute("page", page);
 		model.addAttribute("pages", Math.ceil((double)adminPostService.sizeOfPost() / 10));
 		
-		//MODIFIER권한의 경우 위에서 checksum을 null로 세팅 해놨기 때문에 디폴트로 보여주는 것을 checksum = 0으로 보여준다.
-		Collection<Post> items = null;
-		if("ROLE_MODIFIER".equals(account.getRole()) && checksum == null) {
-			items = adminPostService.findPost(page, order, 0, account);
-		}
-		else {
-			items = adminPostService.findPost(page, order, checksum, account);
-		}
-		
-		
+		Collection<Post> items = adminPostService.findPost(page, order, checksum, account);
 		
 		Collection<TagCategory> tagCate = adminTagCateService.getTagCategories();
 		HashMap<String, TagCategory> tagCateHashMap = new HashMap<String, TagCategory>();
@@ -82,6 +70,10 @@ public class PostAdminController {
 		}
 		
 		
+		DetailModifyStatus.viewCurrentStatus();
+		
+		
+		model.addAttribute("detailModifyStatus", DetailModifyStatus.getCurrentModify());
 		model.addAttribute("tagcate", tagCateHashMap);
 		model.addAttribute("items", items);
 		model.addAttribute("page_on", "post");

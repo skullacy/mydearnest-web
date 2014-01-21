@@ -161,7 +161,11 @@
 	 		
 	 		#if($sec.authorType != "ROLE_UPLOADER")
 	 		<td>
-	 			<a class="btn btn-success" href="/admin/write/detail/$item.id">수정</a>
+	 			#if($detailModifyStatus.containsValue("$item.id"))
+	 				수정중입니다.
+	 			#else
+	 				<a class="btn btn-success" href="/admin/write/detail/$item.id">수정</a>
+	 			#end
 	 		</td>
 	 		#end
 	 		
