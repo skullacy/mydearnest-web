@@ -220,12 +220,12 @@
 		#end
 	#end
 	
-	index_value = 0;
-	#if($colors)
-		#foreach($colors in $colors)
-			hex_value = "$colors.getRGBHex()";
-			insertColorTag($(".color-space[data-click='"+ index_value + "']"), hex_value);
-			index_value += 1;
+	index = 0;
+	#if($hexes)
+		#foreach($colors in $hexes)
+			hexValue = "$colors";
+			insertColorTag($(".color-space[data-click='"+ index + "']"), hexValue);
+			index += 1;
 		#end
 	#end
 	
