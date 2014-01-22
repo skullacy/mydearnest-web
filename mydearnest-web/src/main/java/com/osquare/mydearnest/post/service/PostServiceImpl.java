@@ -33,6 +33,7 @@ import javax.annotation.Resource;
 
 
 
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -63,6 +64,7 @@ import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.PostLove;
 import com.osquare.mydearnest.entity.PostRank;
 import com.osquare.mydearnest.entity.PostTag;
+import com.osquare.mydearnest.entity.PostUserGrade;
 import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.post.vo.RefPost;
@@ -568,7 +570,71 @@ public class PostServiceImpl implements PostService {
 		
 		return result;
 	}
+	
+	@Override
+	public PostUserGrade createPostUserGrade(Post post1, Account account, PostUserGrade postUserGrade) {
+	
+		PostUserGrade result = null;
+		Post post = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+	
+		try {
+			
+			post = (Post) session.get(Post.class, post1.getId());
+			post.setGradeCount(post.getGradeCount() + 1);
+			session.merge(post);
+			
+			result = new PostUserGrade();
+			result.setAccount(account);
+			result.setPost(post);
+			result.setFeelCute(postUserGrade.getFeelCute());
+			result.setFeelWarm(postUserGrade.getFeelWarm());
+			result.setFeelModern(postUserGrade.getFeelModern());
+			result.setFeelVintage(postUserGrade.getFeelVintage());
+			result.setFeelLuxury(postUserGrade.getFeelLuxury());
+			result.setCreatedAt(new Date());
+			
+			session.persist(result);
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
 
+	@Override
+	public PostUserGrade updatePostUserGrade(Post post1, Account account, PostUserGrade postUserGrade) {
+		
+		PostUserGrade result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		
+		try {
+			result = new PostUserGrade();
+			result.setId(postUserGrade.getId());
+			result.setPost(postUserGrade.getPost());
+			result.setFeelCute(postUserGrade.getFeelCute());
+			result.setFeelWarm(postUserGrade.getFeelWarm());
+			result.setFeelModern(postUserGrade.getFeelModern());
+			result.setFeelVintage(postUserGrade.getFeelVintage());
+			result.setFeelLuxury(postUserGrade.getFeelLuxury());
+			
+			session.update(result);
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	@Override
 	public Post getPostById(Long postId) {
 		Post result = null;
@@ -986,7 +1052,30 @@ public class PostServiceImpl implements PostService {
 		
 		
 	}
+	
+	@Override
+	public Collection<PostUserGrade> getPostUserGradeByPost(Post post) {
+		Collection<PostUserGrade> postUserGrades = null;
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.getTransaction().begin();
 
+			Criteria cr = session.createCriteria(PostUserGrade.class)
+								.add(Restrictions.eq("post", post));
+			
+			postUserGrades = cr.list();
+			
+			session.getTransaction().commit();			
+		}
+		catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		
+		return postUserGrades;
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<PostComment> getCommentsByPost(Post post, Integer page) {
