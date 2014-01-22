@@ -4,6 +4,7 @@
 	 	<tr style="font-weight:bold;">
 	  		<th>이름</th>
 	  		<th>이메일</th>
+	  		<th>사진입력</th>
 	  		<th>정보입력</th>
 	  		<th>느낌평가</th>
 	  		<th>게시물관리</th>
@@ -15,6 +16,9 @@
 	 	<tr>
 	 		<td>$!item.account.name</td>
 	 		<td>$!item.account.email</td>
+	 		<td>
+	 			$!item.postCount 개
+	 		</td>
 	 		<td>
 	 			$!item.detailCount 개
 	 		</td>

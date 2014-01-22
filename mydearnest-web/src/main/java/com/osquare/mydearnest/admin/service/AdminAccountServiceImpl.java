@@ -32,6 +32,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 			List<AdminAccountStatusVO> queryResult = session.createQuery("SELECT account as account"
 					+ ", (SELECT COUNT(DISTINCT postTag.post) FROM PostTag postTag WHERE postTag.account.id = account.id) AS detailCount"
 					+ ", (SELECT COUNT(DISTINCT postGrade.post) FROM PostGrade postGrade WHERE postGrade.account.id = account.id) AS gradeCount"
+					+ ", (SELECT COUNT(*) FROM Post post WHERE post.account.id = account.id) AS postCount"
 					+ " FROM Account account").setResultTransformer(Transformers.aliasToBean(AdminAccountStatusVO.class)).list();
 			
 //			Criteria cr = session.createCriteria(Account.class)
@@ -42,6 +43,31 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 //			setResultTransformer(Transformers.aliasToBean(AdminAccountStatusVO.class))
 //			, (SELECT count(DISTINCT postTag.post) from PostTag as postTag where postTag.account.id=account.id)
 			
+			result = queryResult;
+			
+			session.getTransaction().commit();
+		}
+		catch(Exception ex) {
+			session.getTransaction().rollback();
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public AdminAccountStatusVO getAccountStatus(Account account) {
+		AdminAccountStatusVO result = null;
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+
+		try {
+			AdminAccountStatusVO queryResult = (AdminAccountStatusVO) session.createQuery("SELECT account as account"
+					+ ", (SELECT COUNT(DISTINCT postTag.post) FROM PostTag postTag WHERE postTag.account.id = account.id) AS detailCount"
+					+ ", (SELECT COUNT(DISTINCT postGrade.post) FROM PostGrade postGrade WHERE postGrade.account.id = account.id) AS gradeCount"
+					+ ", (SELECT COUNT(*) FROM Post post WHERE post.account.id = account.id) AS postCount"
+					+ " FROM Account account WHERE account.id = :id").setResultTransformer(Transformers.aliasToBean(AdminAccountStatusVO.class)).setParameter("id", account.getId()).uniqueResult();
+
 			result = queryResult;
 			
 			session.getTransaction().commit();

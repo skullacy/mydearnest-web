@@ -21,10 +21,11 @@
 
 </head>
 <body style="padding:10px;">
-
+#set($status = $session.getAttribute("accountStatus"))
 <nav class="navbar navbar-default" role="navigation">
 	<div class="navbar-header">
 		<a class="navbar-brand" href="/admin">홈</a>
+		<span class="navbar-account">$!status.account.name (사진입력: $!status.postCount 개 / 정보입력: $!status.detailCount 개 / 느낌평가: $!status.gradeCount 개)</span>
 	</div>
 	 #if($sec.authorType == "ROLE_ADMIN")
 	<div class="collapse navbar-collapse navbar-ex1-collapse">
