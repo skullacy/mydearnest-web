@@ -39,17 +39,13 @@ public class CategoryAdminController {
 	@RequestMapping("/list")
 	public String index(ModelMap model, 
 			@RequestParam(value="type", required = false) String type,
-			@RequestParam(value="page", required = false) Integer page,
 			@RequestParam(value="order", required = false) String order) {
 		
 		if (type == null) type = "";
-		if (page == null) page = 1;
 		if (order == null) order = "id";
 		
 		model.addAttribute("order", order);
-		model.addAttribute("page", page);
-		model.addAttribute("pages", Math.ceil((double)adminTagCateService.sizeOfTag(type) / 20));
-		model.addAttribute("items", adminTagCateService.findTag(page, type, order));
+		model.addAttribute("items", adminTagCateService.findTag(type, order));
 		model.addAttribute("page_on", "post");
 		
 		return "admin/tag_list";
