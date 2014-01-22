@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -294,43 +296,27 @@ public class FileServiceImpl implements FileService {
 		if (imageSource == null) return null;
  
 		ImageSourceFile result = null;
-
+		
 		try {
 			result = new ImageSourceFile();
 			
 			String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
-			System.out.println(file_location);
 			
-			File fileDir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
-			if(!fileDir.isDirectory()) fileDir.mkdirs();
+			BufferedImage sourceImg = ImageIO.read(new URL(conf.get("amazon.fs.serverUrl") + "/" + file_location + "/source"));
 			
-			File tmp_aFile = new File(fileDir, "tmp_aFile");
-			Boolean tmp_aFileExist = true;
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			ImageIO.write(sourceImg, "jpg", os);
+			os.close();
 			
-			AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
-			AmazonS3 fileStorageServer = new AmazonS3Client(credentials);
-			
-			try {
-				System.out.println("getThumbnailSource");
-				fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/source"), tmp_aFile);
-				System.out.println("getThumbnailSource Complete");
-			} catch (AmazonS3Exception s3e) {
-				if(s3e.getStatusCode() == 404) {
-					tmp_aFileExist = false;
-				} else {
-					throw s3e;
-				}
-			}
-			
-			result.setFileLength(tmp_aFile.length());
-			result.setInputStream(new FileInputStream(tmp_aFile));
-			
-			
-		} 
+			result.setInputStream(new ByteArrayInputStream(os.toByteArray()));
+			result.setFileLength((long) os.size());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("FileSize : " + result.getFileLength());
 		
 		return result;
 	}

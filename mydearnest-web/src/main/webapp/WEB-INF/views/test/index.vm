@@ -14,6 +14,8 @@
 	#end
 </div>
 
+<img src="http://fstest.mydearnest.com/2014/01/3833516787949253477/source.jpg" />
+
 #foreach($cccc in $colors)
 		$cccc.getPercentage()<br />
 	#end
