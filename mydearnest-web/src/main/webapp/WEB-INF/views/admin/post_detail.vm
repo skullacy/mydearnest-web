@@ -36,6 +36,7 @@
     .tip-mousemove{position:fixed; width:auto; display:none; z-index:10;}
     .popover-content{width:150px;}
     .btn-default{text-shadow:none !important;}
+    .popover-title{color:#eee;}
   
 </style>
 <script type="text/javascript" src="$request.contextPath/scripts/bootstrap/admin.js"></script>	
@@ -79,7 +80,7 @@
 					<td class="tag_accessory">
 					</td>
 					<td class="question">
-						<a class="btn btn-default btn-xs tagHint"  href="#" rel="accessory" data-original-title="">?</a>
+						<a class="btn btn-default btn-xs tagHint"  href="#" rel="accessory" data-original-title="가구태그부분입니다 사진에나와있는 모든 가구의 태그를 등록하세요">?</a>
 					</td>
 				</tr>
 				<tr>
@@ -185,7 +186,7 @@
 	#foreach($postTag in $post.getPostTag())
 		#if($postTag.tagCateId > 0)
 			#set($title = "")
-			#set($type = "")
+			#set($type = "") 
 			#foreach($tagCate in $tagcate)
 				#if($tagCate.id == $postTag.tagCateId)
 					#set($title = $tagCate.title)
@@ -216,6 +217,15 @@
 			insertColorTag($(".color-space[data-click='"+ index_value + "']"), color_value);
 			
 			
+		#end
+	#end
+	
+	index_value = 0;
+	#if($colors)
+		#foreach($colors in $colors)
+			hex_value = "$colors.getRGBHex()";
+			insertColorTag($(".color-space[data-click='"+ index_value + "']"), hex_value);
+			index_value += 1;
 		#end
 	#end
 	
@@ -307,3 +317,4 @@
 	});
 	
 </script>
+

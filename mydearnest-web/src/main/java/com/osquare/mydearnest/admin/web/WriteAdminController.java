@@ -1,8 +1,18 @@
 package com.osquare.mydearnest.admin.web;
 
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.junglebird.webframe.common.PropertiesManager;
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.account.service.AccountService;
 import com.osquare.mydearnest.admin.service.AdminTagCateService;
@@ -31,13 +42,17 @@ import com.osquare.mydearnest.entity.Account;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostGrade;
+import com.osquare.mydearnest.entity.PostTag;
 import com.osquare.mydearnest.entity.TagCategory;
 import com.osquare.mydearnest.post.service.FileService;
 import com.osquare.mydearnest.post.service.PostService;
 import com.osquare.mydearnest.post.validator.PostGradeValidator;
 import com.osquare.mydearnest.post.validator.PostUploadValidator;
 import com.osquare.mydearnest.post.vo.PostVO;
+import com.osquare.mydearnest.util.DetailModifyStatus;
 import com.osquare.mydearnest.util.handler.RedirectHandler;
+import com.osquare.mydearnest.util.image.dominant.DominantColor;
+import com.osquare.mydearnest.util.image.dominant.DominantColors;
 
 @Controller
 @RequestMapping("/admin/write")
@@ -47,6 +62,7 @@ public class WriteAdminController {
 	@Autowired private FileService fileService;
 	@Autowired private AccountService accountService;
 	@Autowired private AdminTagCateService adminTagCateService;
+	@Autowired private PropertiesManager pm;
 	
 	/**
 	 * @brief
@@ -274,7 +290,7 @@ public class WriteAdminController {
 	 * 사진 상세정보 입력 화면
 	 */
 	@RequestMapping(value = "/detail/{postId}" , method = RequestMethod.GET)
-	public String insertPostData(Model model, HttpServletRequest request, HttpServletResponse response,
+	public String insertPostDetail(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("postId") Long postId) {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -289,9 +305,41 @@ public class WriteAdminController {
 		model.addAttribute("tagcate", tagCate);
 		model.addAttribute("post", post);
 		
+		// getDominantColor() 실행
+		Iterator<PostTag> postTags = post.getPostTag().iterator();
+		boolean postTagFlag = true;
+		
+		while (postTags.hasNext()) {
+			String value = postTags.next().getValue();
+			if (value != null || value != "") postTagFlag = false;
+		}
+		
+		if (postTagFlag) {
+			BufferedImage bufferedImage = null;
+			
+			try {
+				bufferedImage = ImageIO.read(new URL(pm.get("web_url")+"/mdn-image/thumb/"+post.getImageSource().getId()+"?w=200&t=ratio"));
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			DominantColor[] colors = DominantColors.getDominantColor(bufferedImage, 3, 0.1);
+			List<DominantColor> colorList = Arrays.asList(colors);
+			model.addAttribute("colors", colorList);
+		}
+		
 		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
-//		return "testadmin/grade";
+		
+		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
+
+		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
+		Account account = accountService.findAccountById(principal.getAccountId());
+		
+		
+		if(!DetailModifyStatus.updateModifyStatus(account, post)) return "redirect:/admin";
+		
 		return "admin/post_detail";
 	}
 	
@@ -345,6 +393,8 @@ public class WriteAdminController {
 			
 			//미완료된 포스트중 랜덤 호출.
 			Post redirectPost = postService.getPostByRandom(0, "detail", account);
+			
+			DetailModifyStatus.releaseModifyStatus(account);
 			
 			if(redirectPost == null) {
 				return "redirect:/admin";

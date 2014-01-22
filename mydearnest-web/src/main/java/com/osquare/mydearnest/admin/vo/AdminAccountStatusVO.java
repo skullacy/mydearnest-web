@@ -1,13 +1,15 @@
 package com.osquare.mydearnest.admin.vo;
 
+import java.io.Serializable;
+
 import com.osquare.mydearnest.entity.Account;
 
-public class AdminAccountStatusVO {
+public class AdminAccountStatusVO implements Serializable {
 	
 	private Account account;
 	private long detailCount;
 	private long gradeCount;
-	
+	private long postCount;
 	
 	public Account getAccount() {
 		return account;
@@ -28,6 +30,13 @@ public class AdminAccountStatusVO {
 	}
 	public void setGradeCount(long gradeCount) {
 		this.gradeCount = gradeCount;
+	}
+	
+	public long getPostCount() {
+		return postCount;
+	}
+	public void setPostCount(long postCount) {
+		this.postCount = postCount;
 	}
 	
 }

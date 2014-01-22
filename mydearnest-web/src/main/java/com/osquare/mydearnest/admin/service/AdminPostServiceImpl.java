@@ -58,11 +58,6 @@ public class AdminPostServiceImpl implements AdminPostService {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<Post> findPost(Integer page, String order, Integer checksum, Account account) {
-		//트랜잭션 관계로 미리 빼놓기
-		long modifierIndex = 0;
-		if("ROLE_MODIFIER".equals(account.getRole())) {
-			 modifierIndex = accountService.getTotalModifierCount();
-		}
 		
 		Collection<Post> result = null;
 		Session session = sessionFactory.getCurrentSession();
@@ -73,17 +68,11 @@ public class AdminPostServiceImpl implements AdminPostService {
 					.setFetchMode("account", FetchMode.JOIN)
 					.addOrder(Order.desc(order))
 					.addOrder(Order.desc("createdAt"))
-					.add(Restrictions.isNull("deletedOn"));
+					.add(Restrictions.isNull("deletedOn"))
+					.setMaxResults(10).setFirstResult((page - 1) * 10);
 					
 			if(checksum == 1) {
 				cr.add(Restrictions.eq("checkSum", checksum == 1 ? true : false));
-			}
-			
-			if("ROLE_MODIFIER".equals(account.getRole())) {
-				cr.setMaxResults(10).setFirstResult((int) ((account.getModifierIndex() - 1 + (page - 1) * modifierIndex) * 10));
-			}
-			else {
-				cr.setMaxResults(10).setFirstResult((page - 1) * 10);
 			}
 			
 			result = cr.list();

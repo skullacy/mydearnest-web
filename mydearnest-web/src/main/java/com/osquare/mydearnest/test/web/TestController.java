@@ -12,8 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.osquare.mydearnest.util.image.DominantColor;
-import com.osquare.mydearnest.util.image.DominantColors;
+import com.osquare.mydearnest.util.image.dominant.DominantColor;
+import com.osquare.mydearnest.util.image.dominant.DominantColors;
 
 @Controller
 @RequestMapping("/test")
