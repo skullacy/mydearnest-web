@@ -74,6 +74,7 @@ public class PostAdminController {
 		
 		
 		model.addAttribute("detailModifyStatus", DetailModifyStatus.getCurrentModify());
+		model.addAttribute("detailModifyStatusName", DetailModifyStatus.getCurrentModifyName());
 		model.addAttribute("tagcate", tagCateHashMap);
 		model.addAttribute("items", items);
 		model.addAttribute("page_on", "post");
