@@ -4,11 +4,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -93,8 +97,8 @@ public class TestController {
 		model.addAttribute("post", post);
 
 		// Grade 가져오는 파트
-		Collection<PostUserGrade> postUserGrades = postService.getPostUserGradeByPost(post);
 		Collection<PostGrade> postGrades = postService.getPostGradeByPost(post);
+		Collection<PostUserGrade> postUserGrades = postService.getPostUserGradeByPost(post);
 		
 		PostUserGrade myPostUserGrade = null;
 		
@@ -108,8 +112,8 @@ public class TestController {
 			}
 		}
 		
-		model.addAttribute("postUserGrades", postUserGrades);
 		model.addAttribute("postGrades", postGrades);
+		model.addAttribute("postUserGrades", postUserGrades);
 		model.addAttribute("myPostUserGrade", myPostUserGrade);
 
 		model.addAttribute("layout", "./shared/layout.admin.vm");

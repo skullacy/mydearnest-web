@@ -32,6 +32,7 @@ var myFeelWarm = $myPostUserGrade.feelWarm;
 	userFeelVintage += $userGrades.feelVintage;
 	userFeelWarm += $userGrades.feelWarm;
 #end
+
 #foreach ($grades in $postGrades)
 	index += 1;
 	feelCute += $grades.feelCute;
@@ -40,12 +41,23 @@ var myFeelWarm = $myPostUserGrade.feelWarm;
 	feelVintage += $grades.feelVintage;
 	feelWarm += $grades.feelWarm;
 #end
+
 feelCute = feelCute/index;
 feelLuxury = feelLuxury/index;
 feelModern = feelModern/index;
 feelVintage = feelVintage/index;
 feelWarm = feelWarm/index;
 
+// 토글 버튼
+$('.nav-tabs').button();
+
+if(myFeelCute) $('#cute').addClass('active');
+if(myFeelLuxury) $('#luxury').addClass('active');
+if(myFeelModern) $('#modern').addClass('active');
+if(myFeelVintage) $('#vintage').addClass('active');
+if(myFeelWarm) $('#warm').addClass('active');
+
+// 차트 생성
 var ctx = document.getElementById("myChart").getContext("2d");
 
 var data = {
@@ -67,10 +79,36 @@ var data = {
 
 new Chart(ctx).Bar(data);
 
-$('.nav-tabs').button();
-if(myFeelCute) $('#cute').addClass('active');
-if(myFeelLuxury) $('#luxury').addClass('active');
-if(myFeelModern) $('#modern').addClass('active');
-if(myFeelVintage) $('#vintage').addClass('active');
-if(myFeelWarm) $('#warm').addClass('active');
+// 클릭 이벤트
+$('#cute').on('click', function () {
+	if ($('#cute').hasClass('active')) data.datasets[0].data[2] -= 1;
+	else data.datasets[0].data[2] += 1;
+	
+	new Chart(ctx).Bar(data);
+});
+$('#luxury').on('click', function () {
+	if ($('#luxury').hasClass('active')) data.datasets[0].data[3] -= 1;
+	else data.datasets[0].data[3] += 1;
+	
+	new Chart(ctx).Bar(data);
+});
+$('#modern').on('click', function () {
+	if ($('#modern').hasClass('active')) data.datasets[0].data[0] -= 1;
+	else data.datasets[0].data[0] += 1;
+	
+	new Chart(ctx).Bar(data);
+});
+$('#vintage').on('click', function () {
+	if ($('#vintage').hasClass('active')) data.datasets[0].data[4] -= 1;
+	else data.datasets[0].data[4] += 1;
+	
+	new Chart(ctx).Bar(data);
+});
+$('#warm').on('click', function () {
+	if ($('#warm').hasClass('active')) data.datasets[0].data[1] -= 1;
+	else data.datasets[0].data[1] += 1;
+	
+	new Chart(ctx).Bar(data);
+});
+
 </script>

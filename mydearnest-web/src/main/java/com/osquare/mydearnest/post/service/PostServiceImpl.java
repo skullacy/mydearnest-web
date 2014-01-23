@@ -34,6 +34,7 @@ import javax.annotation.Resource;
 
 
 
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -1014,6 +1015,8 @@ public class PostServiceImpl implements PostService {
 								.add(Restrictions.eq("post", post));
 			
 			postGrade = cr.list();
+			
+			session.getTransaction().commit();
 		}
 		catch(Exception e) {
 			session.getTransaction().rollback();
@@ -1053,6 +1056,7 @@ public class PostServiceImpl implements PostService {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<PostUserGrade> getPostUserGradeByPost(Post post) {
 		Collection<PostUserGrade> postUserGrades = null;
@@ -1061,12 +1065,10 @@ public class PostServiceImpl implements PostService {
 		try {
 			session.getTransaction().begin();
 
-			Criteria cr = session.createCriteria(PostUserGrade.class)
-								.add(Restrictions.eq("post", post));
+			postUserGrades = session.createCriteria(PostUserGrade.class)
+					.add(Restrictions.eq("post", post)).list();
 			
-			postUserGrades = cr.list();
-			
-			session.getTransaction().commit();			
+			session.getTransaction().commit();
 		}
 		catch(Exception e) {
 			session.getTransaction().rollback();
