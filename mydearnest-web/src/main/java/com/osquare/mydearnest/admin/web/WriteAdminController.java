@@ -308,7 +308,7 @@ public class WriteAdminController {
 		
 		while (postTags.hasNext()) {
 			String value = postTags.next().getValue();
-			if (value != null || value != "") postTagFlag = false;
+			if (value != null && value.trim() != "") postTagFlag = false;
 		}
 		
 		if (postTagFlag) {
