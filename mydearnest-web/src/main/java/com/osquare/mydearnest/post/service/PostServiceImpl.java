@@ -739,9 +739,11 @@ public class PostServiceImpl implements PostService {
 			postList = cr.list();
 			session.getTransaction().commit();
 			
-			Iterator<Post> iterator = postList.iterator();
-			if("grade".equals(type)) {
-				//순환중 객체 삭제를 하게되면 자기 자신을 삭제하고 Exception발생.  Iterator로 변경.
+			Iterator<Post> iterator = null;
+			
+			if("grade".equals(type) && postList != null) {
+				iterator = postList.iterator();
+				
 				while(iterator.hasNext()) {
 					Post checkPost = iterator.next();
 					if(checkPost.getGradeCount() > 0) {
@@ -752,7 +754,7 @@ public class PostServiceImpl implements PostService {
 				}
 			}
 			
-			if(!iterator.hasNext() || postList == null) {
+			if((iterator != null && !iterator.hasNext()) || postList == null) {
 				return null;
 			}
 			else {
