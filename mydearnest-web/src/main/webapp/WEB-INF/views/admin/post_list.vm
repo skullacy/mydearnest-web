@@ -75,6 +75,7 @@
 	 			<img src="$request.contextPath/mdn-image/thumb/$item.imageSource.id?w=70&h=70&t=crop" alt="..." class="img-rounded">
 	 		</td>
 	 		<td>
+	 			<a href="$request.contextPath/test/thumbtest/$item.getId()">테스트링크</a>
 	 			<a href="$item.source">바로가기</a>
 	 		</td>
 	 		#if($sec.authorType == "ROLE_ADMIN")

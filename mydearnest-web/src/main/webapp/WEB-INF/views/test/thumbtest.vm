@@ -1,0 +1,2 @@
+<img src="$request.contextPath/mdn-image/thumb/$post.imageSource.id?w=99&h=99&t=crop" />
+<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" />

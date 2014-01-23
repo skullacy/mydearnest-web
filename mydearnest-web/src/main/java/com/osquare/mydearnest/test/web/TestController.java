@@ -6,18 +6,24 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.osquare.mydearnest.entity.Post;
+import com.osquare.mydearnest.post.service.PostService;
 import com.osquare.mydearnest.util.image.dominant.DominantColor;
 import com.osquare.mydearnest.util.image.dominant.DominantColors;
 
 @Controller
 @RequestMapping("/test")
 public class TestController {
+	
+	@Autowired private PostService postService;
 	
 	public static final double minDiff1 = 0.1;
 	public static final double minDiff2 = 0.9;
@@ -50,5 +56,25 @@ public class TestController {
 		
 		return "test/index";
 	}
+	
+	@RequestMapping("/thumbtest/{postId}")
+	public String thumbTest(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("postId") long postId) {
+		
+		
+		
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Expires", "0");
+		
+		//포스트 정보 가져오기
+		Post post = postService.getPostById(postId);
+		
+		model.addAttribute("post", post);
+		
+		
+		return "test/thumbtest";
+	}
+	
 	
 }

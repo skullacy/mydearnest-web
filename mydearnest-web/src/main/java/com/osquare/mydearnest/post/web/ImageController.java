@@ -43,9 +43,7 @@ public class ImageController {
 		if (file != null && response != null) {
 	        response.setHeader("Content-disposition", "inline;filename=" + imageId + ".jpg" );
 	        response.setHeader("Content-Length", String.valueOf(file.getFileLength()));
-	        System.out.println("Stream copy start");
 			FileCopyUtils.copy(file.getInputStream(), response.getOutputStream());
-			System.out.println("Stream copy complete");
 		}
 		
 		return null;
@@ -66,13 +64,17 @@ public class ImageController {
 		ImageSource imageSource = fileService.getImageSource(imageId);
 		ImageSourceFile file = fileService.getSourceFile(imageSource, width, height, type, postId);
 		
+		System.out.println(file);
+		
 		if (file != null && response != null) {
 			try {
 				
 				response.setContentType("image/jpeg"); 
 		        response.setHeader("Content-disposition", "inline;filename=" + imageId + ".jpg" );
 		        response.setHeader("Content-Length", String.valueOf(file.getFileLength()));
-				FileCopyUtils.copy(file.getInputStream(), response.getOutputStream());
+		        System.out.println("Stream copy start");
+		        FileCopyUtils.copy(file.getInputStream(), response.getOutputStream());
+				System.out.println("Stream copy complete");
 			}
 			catch(Exception ex) { }
 		}
