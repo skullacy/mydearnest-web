@@ -12,7 +12,7 @@ public interface AdminTagCateService {
 	//태그 갯수 구하기 
 	Long sizeOfTag(String type);
 	
-	Collection<TagCategory> findTag(Integer page, String type, String order);
+	Collection<TagCategory> findTag(String type, String order);
 
 	TagCategory disabledTag(long id);
 	

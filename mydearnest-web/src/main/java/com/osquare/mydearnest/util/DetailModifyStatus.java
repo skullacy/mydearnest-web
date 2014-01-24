@@ -9,6 +9,8 @@ import com.osquare.mydearnest.entity.Post;
 
 public class DetailModifyStatus {
 	private static HashMap<String, String> currentModify;
+	// 키: post.getId(), 밸류: account.getName()
+	private static HashMap<String, String> currentModifyName;
 	
 	//현재 Account가 수정하고 있는 Post 갱신
 	public static Boolean updateModifyStatus(Account account, Post post) {
@@ -20,6 +22,7 @@ public class DetailModifyStatus {
 	
 	public static Boolean releaseModifyStatus(Account account) {
 		Iterator<Map.Entry<String, String>> iterator = DetailModifyStatus.currentModify.entrySet().iterator();
+		Iterator<Map.Entry<String, String>> nameIterator = DetailModifyStatus.currentModifyName.entrySet().iterator();
 		
 		while(iterator.hasNext()) {
 			Map.Entry<String, String> entry = iterator.next();
@@ -27,6 +30,14 @@ public class DetailModifyStatus {
 				iterator.remove();
 			}
 		}
+		
+		while(nameIterator.hasNext()) {
+			Map.Entry<String, String> entry = nameIterator.next();
+			if(entry.getValue().equals(String.valueOf(account.getName()))) {
+				nameIterator.remove();
+			}
+		}
+		
 		return false;
 	}
 	
@@ -50,6 +61,7 @@ public class DetailModifyStatus {
 	public static Boolean setCurrentModify(Account account, Post post) {
 		releaseModifyStatus(account);
 		DetailModifyStatus.currentModify.put(String.valueOf(account.getId()), String.valueOf(post.getId()));
+		DetailModifyStatus.currentModifyName.put(String.valueOf(post.getId()), account.getName());
 		
 		return true;
 	}
@@ -58,6 +70,12 @@ public class DetailModifyStatus {
 	public static HashMap<String, String> getCurrentModify() {
 		if(DetailModifyStatus.currentModify == null) DetailModifyStatus.currentModify = new HashMap<String, String>();
 		return DetailModifyStatus.currentModify;
+	}
+	
+	// Account name 리턴
+	public static HashMap<String, String> getCurrentModifyName() {
+		if(DetailModifyStatus.currentModifyName == null) DetailModifyStatus.currentModifyName = new HashMap<String, String>();
+		return DetailModifyStatus.currentModifyName;
 	}
 	
 	
@@ -73,6 +91,7 @@ public class DetailModifyStatus {
 	
 	public static void cleanCurrentModify() {
 		DetailModifyStatus.currentModify = null;
+		DetailModifyStatus.currentModifyName = null;
 	}
 	
 }

@@ -1,11 +1,12 @@
 var color_click = 0;
 	var massages = ['비중이 50%이상인 색을 선택하세요','2번째로 비중이 높은 색을 선택하세요','3번째로 비중이 높은 색을 선택하세요','4번째로 비중이 높은 색을 선택하세요','색상 입력 완료!'];
 	function insertColorTag(container, color) {
+		var dataClick = container.attr('data-click');
 		var tag = $('.tagResult').children('.tag_ori').clone();
 		tag.removeClass('tag_ori').addClass('tag').data('value', color).css('background',color).css('color','#eeeeee').css('text-shadow','none');
 		tag.children('.tag_label').text(color);
 		tag.children('.position_hidden').removeClass('position_hidden')
-		.attr('name', 'tagColor').attr('value', color+color_click);
+		.attr('name', 'tagColor').attr('value', color + dataClick);
 		
 		tag.find('a.delete_tag').click(function(){
 			$(this).parent('.tag').remove();
