@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -63,6 +64,7 @@ public class FileServiceImpl implements FileService {
 	@Resource private SessionFactory sessionFactory;
 	
 	@Autowired private PropertiesManager conf;
+	@Autowired private MdnAmazonManager mdnAmazonManager;
 
 	@Override
 	public ImageSource getImageSource(Long imageId) {
@@ -291,51 +293,80 @@ public class FileServiceImpl implements FileService {
 		
 		return result;
 	}
-
-
-	@Override
-	public ImageSourceFile getSourceFile(ImageSource imageSource) {
-		
+	
+	public ImageSourceFile getImageFromAmazon(ImageSource imageSource, String type) {
+		return getImageFromAmazon(imageSource, type, null, null, null, null);
+	}
+	
+	public ImageSourceFile getImageFromAmazon(ImageSource imageSource, String type, Long width, Long height, String thumbnail_type, Long postId) {
 		if (imageSource == null) return null;
- 
+		
+		//type에 따라 선택되어야할 파일명
+		String fileName = null;
+		if("source".equals(type)) fileName = "source";
+		else if("thumbnail".equals(type)) fileName = width + "x" + height + "_" + thumbnail_type + ".jpg";
+		else return null;
+		
+		//S3에 저장되는 경로 조합.
+		String filePath = imageSource.getStoragePath() + "/" + imageSource.getId();
+		String fileLocation = filePath + "/" + fileName;
+		
+		//필요한 변수들
 		ImageSourceFile result = null;
 		InputStream sourceImg = null;
-		//S3에 저장되는 경로 조합.
-		String file_location = imageSource.getStoragePath() + "/" + (imageSource.getId() + 1);
 		
+		//CloudFront를 통해서 이미지 가져오기 시도.
 		try {
-			//CloudFront를 통해서 이미지 가져오기 시도.
 			result = new ImageSourceFile();
-			sourceImg = new URL(conf.get("amazon.fs.serverUrl") + "/" + file_location + "/source").openStream();
+			
+			//CloudFront에서 파일을 못찾은경우, Catch로 Exception 발생시킨다.
+			URL sourceURL = new URL(conf.get("amazon.fs.serverUrl") + "/" + fileLocation);
+			sourceImg = sourceURL.openStream();
+			
+			//파일 크기 구하기
+			URLConnection conn = sourceURL.openConnection();
+			HttpURLConnection httpConn = (HttpURLConnection) conn;
+			
+			long fileSize = (long) httpConn.getContentLength();
+			
+			//ImageSourceFile 오브젝트에 담는다.
+			result.setFileLength(fileSize);
+			result.setInputStream(sourceImg);
+			
 		}
 		catch (IOException e) {
 			//CloudFront에서 파일을 못찾은 경우, S3에서 가져와본다.
 			try {
 				//아마존 S3객체 생성
-				AmazonS3Client fileStorageServer = new MdnAmazonManager().getAmazonS3();
+				AmazonS3Client fileStorageServer = mdnAmazonManager.getAmazonS3();
 				
 				//AmazonS3 에서 이미지 가져오기.
-				System.out.println("GET IMAGE IN AMAZON S3");
-				S3Object object = fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location));
+				S3Object object = fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), fileLocation));
 				
 				sourceImg = object.getObjectContent();
+				
+				//ImageSourceFile 오브젝트에 담는다.
+				result.setFileLength(object.getObjectMetadata().getContentLength());
+				result.setInputStream(sourceImg);
 			} 
 			catch(AmazonS3Exception s3e) {
 				//S3에서도 파일을 못찾은 경우, 에러발생.
 				//추후 기본적으로 불려질 이미지를 넣어도 괜찮을듯 하다.
-				System.out.println("FILE NOT FOUND IN S3 TOO");
-				e.printStackTrace();
+				System.out.println("FILE NOT FOUND IN S3 TOO : " + s3e.getMessage());
+				
+				result = null;
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		finally {
-			result.setFileLength(imageSource.getByteLength());
-			result.setInputStream(sourceImg);
-		}
 		
 		return result;
+	}
+	
+	@Override
+	public ImageSourceFile getSourceFile(ImageSource imageSource) {
+		return getImageFromAmazon(imageSource, "source");
 	}
 
 	@Override
@@ -345,10 +376,27 @@ public class FileServiceImpl implements FileService {
 	
 	@Override
 	public ImageSourceFile getSourceFile(ImageSource imageSource, Long width, Long height, String thumbnail_type, Long postId) {
-
-		if (imageSource == null) return null;
-
+		
+		//일단 썸네일을 가져와본다.
+		ImageSourceFile target = getImageFromAmazon(imageSource, "thumbnail", width, height, thumbnail_type, postId);
 		ImageSourceFile result = new ImageSourceFile();
+		if(target == null) {
+			//썸네일이 없다면 원본 이미지를 가져와본다.
+			target = getImageFromAmazon(imageSource, "source");
+			
+			//원본 이미지마저 없다면 요청이 잘못되거나 에러발생. null 리턴해준다.
+			if(target == null) return null;
+			else {
+				//원본이미지만 있는상황이므로 썸네일을 생성한 후, S3에 저장.
+				
+			}
+		} else {
+			return result;
+		}
+		
+		
+		
+		
 		
 		//S3에 저장되는 경로 조합.
 		String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
@@ -363,6 +411,8 @@ public class FileServiceImpl implements FileService {
 		InputStream sourceIs = null;
 		InputStream destIs = null;
 		long fileSize = 0L;
+		
+		return result;
 		
 		
 		
@@ -795,7 +845,7 @@ public class FileServiceImpl implements FileService {
 //		catch (Exception e) {
 //		}
 		
-		return result;
+//		return result;
 	}
 
 	
