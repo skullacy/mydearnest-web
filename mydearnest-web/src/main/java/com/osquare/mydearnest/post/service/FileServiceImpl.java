@@ -40,7 +40,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.cloudfront.AmazonCloudFrontClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
@@ -56,11 +55,13 @@ import com.osquare.mydearnest.entity.Folder;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.post.vo.ImageSourceFile;
+import com.osquare.mydearnest.util.amazon.MdnAmazonManager;
 
 @Service("fileService")
 public class FileServiceImpl implements FileService {
 
 	@Resource private SessionFactory sessionFactory;
+	
 	@Autowired private PropertiesManager conf;
 
 	@Override
@@ -298,24 +299,40 @@ public class FileServiceImpl implements FileService {
 		if (imageSource == null) return null;
  
 		ImageSourceFile result = null;
+		InputStream sourceImg = null;
 		//S3에 저장되는 경로 조합.
-		String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
+		String file_location = imageSource.getStoragePath() + "/" + (imageSource.getId() + 1);
 		
 		try {
+			//CloudFront를 통해서 이미지 가져오기 시도.
 			result = new ImageSourceFile();
-			
-			AmazonCloudFrontClient cloudFrontClient = new AmazonCloudFrontClient();
-			
-			InputStream sourceImg = new URL(conf.get("amazon.fs.serverUrl") + "/" + file_location + "/source").openStream();
-			
-			result.setFileLength(imageSource.getByteLength());
-			result.setInputStream(sourceImg);
+			sourceImg = new URL(conf.get("amazon.fs.serverUrl") + "/" + file_location + "/source").openStream();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			//CloudFront에서 파일을 못찾은 경우, S3에서 가져와본다.
+			try {
+				//아마존 S3객체 생성
+				AmazonS3Client fileStorageServer = new MdnAmazonManager().getAmazonS3();
+				
+				//AmazonS3 에서 이미지 가져오기.
+				System.out.println("GET IMAGE IN AMAZON S3");
+				S3Object object = fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location));
+				
+				sourceImg = object.getObjectContent();
+			} 
+			catch(AmazonS3Exception s3e) {
+				//S3에서도 파일을 못찾은 경우, 에러발생.
+				//추후 기본적으로 불려질 이미지를 넣어도 괜찮을듯 하다.
+				System.out.println("FILE NOT FOUND IN S3 TOO");
+				e.printStackTrace();
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			result.setFileLength(imageSource.getByteLength());
+			result.setInputStream(sourceImg);
 		}
 		
 		return result;
@@ -347,24 +364,26 @@ public class FileServiceImpl implements FileService {
 		InputStream destIs = null;
 		long fileSize = 0L;
 		
-		Boolean test = false;
-		try {
-			result = new ImageSourceFile();
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			
-			//CloudFront url을 통해 이미지를 가져온다. 만약 없으면(404에러 리턴) Exception 발생되므로 그 시점에서 썸네일 만들기.
-			System.out.println(conf.get("amazon.fs.serverUrl") + "/" + thumbFileLoc);
-			sourceIs = new URL(conf.get("amazon.fs.serverUrl") + "/" + thumbFileLoc).openStream();
-			destIs = sourceIs;
-			//파일 사이즈 구하기
-	        
-	        fileSize = (long) os.size();
-	        if(os != null) os.close();
-		}
-		//CloudFront를 통해 이미지를 가져오지 못할경우
-		catch (IOException e) {
-			System.out.println("CAN'T FIND IN CLOUDFRONT");
-			System.out.println(thumbFileName);
+		
+		
+//		Boolean test = false;
+//		try {
+//			result = new ImageSourceFile();
+//			ByteArrayOutputStream os = new ByteArrayOutputStream();
+//			
+//			//CloudFront url을 통해 이미지를 가져온다. 만약 없으면(404에러 리턴) Exception 발생되므로 그 시점에서 썸네일 만들기.
+//			System.out.println(conf.get("amazon.fs.serverUrl") + "/" + thumbFileLoc);
+//			sourceIs = new URL(conf.get("amazon.fs.serverUrl") + "/" + thumbFileLoc).openStream();
+//			destIs = sourceIs;
+//			//파일 사이즈 구하기
+//	        
+//	        fileSize = (long) os.size();
+//	        if(os != null) os.close();
+//		}
+//		//CloudFront를 통해 이미지를 가져오지 못할경우
+//		catch (IOException e) {
+//			System.out.println("CAN'T FIND IN CLOUDFRONT");
+//			System.out.println(thumbFileName);
 			
 //			//아마존 S3객체 생성
 //			AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
@@ -580,33 +599,33 @@ public class FileServiceImpl implements FileService {
 //			 */
 			
 			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			
-			
-			if(test) {
-				System.out.println("saldgjha;lskdfhasl;kdfjalsk;dfj;laksghl;aksdjfalk;sdjflak;shgl;asdjfla;skdfjal;sj");
-				
-				System.out.println(fileSize);
-			}
-			
-			
-			
-			result.setInputStream(destIs);
-			result.setFileLength(fileSize);
-			
-			try{
-				if(sourceIs != null) sourceIs.close();
-				if(destIs != null) destIs.close();
-				
-			} catch(IOException ex) {
-				ex.printStackTrace();
-			}
-			
-		}
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			
+//			
+//			if(test) {
+//				System.out.println("saldgjha;lskdfhasl;kdfjalsk;dfj;laksghl;aksdjfalk;sdjflak;shgl;asdjfla;skdfjal;sj");
+//				
+//				System.out.println(fileSize);
+//			}
+//			
+//			
+//			
+//			result.setInputStream(destIs);
+//			result.setFileLength(fileSize);
+//			
+//			try{
+//				if(sourceIs != null) sourceIs.close();
+//				if(destIs != null) destIs.close();
+//				
+//			} catch(IOException ex) {
+//				ex.printStackTrace();
+//			}
+//			
+//		}
 		
 //		File fileDir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
 //		if(!fileDir.isDirectory()) fileDir.mkdirs();
