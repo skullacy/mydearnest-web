@@ -220,16 +220,16 @@
 		#end
 	#end
 	
-	var hexArray = [
-		#if($hexes)
+	#if($hexes)
+		var hexArray = [
 			#foreach($colors in $hexes)
 				"$colors",
 			#end
-		#end
-	];
-	for (var i = 0; i < hexArray.length; i++) {
-		insertColorTag($(".color-space[data-click='"+ i + "']"), hexArray[i]);
-	}
+		];
+		for (var i = 0; i < hexArray.length; i++) {
+			insertColorTag($(".color-space[data-click='"+ i + "']"), hexArray[i]);
+		}
+	#end
 	
 	#if($!post.getTagTone() > 0)
 		#set($title = "")
