@@ -50,17 +50,15 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 	}
 
 	@Override
-	public Collection<TagCategory> findTag(Integer page, String type, String order) {
+	public Collection<TagCategory> findTag(String type, String order) {
 		Collection<TagCategory> result = null;
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
 
 		try {
 			
-			Criteria cr = session.createCriteria(TagCategory.class)
-//					.addOrder(Order.desc(order))
-					.setMaxResults(10).setFirstResult((page - 1) * 20);
-			
+			Criteria cr = session.createCriteria(TagCategory.class);
+
 			if(!type.isEmpty()) {
 				cr.add(Restrictions.eq("type", type));
 			}

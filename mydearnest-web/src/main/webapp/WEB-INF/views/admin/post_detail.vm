@@ -34,7 +34,7 @@
     	text-align:center;
     }
     .tip-mousemove{position:fixed; width:auto; display:none; z-index:10;}
-    .popover-content{width:150px;}
+    .popover-content{width:250px;}
     .btn-default{text-shadow:none !important;}
     .popover-title{color:#eee;}
   
