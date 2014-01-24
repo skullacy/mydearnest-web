@@ -261,11 +261,9 @@ public class TestController {
 		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 		Account account = accountService.findAccountById(principal.getAccountId());
 		
-		model.addAttribute("account", account);
-		
 		Post post = postService.getPostById(postId);
-		Account postAccount = post.getAccount();
-		
+
+		model.addAttribute("account", account);
 		model.addAttribute("command", postVO);
 		
 		if (result.hasErrors()) {
@@ -274,8 +272,8 @@ public class TestController {
 			model.addAttribute("errors", result.getAllErrors());
 		}
 		else {
-			
-			Post postResult = postService.createPostDetail(post, postAccount, postVO);
+			// null check 하지 않음: 수정용이니 Tag가 이미 달려있을거라 생각.
+			Post postResult = postService.createPostDetail(post, post.getPostTag().iterator().next().getAccount(), postVO);
 			if ( postResult == null) {
 				model.addAttribute("success", false);
 			}
