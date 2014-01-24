@@ -174,23 +174,25 @@ public class TestController {
 		return "redirect:/grade/" +  post.getId();
 	}*/
 
+	private static Set<Long> postIdSet;
+	
 	@RequestMapping(value = "/posts" , method = RequestMethod.GET)
-	public String getWrongColorTags(HttpServletRequest request, HttpServletResponse response) {
+	public String getWrongColorTags(Model model, HttpServletRequest request, HttpServletResponse response) {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
 		
 		List<PostTag> list = colorTagUpdate.getWrongColorTags();
-		Set<Long> postIdSet = new HashSet<Long>();
+		postIdSet = new HashSet<Long>();
 		
 		int listSize = list.size();
 		for (int i = 0; i < listSize-1 ; i++) {
 			long postId = list.get(i).getPost().getId();
 			if (postId == list.get(i+1).getPost().getId()) postIdSet.add(postId);
 		}
-		
-		System.out.println("Wrong post's id: " + postIdSet);
+				
+		System.out.println("Wrong post's id(" + postIdSet.size() + "): " + postIdSet);
 		
 		if (postIdSet.isEmpty()) {
 			return "redirect:/";
@@ -214,6 +216,7 @@ public class TestController {
 		
 		model.addAttribute("tagcate", tagCate);
 		model.addAttribute("post", post);
+		model.addAttribute("postSetSize", postIdSet.size());
 		
 		Iterator<PostTag> postTags = post.getPostTag().iterator();
 		boolean postTagFlag = true;

@@ -1,4 +1,4 @@
-<h2>정보입력 페이지</h2>
+<h2>정보입력 페이지($postSetSize 개 남음)</h2>
 <style>
 	.photocontainer {
     	width:400px;
