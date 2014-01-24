@@ -1,0 +1,322 @@
+<h2>정보입력 페이지</h2>
+<style>
+	.photocontainer {
+    	width:400px;
+    	
+    	position:relative;
+    	display:inline-block;
+    	float:left;
+    }
+    .infoInput{
+    	width:500px;
+    	height:auto;
+    	position:relative;
+    	display:inline-block;
+    	margin-left:20px;
+    }
+
+    
+    .tagResult{
+    	width:500px;
+    	height:auto;
+    	position:relative;
+    	display:inline-block;
+    	background:#eeeeee;
+    	border:1px solid #aaaaaa;
+    }    
+    
+    .tag_table .tag_name{
+    	width:80px;
+    	text-align:center;
+    }
+    .tag_table .question{
+    	width:5px;
+    	text-align:center;
+    }
+    .tip-mousemove{position:fixed; width:auto; display:none; z-index:10;}
+    .popover-content{width:150px;}
+    .btn-default{text-shadow:none !important;}
+    .popover-title{color:#eee;}
+  
+</style>
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/admin.js"></script>	
+<div class="photocontainer">
+	<div class="tip-mousemove">
+		<button class="color-teach btn btn-danger" ></button>
+	</div>
+	<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400px" id="test"/>
+	<div style="width:400px; height:500px; background:$post.imageSource.aveColor"></div>
+	
+</div>	
+
+<div class="infoInput">
+	<form name="form" class="form-horizontal" role="form" action="$request.contextPath/test/detail/$post.id" method="post" id="data_form" onkeypress="return event.keyCode!=13" onsubmit="return checkit(this);">
+		
+		<div class="form-group">
+			<div class="col-lg-10">
+			<span>태그입력</span>
+				<input type="text" class="form-control" id="position_search" name="keyword" action="$request.contextPath/api/category/search.ajax" placeholder="태그검색">
+			</div>
+		</div>
+		<div class="tagResult">
+			<div style="display:none;" class="btn btn-default btn-xs tag_ori">
+				<span class="tag_label"></span>
+				<a class="delete_tag" href="#">X</a>
+				<input type="hidden" class="position_hidden" onKeyPress="check(event);" />
+			</div>
+			<table class="table table-striped table-bordered tag_table" style="margin-bottom:0px;">
+				<tr>
+					<td class="tag_name">
+						공간
+					</td>
+					<td class="tag_home">
+					</td>
+					<td class="question">
+						<a href="#" class="btn btn-default btn-xs tagHint" rel="home">?</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tag_name">가구</td>
+					<td class="tag_accessory">
+					</td>
+					<td class="question">
+						<a class="btn btn-default btn-xs tagHint"  href="#" rel="accessory" data-original-title="가구태그부분입니다 사진에나와있는 모든 가구의 태그를 등록하세요">?</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tag_name">평수</td>
+					<td class="tag_size"></td>
+					<td class="question">
+						<a class="btn btn-default btn-xs tagHint"  href="#" rel="size" data-original-title="">?</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tag_name">톤</td>
+					<td class="tag_tone"></td>
+					<td class="question">
+						<a class="btn btn-default btn-xs tagHint"  href="#" rel="tone" data-original-title="" >?</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tag_name">테마</td>
+					<td>
+						<div class="btn-group" data-toggle="buttons" >
+							<label class="btn btn-default btn-sm #if($post.getTheme() == 0) active #end">
+								<input type="radio" name="theme" value="0" #if($post.getTheme() == 0) checked="true" #end /> 없음
+							</label>
+							<label class="btn btn-default btn-sm #if($post.getTheme() == 1) active #end">
+								<input type="radio" name="theme" value="1" #if($post.getTheme() == 1) checked="true" #end /> 있음
+							</label>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="tag_name">공간</td>
+					<td>
+						<div class="btn-group" data-toggle="buttons" >
+							<label class="btn btn-default btn-sm #if($post.getSpaceType() == 0) active #end">
+								<input type="radio" name="spaceType" value="0" #if($post.getSpaceType() == 0) checked="true" #end /> 인도어
+							</label>
+							<label class="btn btn-default btn-sm #if($post.getSpaceType() == 1) active #end">
+								<input type="radio" name="spaceType" value="1" #if($post.getSpaceType() == 1) checked="true" #end /> 아웃도어
+							</label>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="tag_name">색상</td>
+					<td class="tag_color">
+						<div class="color-space" style="display:inline;" data-click="0"></div>
+						<div class="color-space" style="display:inline;" data-click="1"></div>
+						<div class="color-space" style="display:inline;" data-click="2"></div>
+						<div class="color-space" style="display:inline;" data-click="3"></div>
+						<a class="btn btn-success" id="color-select-btn" style="display:block; margin-top:10px;">색상 선택 힌트</a> 
+					</td>
+				</tr>
+			</table>
+			
+		</div>
+		<a class="btn btn-default btn-lg" href="#" style="margin-top:10px; display:none;"><이전</a>
+			
+		<div class="button-container" style="margin-top:30px; position:relative;">
+			#if($sec.getAuthorType() == "ROLE_ADMIN")
+			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="grade">등록 > 느낌평가</a>
+			<a class="btn btn-warning btn-lg submit_redirect" data-redirectTo="phototag">등록 > 가구링크</a>
+			<input type="hidden" id="redirectTo" />
+			#end
+			<input type="submit" class="btn btn-primary btn-lg" id="form_submit" value="등록>다음사진" style="" />
+		</div>	
+	</form>
+	<ul id="popover_home" style="display:none;">
+	#foreach($tag in $tagcate)
+		#if($tag.type=="home")
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		#end
+	#end
+	</ul>
+	<ul id="popover_accessory" style="display:none;">
+	#foreach($tag in $tagcate)
+		#if($tag.type=="accessory")
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		#end
+	#end
+	</ul>
+	<ul id="popover_size" style="display:none;">
+	#foreach($tag in $tagcate)
+		#if($tag.type=="size")
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		#end
+	#end
+	</ul>
+	<ul id="popover_tone" style="display:none;">
+	#foreach($tag in $tagcate)
+		#if($tag.type=="tone")
+			<li class="btn btn-default btn-xs" style="width:auto; list-style-type:none; margin:0 3px 7px 0px;">$tag.title </li>
+		#end
+	#end
+	</ul>
+	
+         
+</div>
+
+<script type="text/javascript" src="$request.contextPath/scripts/bootstrap/jquery.ImageColorPicker.js"></script>					
+
+
+<script>
+	#foreach($postTag in $post.getPostTag())
+		#if($postTag.tagCateId > 0)
+			#set($title = "")
+			#set($type = "") 
+			#foreach($tagCate in $tagcate)
+				#if($tagCate.id == $postTag.tagCateId)
+					#set($title = $tagCate.title)
+					#set($type = $tagCate.type)
+				#end
+			#end
+			var tag = $('.tagResult').children('.tag_ori').clone();
+			tag.removeClass('tag_ori').addClass('tag').data('value', "$!postTag.tagCateId");
+			tag.children('.tag_label').text("$!title");
+			
+			
+			tag.children('.position_hidden').removeClass('position_hidden')
+				.attr('name', 'tag'+"$!type".substring(0, 1).toUpperCase() + "$!type".substring(1, "$!type".length).toLowerCase()).val("$!postTag.tagCateId");
+			
+			tag.find('a.delete_tag').click(function(){
+				$(this).parent('.tag').remove();
+				return false;
+			});
+			
+			$(".tag_$!type").append(tag);
+			tag.show();
+		#else
+			tag_value = "$!postTag.value";
+			color_value = tag_value.substr(0, 7);
+			index_value = tag_value.substr(-1, 1);
+			
+			
+			insertColorTag($(".color-space[data-click='"+ index_value + "']"), color_value);
+			
+			
+		#end
+	#end
+	
+	#if($hexes)
+		var hexArray = [
+			#foreach($colors in $hexes)
+				"$colors",
+			#end
+		];
+		for (var i = 0; i < hexArray.length; i++) {
+			insertColorTag($(".color-space[data-click='"+ i + "']"), hexArray[i]);
+		}
+	#end
+	
+	#if($!post.getTagTone() > 0)
+		#set($title = "")
+		#set($type = "")
+		#foreach($tagCate in $tagcate)
+			#if($tagCate.id == $!post.getTagTone())
+				#set($title = $tagCate.title)
+				#set($type = $tagCate.type)
+			#end
+		#end
+		var tag = $('.tagResult').children('.tag_ori').clone();
+		tag.removeClass('tag_ori').addClass('tag').data('value', "$!post.getTagTone()");
+		tag.children('.tag_label').text("$!title");
+		console.log("$!title");
+		
+		tag.children('.position_hidden').removeClass('position_hidden')
+			.attr('name', 'tag'+"$!type".substring(0, 1).toUpperCase() + "$!type".substring(1, "$!type".length).toLowerCase()).val("$!post.getTagTone()");
+		
+		tag.find('a.delete_tag').click(function(){
+			$(this).parent('.tag').remove();
+			return false;
+		});
+		
+		$(".tag_$!type").append(tag);
+		tag.show();
+	#end
+	#if($!post.getTagSize() > 0)
+		#set($title = "")
+		#set($type = "")
+		#foreach($tagCate in $tagcate)
+			#if($tagCate.id == $!post.getTagSize())
+				#set($title = $tagCate.title)
+				#set($type = $tagCate.type)
+			#end
+		#end
+		var tag = $('.tagResult').children('.tag_ori').clone();
+		tag.removeClass('tag_ori').addClass('tag').data('value', "$!post.getTagSize()");
+		tag.children('.tag_label').text("$!title");
+		
+		
+		tag.children('.position_hidden').removeClass('position_hidden')
+			.attr('name', 'tag'+"$!type".substring(0, 1).toUpperCase() + "$!type".substring(1, "$!type".length).toLowerCase()).val("$!post.getTagSize()");
+		
+		tag.find('a.delete_tag').click(function(){
+			$(this).parent('.tag').remove();
+			return false;
+		});
+		
+		$(".tag_$!type").append(tag);
+		tag.show();
+		
+	#end
+		function checkit(form){
+			$('#form_submit').attr('disabled', 'disabled');
+			if(!form.tagHome){
+				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
+				return false;
+			}
+			if(!form.tagAccessory){
+				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
+				return false;
+			}
+			if(!form.tagSize){
+				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
+				return false;
+			}
+			if(!form.tagTone){
+				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
+				return false;
+			}
+			if(!form.tagColor){
+				alert('등록되지 않은 태그가 있습니다');
+				$('#form_submit').removeAttr('disabled');
+				return false;
+			}
+			form.submit();
+		}
+	
+	 $('.submit_redirect').on('click', function() {
+		$('#redirectTo').attr('name', 'redirectType').val($(this).attr('data-redirectTo'));
+		$('#data_form').submit();
+		return false;
+	});
+	
+</script>
+
