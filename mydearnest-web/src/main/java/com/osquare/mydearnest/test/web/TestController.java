@@ -182,15 +182,14 @@ public class TestController {
 		response.setHeader("Expires", "0");
 		
 		List<PostTag> list = colorTagUpdate.getWrongColorTags();
-		Iterator<PostTag> iterator = list.iterator();
 		Set<Long> postIdSet = new HashSet<Long>();
 		
-		while (iterator.hasNext()) {
-			long postId = iterator.next().getPost().getId();
-			if (iterator.hasNext() && postId == iterator.next().getPost().getId()) {
-				postIdSet.add(postId);				
-			}
+		int listSize = list.size();
+		for (int i = 0; i < listSize-1 ; i++) {
+			long postId = list.get(i).getPost().getId();
+			if (postId == list.get(i+1).getPost().getId()) postIdSet.add(postId);
 		}
+		
 		System.out.println("Wrong post's id: " + postIdSet);
 		
 		if (postIdSet.isEmpty()) {
