@@ -203,7 +203,7 @@ public class TestController {
 	}
 	
 	@RequestMapping(value = "/detail/{postId}" , method = RequestMethod.GET)
-	public String insertPostDetail(Model model, HttpServletRequest request, HttpServletResponse response,
+	public String updateWorngColorTags(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("postId") Long postId) {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -217,39 +217,29 @@ public class TestController {
 		model.addAttribute("tagcate", tagCate);
 		model.addAttribute("post", post);
 		model.addAttribute("postSetSize", postIdSet.size());
+
+		BufferedImage bufferedImage = null;
 		
-		Iterator<PostTag> postTags = post.getPostTag().iterator();
-		boolean postTagFlag = true;
-		
-		while (postTags.hasNext()) {
-			String value = postTags.next().getValue();
-			if (value != null && value.trim() != "") postTagFlag = false;
+		try {
+			bufferedImage = ImageIO.read(new URL(pm.get("web_url")+"/mdn-image/thumb/"+post.getImageSource().getId()+"?w=200&t=ratio"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
-		if (postTagFlag) {
-			BufferedImage bufferedImage = null;
-			
-			try {
-				bufferedImage = ImageIO.read(new URL(pm.get("web_url")+"/mdn-image/thumb/"+post.getImageSource().getId()+"?w=200&t=ratio"));
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			DominantColor[] colors = DominantColors.getDominantColor(bufferedImage, 3, 0.1);
-			
-			TreeMap<Float, String> hexTree = new TreeMap<Float, String>();
-			List<String> hexes = new ArrayList<String>();
-			int colorsLength = colors.length;
-			for (int i = 0; i < colorsLength; i++) {
-				hexTree.put(colors[i].getPercentage(), colors[i].getRGBHex());
-			}
-			for (int i = 0; i < colorsLength; i++) {
-				hexes.add(hexTree.pollLastEntry().getValue());
-			}
-			
-			model.addAttribute("hexes", hexes);
+		DominantColor[] colors = DominantColors.getDominantColor(bufferedImage, 3, 0.1);
+		
+		TreeMap<Float, String> hexTree = new TreeMap<Float, String>();
+		List<String> hexes = new ArrayList<String>();
+		int colorsLength = colors.length;
+		for (int i = 0; i < colorsLength; i++) {
+			hexTree.put(colors[i].getPercentage(), colors[i].getRGBHex());
 		}
+		for (int i = 0; i < colorsLength; i++) {
+			hexes.add(hexTree.pollLastEntry().getValue());
+		}
+		
+		model.addAttribute("hexes", hexes);
 		
 		model.addAttribute("layout", "./shared/layout.admin.vm");
 		
@@ -271,9 +261,11 @@ public class TestController {
 		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 		Account account = accountService.findAccountById(principal.getAccountId());
 		
-		Post post = postService.getPostById(postId);
-
 		model.addAttribute("account", account);
+		
+		Post post = postService.getPostById(postId);
+		Account postAccount = post.getAccount();
+		
 		model.addAttribute("command", postVO);
 		
 		if (result.hasErrors()) {
@@ -283,7 +275,7 @@ public class TestController {
 		}
 		else {
 			
-			Post postResult = postService.createPostDetail(post, account, postVO);
+			Post postResult = postService.createPostDetail(post, postAccount, postVO);
 			if ( postResult == null) {
 				model.addAttribute("success", false);
 			}

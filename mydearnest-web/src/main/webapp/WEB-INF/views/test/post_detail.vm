@@ -209,27 +209,17 @@
 			$(".tag_$!type").append(tag);
 			tag.show();
 		#else
-			tag_value = "$!postTag.value";
-			color_value = tag_value.substr(0, 7);
-			index_value = tag_value.substr(-1, 1);
-			
-			
-			insertColorTag($(".color-space[data-click='"+ index_value + "']"), color_value);
-			
-			
 		#end
 	#end
 	
-	#if($hexes)
-		var hexArray = [
-			#foreach($colors in $hexes)
-				"$colors",
-			#end
-		];
-		for (var i = 0; i < hexArray.length; i++) {
-			insertColorTag($(".color-space[data-click='"+ i + "']"), hexArray[i]);
-		}
-	#end
+	var hexArray = [
+		#foreach($colors in $hexes)
+			"$colors",
+		#end
+	];
+	for (var i = 0; i < hexArray.length; i++) {
+		insertColorTag($(".color-space[data-click='"+ i + "']"), hexArray[i]);
+	}
 	
 	#if($!post.getTagTone() > 0)
 		#set($title = "")
