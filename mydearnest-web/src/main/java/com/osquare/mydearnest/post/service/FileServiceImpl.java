@@ -1,5 +1,6 @@
 package com.osquare.mydearnest.post.service;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -32,6 +33,7 @@ import javax.imageio.stream.ImageInputStream;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -57,6 +59,7 @@ import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.post.vo.ImageSourceFile;
 import com.osquare.mydearnest.util.amazon.MdnAmazonManager;
+import com.sun.media.sound.Toolkit;
 
 @Service("fileService")
 public class FileServiceImpl implements FileService {
@@ -294,6 +297,10 @@ public class FileServiceImpl implements FileService {
 		return result;
 	}
 	
+	public void setImageFiletoAmazon(ImageSource imageSource) {
+		
+	}
+	
 	public ImageSourceFile getImageFromAmazon(ImageSource imageSource, String type) {
 		return getImageFromAmazon(imageSource, type, null, null, null, null);
 	}
@@ -389,463 +396,156 @@ public class FileServiceImpl implements FileService {
 			else {
 				//원본이미지만 있는상황이므로 썸네일을 생성한 후, S3에 저장.
 				
+				//S3에 저장되는 경로 조합.
+				String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
+				//Thumbnail 파일명 조합.
+				String thumbFileName = width + "x" + height + "_" + thumbnail_type + ".jpg";
+				
+				//s3패스 + thumb파일명
+				final String thumbFileLoc = file_location + "/" + thumbFileName;
+				
+				try {
+					BufferedImage sourceImg = ImageIO.read(target.getInputStream());
+					BufferedImage resultImg = null;
+					
+					//필요한 변수들
+					double width_per;
+			        double height_per;
+			        double per = 0;
+			        double resize_width = width;
+			        double resize_height = height;
+			        
+			        //리사이즈 비율 설정
+			        if (resize_width > 0 && sourceImg.getWidth() >= resize_width) width_per = resize_width / sourceImg.getWidth();
+			        else width_per = 1;
+			
+			        if (resize_height > 0 && sourceImg.getHeight() >= resize_height) height_per = resize_height / sourceImg.getHeight();
+			        else height_per = 1;
+			        
+			        //비율에 맞춰서 리사이즈 하는경우 최종 리사이즈 크기 결정
+			        if (thumbnail_type.equals("ratio"))
+			        {
+			            if (width_per > height_per) per = height_per;
+			            else per = width_per;
+			            resize_width = ((double)sourceImg.getWidth() * per);
+			            resize_height = ((double)sourceImg.getHeight() * per);
+			        }
+			        //crop인 경우 최종 리사이즈 크기 결정
+			        else
+			        {
+			            if (width_per < height_per) per = height_per;
+			            else per = width_per;
+			        }
+			
+			        if (per == 0) per = 1;
+			
+			        int _x = 0;
+			        int _y = 0;
+			
+			        int new_width = (int)(sourceImg.getWidth() * per);
+			        int new_height = (int)(sourceImg.getHeight() * per);
+			
+			        if (thumbnail_type.equals("crop"))
+			        {
+			            _x = (int)(resize_width / 2 - new_width / 2);
+			            _y = (int)(resize_height / 2 - new_height / 2);
+			        }
+			        else
+			        {
+			            _x = 0;
+			            _y = 0;
+			        }
+			        
+			        //최종 저장될 스트림.
+			        InputStream destIs = null;
+			        		
+			        //ByteArrayOutputStream 의 toByteArray의 메모리 에러 방지 위해 미리 오버라이드 해준다.
+			        final ByteArrayOutputStream output = new ByteArrayOutputStream() {
+			            @Override
+			            public synchronized byte[] toByteArray() {
+			                return this.buf;
+			            }
+			        };
+			        
+			        //소스 이미지의 타입을 분석해서 BufferedImage에 알맞는 캔버스 타입을 설정한다.
+			        //현재 0을 제외한 나머지 타입은 RGB로 통일시켰는데, PNG와 GIF 모두 제대로 출력되나 테스트 해보아야함.
+			        int type = sourceImg.getType() == 0? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;
+			        
+			        resultImg = new BufferedImage((int) resize_width, (int) resize_height, type);
+			    	Graphics2D g = resultImg.createGraphics();
+			    	//알파값 보존하는 알고리즘
+//			    	if (true) {
+//			    		g.setComposite(AlphaComposite.Src);
+//			    	}
+			    	g.drawImage(sourceImg, _x - 2, _y - 2, (int)new_width + 4, (int)new_height + 4, null); 
+			    	g.dispose();
+			        
+			    	ImageIO.write(resultImg, "jpg", output);
+			    	
+			    	final long fileSize = output.size();
+			        
+			        destIs = new ByteArrayInputStream(output.toByteArray(), 0, (int) fileSize);
+			        		
+			        result.setFileLength(fileSize);
+			        result.setInputStream(destIs);
+			        
+			        
+			        final InputStream uploadIs = destIs;
+			        
+			        //반응속도를 조금이나마 빠르게하기위해 아마존 업로드는 쓰레드로 돌린다.
+			        new Thread(
+		                    new Runnable() {
+		                        @Override
+		                        public void run() {
+		                        	//Amazon S3에 생성된 섬네일 저장.
+		        			        try {
+		        			        	//아마존 SDK가져오기
+			        			        AmazonS3Client fileStorageServer = mdnAmazonManager.getAmazonS3();
+			        			        
+			        			        //메타데이터 입력
+			        			        ObjectMetadata meta = new ObjectMetadata();
+			        					meta.setContentLength(fileSize);
+			        					
+			        					//스트림 초기화 : putObject 대비.
+			        					uploadIs.reset();
+			        					
+			        					PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), thumbFileLoc, uploadIs, meta);
+			        					
+			        					//PublicRead권한 설정
+			        					putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+			        					
+			        					//이미지 업로드
+			        					fileStorageServer.putObject(putObjectRequest);
+		        			        }
+		        			        catch(AmazonS3Exception s3e) {
+		        			        	s3e.printStackTrace();
+		        			        }
+		        			        catch(Exception e) {
+		        			        	e.printStackTrace();
+		        			        }
+		        			        finally {
+		        			        	Thread.currentThread().interrupt();
+		        			        }
+		        			        
+		                        }
+		                    }
+		            ).start();
+			        
+			        
+			        
+			        return result;
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-		} else {
-			return result;
 		}
-		
-		
-		
-		
-		
-		//S3에 저장되는 경로 조합.
-		String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
-		//Thumbnail 파일명 조합.
-		String thumbFileName = width + "x" + height + "_" + thumbnail_type + ".jpg";
-		
-		//s3패스 + thumb파일명
-		String thumbFileLoc = file_location + "/" + thumbFileName;
-		
-		BufferedImage sourceImg = null;
-		BufferedImage destImg = null;
-		InputStream sourceIs = null;
-		InputStream destIs = null;
-		long fileSize = 0L;
+		else {
+			result = target;
+		}
 		
 		return result;
 		
-		
-		
-//		Boolean test = false;
-//		try {
-//			result = new ImageSourceFile();
-//			ByteArrayOutputStream os = new ByteArrayOutputStream();
-//			
-//			//CloudFront url을 통해 이미지를 가져온다. 만약 없으면(404에러 리턴) Exception 발생되므로 그 시점에서 썸네일 만들기.
-//			System.out.println(conf.get("amazon.fs.serverUrl") + "/" + thumbFileLoc);
-//			sourceIs = new URL(conf.get("amazon.fs.serverUrl") + "/" + thumbFileLoc).openStream();
-//			destIs = sourceIs;
-//			//파일 사이즈 구하기
-//	        
-//	        fileSize = (long) os.size();
-//	        if(os != null) os.close();
-//		}
-//		//CloudFront를 통해 이미지를 가져오지 못할경우
-//		catch (IOException e) {
-//			System.out.println("CAN'T FIND IN CLOUDFRONT");
-//			System.out.println(thumbFileName);
-			
-//			//아마존 S3객체 생성
-//			AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
-//			AmazonS3 fileStorageServer = new AmazonS3Client(credentials);
-//			
-//			try {
-//				//AmazonS3 에서 썸네일을 가져와본다.
-//				System.out.println("GET THUMBNAIL IN AMAZON S3");
-//				S3Object object = fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), thumbFileLoc));
-//				
-//				is = object.getObjectContent();
-//				fileSize = object.getObjectMetadata().getContentLength();
-//				
-//				test = true;
-//			} 
-//			catch(AmazonS3Exception s3e) {
-//				if(s3e.getStatusCode() == 404) {
-//					System.out.println("NO THUMBNAIL IN AMAZON S3");
-//					System.out.println("START MAKE THUMBNAIL");
-//					//S3에도 파일이 존재하지 않으면 원본파일을 가지고 썸네일을 생성하자.
-//					try {
-//						System.out.println("GET SOURCE IMAGE IN AMAZON S3");
-//						S3Object object = fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/source"));
-//						is = object.getObjectContent();
-//						
-//						//원본파일을 가지고 있다면 썸네일 생성작업 시작.
-//						System.out.println("THUMBNAIL NOT FOUNDED!!");
-//						sourceImg = ImageIO.read(is);
-//						ByteArrayOutputStream os = new ByteArrayOutputStream();
-//						
-//						//필요한 변수들
-//						double width_per;
-//				        double height_per;
-//				        double per = 0;
-//				        double resize_width = width;
-//				        double resize_height = height;
-//				        
-//				        
-//				      //리사이즈 비율 설정
-//				        if (resize_width > 0 && sourceImg.getWidth() >= resize_width) width_per = resize_width / sourceImg.getWidth();
-//				        else width_per = 1;
-//				
-//				        if (resize_height > 0 && sourceImg.getHeight() >= resize_height) height_per = resize_height / sourceImg.getHeight();
-//				        else height_per = 1;
-//				        
-//				        //비율에 맞춰서 리사이즈 하는경우 최종 리사이즈 크기 결정
-//				        if (thumbnail_type.equals("ratio"))
-//				        {
-//				            if (width_per > height_per) per = height_per;
-//				            else per = width_per;
-//				            resize_width = ((double)sourceImg.getWidth() * per);
-//				            resize_height = ((double)sourceImg.getHeight() * per);
-//				        }
-//				        //crop인 경우 최종 리사이즈 크기 결정
-//				        else
-//				        {
-//				            if (width_per < height_per) per = height_per;
-//				            else per = width_per;
-//				        }
-//				
-//				        if (per == 0) per = 1;
-//				
-//				        int _x = 0;
-//				        int _y = 0;
-//				
-//				        int new_width = (int)(sourceImg.getWidth() * per);
-//				        int new_height = (int)(sourceImg.getHeight() * per);
-//				
-//				        if (thumbnail_type.equals("crop"))
-//				        {
-//				            _x = (int)(resize_width / 2 - new_width / 2);
-//				            _y = (int)(resize_height / 2 - new_height / 2);
-//				        }
-//				        else
-//				        {
-//				            _x = 0;
-//				            _y = 0;
-//				        }
-//
-//						ResampleOp resampleOp = new ResampleOp(new_width, new_height);
-//						resampleOp.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Normal);
-//				        destImg = resampleOp.filter(sourceImg, null);
-//				        
-//				        ImageIO.write(destImg, "jpg", os);
-//				        
-//				        byte[] buffer = os.toByteArray();
-//				        is = new ByteArrayInputStream(buffer);
-//				        
-//				        fileSize = (long) os.size();
-//				        os.close();
-//				        
-//				        
-//				        
-//						ObjectMetadata meta = new ObjectMetadata();
-//						meta.setContentLength(buffer.length);
-//						PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), thumbFileLoc, is, meta);
-//						putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
-//						fileStorageServer.putObject(putObjectRequest);
-//						
-//						System.out.println("Make Thumbnail and put thumbnail into amazon s3 complete.");
-//				        
-//						
-//					}
-//					catch(AmazonS3Exception s3ee) {
-//						if(s3e.getStatusCode() == 404) {
-//							//원본파일도 존재하지 않는경우.
-//							System.out.println("NO SOURCE FILE IN AMAZON S3");
-//						}
-//						else {
-//							s3ee.printStackTrace();
-//						}
-//					}
-//					catch(Exception ex) {
-//						ex.printStackTrace();
-//					}
-//				}
-//			}
-//			catch(Exception ex) {
-//				e.printStackTrace();
-//			}
-//			
-//			
-//			
-//			//IOException 발생시 오리지널 이미지를 통해서 썸네일을 생성하자.
-////			try {
-////				e.printStackTrace();
-//				
-//				
-//				
-//		        
-//		        
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//
-////				int type = sourceImg.getType() == 0? BufferedImage.TYPE_INT_ARGB : sourceImg.getType();
-////		        BufferedImage targetImage = new BufferedImage((int)resize_width, (int)resize_height, type);
-////		        Graphics2D graphics2D = targetImage.createGraphics();
-////		        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-////		        graphics2D.setBackground(Color.WHITE);
-////		        graphics2D.fillRect(0, 0, (int)resize_width, (int)resize_height);
-////		        graphics2D.drawImage(destImg, _x - 2, _y - 2, (int)new_width + 4, (int)new_height + 4, null);
-////		        
-////		        Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpeg");
-////		        ImageWriter writer = (ImageWriter)iter.next();
-////		        ImageWriteParam iwp = writer.getDefaultWriteParam();
-////		        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-////		        iwp.setCompressionQuality(0.9f);
-//		        
-////		        File fileDir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
-////				if(!fileDir.isDirectory()) fileDir.mkdirs();
-////		        File tmp_tFile = new File(fileDir, "tmp_fFile");
-////		        
-////		        FileImageOutputStream output = new FileImageOutputStream(tmp_tFile);
-////		        writer.setOutput(output);
-////		        
-////		        IIOImage image = new IIOImage(targetImage, null, null);
-////		        writer.write(null, image, iwp);
-////		        writer.dispose();
-//		        
-////				result = new ImageSourceFile();
-////				result.setFileLength(tmp_tFile.length());
-////				result.setInputStream(new FileInputStream(tmp_tFile));
-//			
-//				/**
-//				 * 
-//				 * 
-//				 * 
-//				 */
-//		        
-////				test = true;
-//				/**
-//				 * 
-//				 * 
-//				 * 
-//				 */
-//				
-////				result.setInputStream(is);
-////				result.setFileLength((long) os.size());
-////				
-////				return result;
-//			
-//			
-//			/**
-//			 * 
-//			 * 
-//			 * 
-//			 */
-//				
-//				
-////			}
-////			catch (IOException ex) {
-////				System.out.println("ERROR: IOException in MAKE THUMBNAIL ");
-////				ex.printStackTrace();
-////			}
-////			catch (Exception ex) {
-////				System.out.println("ERROR: Exception in MAKE THUMBNAIL");
-////				ex.printStackTrace();
-////			}
-//			
-//			/**
-//			 * 
-//			 * 
-//			 * 
-//			 */
-			
-			
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		finally {
-//			
-//			
-//			if(test) {
-//				System.out.println("saldgjha;lskdfhasl;kdfjalsk;dfj;laksghl;aksdjfalk;sdjflak;shgl;asdjfla;skdfjal;sj");
-//				
-//				System.out.println(fileSize);
-//			}
-//			
-//			
-//			
-//			result.setInputStream(destIs);
-//			result.setFileLength(fileSize);
-//			
-//			try{
-//				if(sourceIs != null) sourceIs.close();
-//				if(destIs != null) destIs.close();
-//				
-//			} catch(IOException ex) {
-//				ex.printStackTrace();
-//			}
-//			
-//		}
-		
-//		File fileDir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
-//		if(!fileDir.isDirectory()) fileDir.mkdirs();
-//		
-//		File tmp_aFile = new File(fileDir, "tmp_aFile");
-//		Boolean tmp_aFileExist = true;
-//		
-//		File tmp_tFile = new File(fileDir, "tmp_fFile");
-//		Boolean tmp_tFileExist = true;
-//		
-//		
-//		AWSCredentials credentials = new BasicAWSCredentials(conf.get("amazon.credential.accessKey"), conf.get("amazon.credential.secretKey"));
-//		AmazonS3 fileStorageServer = new AmazonS3Client(credentials);
-//		
-//		//YOU HAVE TO MODIFY ONCE AGAIN
-//		//이부분의 코드 반복되므로 리팩토링 해야함, AmazonS3를 이용하면 속도면에서 문제가 생김, CloudFront를 이용하도록 수정해야함.
-//		try {
-//			System.out.println("getImageSource");
-//			fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), file_location + "/source"), tmp_aFile);
-//			System.out.println("getImageSource Complete");
-//			
-//		} catch(AmazonS3Exception s3e) {
-//			if (s3e.getStatusCode() == 404) {
-//				tmp_aFileExist = false;
-//			} else {
-//				throw s3e;
-//			}
-//		}
-//		catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		String thumbFile_location = file_location + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg";
-//		try {
-//			System.out.println("getThumbnailSource");
-//			fileStorageServer.getObject(new GetObjectRequest(conf.get("amazon.fs.bucketName"), thumbFile_location),	tmp_tFile);
-//			System.out.println("getThumbnailSource Complete");
-//		} catch (AmazonS3Exception s3e) {
-//			if(s3e.getStatusCode() == 404) {
-//				tmp_tFileExist = false;
-//			} else {
-//				throw s3e;
-//			}
-//		}
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-////		result.setFileLength(tmpFile.length());
-////		result.setInputStream(new FileInputStream(tmpFile));
-//		
-////		File afile = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix + "/source");
-////		if (!afile.exists()) suffix = "";
-////		
-////		File tFile = new File(conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg");
-//		
-//		System.out.println("tmp_tFileExist : " + tmp_tFileExist);
-//		if (tmp_tFileExist) {
-//			try {
-//				System.out.println("Thumbnail Cache Enable");
-//				result.setFileLength(tmp_tFile.length());
-//				result.setInputStream(new FileInputStream(tmp_tFile));
-//				return result;
-//			}
-//			catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//				return null;
-//			}
-//		}
-//		
-//		try {
-//			System.out.println("Make Thumbnail Start!!!");
-////			String dir = conf.get("imageSource.savePath") + "/" + imageSource.getStoragePath() + "/" + imageSource.getId() + suffix;
-//			            
-//			File file = tmp_aFile;
-//			System.out.println(file);
-//			BufferedImage img = ImageIO.read(file.toURI().toURL());
-//			
-//	        double width_per;
-//	        double height_per;
-//	        double per = 0;
-//	        double resize_width = width;
-//	        double resize_height = height;
-//	
-//	        if (resize_width > 0 && img.getWidth() >= resize_width) width_per = resize_width / img.getWidth();
-//	        else width_per = 1;
-//	
-//	        if (resize_height > 0 && img.getHeight() >= resize_height) height_per = resize_height / img.getHeight();
-//	        else height_per = 1;
-//	
-//	        if (thumbnail_type.equals("ratio"))
-//	        {
-//	            if (width_per > height_per) per = height_per;
-//	            else per = width_per;
-//	            resize_width = ((double)img.getWidth() * per);
-//	            resize_height = ((double)img.getHeight() * per);
-//	        }
-//	        else
-//	        {
-//	            if (width_per < height_per) per = height_per;
-//	            else per = width_per;
-//	        }
-//	
-//	        if (per == 0) per = 1;
-//	
-//	        int _x = 0;
-//	        int _y = 0;
-//	
-//	        int new_width = (int)(img.getWidth() * per);
-//	        int new_height = (int)(img.getHeight() * per);
-//	
-//	        if (thumbnail_type.equals("crop"))
-//	        {
-//	            _x = (int)(resize_width / 2 - new_width / 2);
-//	            _y = (int)(resize_height / 2 - new_height / 2);
-//	        }
-//	        else
-//	        {
-//	            _x = 0;
-//	            _y = 0;
-//	        }
-//
-//			ResampleOp resampleOp = new ResampleOp(new_width, new_height);
-//			resampleOp.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Normal);
-//	        BufferedImage destImg = resampleOp.filter(img, null);
-//
-//			int type = img.getType() == 0? BufferedImage.TYPE_INT_ARGB : img.getType();
-//	        BufferedImage targetImage = new BufferedImage((int)resize_width, (int)resize_height, type);
-//	        Graphics2D graphics2D = targetImage.createGraphics();
-//	        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-//	        graphics2D.setBackground(Color.WHITE);
-//	        graphics2D.fillRect(0, 0, (int)resize_width, (int)resize_height);
-//	        graphics2D.drawImage(destImg, _x - 2, _y - 2, (int)new_width + 4, (int)new_height + 4, null);
-//	        
-//	        Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpeg");
-//	        ImageWriter writer = (ImageWriter)iter.next();
-//	        ImageWriteParam iwp = writer.getDefaultWriteParam();
-//	        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-//	        iwp.setCompressionQuality(0.9f);
-//	        
-//	        FileImageOutputStream output = new FileImageOutputStream(tmp_tFile);
-//	        writer.setOutput(output);
-//	        
-//	        IIOImage image = new IIOImage(targetImage, null, null);
-//	        writer.write(null, image, iwp);
-//	        writer.dispose();
-//	        
-//			result = new ImageSourceFile();
-//			result.setFileLength(tmp_tFile.length());
-//			result.setInputStream(new FileInputStream(tmp_tFile));
-//			
-//			
-//			
-//			
-//	        
-//			
-//			//아마존에 만들어진 파일 업로드
-//			PutObjectRequest putObjectRequest = new PutObjectRequest(conf.get("amazon.fs.bucketName"), thumbFile_location, tmp_tFile);
-//			putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
-//			
-//			fileStorageServer.putObject(putObjectRequest);
-//			
-//		} 
-//		catch (Exception e) {
-//		}
-		
-//		return result;
 	}
 
 	
@@ -902,7 +602,7 @@ public class FileServiceImpl implements FileService {
 		
 		return result;
 	}
-
+	
 
 	@Override
 	public void cropImageSource(Post post, ImageSource imageSource, String crop) {

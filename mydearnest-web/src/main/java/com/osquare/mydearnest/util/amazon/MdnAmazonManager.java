@@ -19,7 +19,6 @@ public class MdnAmazonManager {
 	AWSCredentials credentials;
 	
 	public AmazonS3Client getAmazonS3() {
-		System.out.println("AccessKey: " + pm.get("amazon.credential.accessKey") +"    SecretKey: " + pm.get("amazon.credential.secretKey"));
 		if(this.credentials == null) setCredential();
 		return new AmazonS3Client(this.credentials);
 	}
