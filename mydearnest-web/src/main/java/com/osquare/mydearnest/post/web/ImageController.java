@@ -60,8 +60,10 @@ public class ImageController {
 		if (height == null) height = 0L;
 		if (type == null || type.isEmpty()) type = "ratio";
 		
+		System.out.println("getThumbnail Start");
+		
 		ImageSource imageSource = fileService.getImageSource(imageId);
-		ImageSourceFile file = fileService.getSourceFile(imageSource, width, height, type, postId);
+		ImageSourceFile file = fileService.getSourceFile(imageSource, width, height, type);
 		
 		if (file != null && response != null) {
 			try {
@@ -69,7 +71,7 @@ public class ImageController {
 				response.setContentType("image/jpeg"); 
 		        response.setHeader("Content-disposition", "inline;filename=" + imageId + ".jpg" );
 		        response.setHeader("Content-Length", String.valueOf(file.getFileLength()));
-				FileCopyUtils.copy(file.getInputStream(), response.getOutputStream());
+		        FileCopyUtils.copy(file.getInputStream(), response.getOutputStream());
 			}
 			catch(Exception ex) { }
 		}
