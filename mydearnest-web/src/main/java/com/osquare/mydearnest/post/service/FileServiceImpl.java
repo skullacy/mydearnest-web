@@ -1,6 +1,5 @@
 package com.osquare.mydearnest.post.service;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -9,8 +8,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,19 +18,12 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 
 import javax.annotation.Resource;
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageInputStream;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.io.IOUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -52,14 +42,11 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.junglebird.webframe.common.PropertiesManager;
-import com.mortennobel.imagescaling.AdvancedResizeOp;
-import com.mortennobel.imagescaling.ResampleOp;
 import com.osquare.mydearnest.entity.Folder;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.post.vo.ImageSourceFile;
 import com.osquare.mydearnest.util.amazon.MdnAmazonManager;
-import com.sun.media.sound.Toolkit;
 
 @Service("fileService")
 public class FileServiceImpl implements FileService {
@@ -210,10 +197,9 @@ public class FileServiceImpl implements FileService {
 			result.setByteLength(filedata.getSize());
 			
 			String file_location = result.getStoragePath() + "/" + result.getId();
-			File dir = new File(conf.get("postFile.tmpPath") + "/" + file_location);
-			if(!dir.isDirectory()) dir.mkdirs();
 			
-			File tmpFile = new File(dir, "tmpData");
+			final File tmpFile = File.createTempFile("mdn", ".upload");
+			
 			filedata.transferTo(tmpFile);
 			
 			BufferedImage img = ImageIO.read(tmpFile);
@@ -223,6 +209,7 @@ public class FileServiceImpl implements FileService {
             String rgb = getAveColor(tmpFile);
             System.out.println("RGB_COLOR: "+rgb);
             result.setAveColor(rgb);
+            
             
 			
 			//원이미지는 해당 ID/source로 저장. 
@@ -236,7 +223,32 @@ public class FileServiceImpl implements FileService {
 			
             
             session.merge(result);
-
+            
+            //어플리케이션이 종료될때 임시파일을 삭제하도록 설정.
+            tmpFile.deleteOnExit();
+            
+            //혹시 몰라 강제로 지워보기
+            if(!tmpFile.delete()) {
+            	new Thread(
+            			new Runnable() {
+            				@Override
+            				public void run() {
+            					try {
+            						//그래도 안되면 1초후 다시 지워보기 -_-
+									Thread.sleep(1000);
+									System.out.println("DELETE TMPFILE IN THREAD : " + tmpFile.delete());
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+            					
+            				}
+            			}
+            		).start();;
+            } else {
+            	System.out.println("DELETE TMPFILE COMPLETE");
+            }
+            
 			session.getTransaction().commit();
 			
 			
