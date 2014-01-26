@@ -75,7 +75,6 @@
 	 			<img src="$request.contextPath/mdn-image/thumb/$item.imageSource.id?w=70&h=70&t=crop" alt="..." class="img-rounded">
 	 		</td>
 	 		<td>
-	 			<a href="$request.contextPath/test/thumbtest/$item.getId()">테스트링크</a>
 	 			<a href="$item.source">바로가기</a>
 	 		</td>
 	 		#if($sec.authorType == "ROLE_ADMIN")
@@ -163,7 +162,7 @@
 	 		#if($sec.authorType != "ROLE_UPLOADER")
 	 		<td>
 	 			#if($detailModifyStatus.containsValue("$item.id"))
-	 				수정중입니다.
+	 				$detailModifyStatusName.get("$item.id") 가 수정중입니다.
 	 			#else
 	 				<a class="btn btn-success" href="/admin/write/detail/$item.id">수정</a>
 	 			#end

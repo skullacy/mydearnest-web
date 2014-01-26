@@ -1,18 +1,16 @@
 package com.osquare.mydearnest.admin.web;
 
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,7 +48,6 @@ import com.osquare.mydearnest.post.validator.PostGradeValidator;
 import com.osquare.mydearnest.post.validator.PostUploadValidator;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.util.DetailModifyStatus;
-import com.osquare.mydearnest.util.handler.RedirectHandler;
 import com.osquare.mydearnest.util.image.dominant.DominantColor;
 import com.osquare.mydearnest.util.image.dominant.DominantColors;
 
@@ -311,7 +308,7 @@ public class WriteAdminController {
 		
 		while (postTags.hasNext()) {
 			String value = postTags.next().getValue();
-			if (value != null || value != "") postTagFlag = false;
+			if (value != null && value.trim() != "") postTagFlag = false;
 		}
 		
 		if (postTagFlag) {
@@ -324,9 +321,20 @@ public class WriteAdminController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 			DominantColor[] colors = DominantColors.getDominantColor(bufferedImage, 3, 0.1);
-			List<DominantColor> colorList = Arrays.asList(colors);
-			model.addAttribute("colors", colorList);
+			
+			TreeMap<Float, String> hexTree = new TreeMap<Float, String>();
+			List<String> hexes = new ArrayList<String>();
+			int colorsLength = colors.length;
+			for (int i = 0; i < colorsLength; i++) {
+				hexTree.put(colors[i].getPercentage(), colors[i].getRGBHex());
+			}
+			for (int i = 0; i < colorsLength; i++) {
+				hexes.add(hexTree.pollLastEntry().getValue());
+			}
+			
+			model.addAttribute("hexes", hexes);
 		}
 		
 		model.addAttribute("layout", "./shared/layout.admin.vm");

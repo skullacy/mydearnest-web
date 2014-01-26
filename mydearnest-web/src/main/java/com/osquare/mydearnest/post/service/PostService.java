@@ -10,6 +10,7 @@ import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostComment;
 import com.osquare.mydearnest.entity.PostGrade;
 import com.osquare.mydearnest.entity.PostLove;
+import com.osquare.mydearnest.entity.PostUserGrade;
 import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.profile.vo.CommentVO;
 
@@ -43,10 +44,15 @@ public interface PostService {
 	PostGrade updatePostGrade(Post post, Account account, PostVO postVO);
 	Post checkPostPublishable(Post post);
 	
+	PostUserGrade createPostUserGrade(Post post1, Account account, PostUserGrade postUserGrade);
+	PostUserGrade updatePostUserGrade(Post post1, Account account, PostUserGrade postUserGrade);
+	
 	Post removePostByMode(Long postId, String editMode, Long drawerId);
 	
 	Collection<PostGrade> getPostGradeByPost(Post post);
 	PostGrade getMyPostGradeByPost(Account account, Post post);
+	
+	Collection<PostUserGrade> getPostUserGradeByPost(Post post);
 	
 	Collection<PostComment> getCommentsByPost(Post post, Integer page);
 	PostComment createPostComment(Post post, Account account, String text);
