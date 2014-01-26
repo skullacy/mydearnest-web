@@ -60,6 +60,8 @@ public class ImageController {
 		if (height == null) height = 0L;
 		if (type == null || type.isEmpty()) type = "ratio";
 		
+		System.out.println("getThumbnail Start");
+		
 		ImageSource imageSource = fileService.getImageSource(imageId);
 		ImageSourceFile file = fileService.getSourceFile(imageSource, width, height, type);
 		

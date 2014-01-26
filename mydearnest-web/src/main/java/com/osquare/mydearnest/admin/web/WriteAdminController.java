@@ -318,6 +318,7 @@ public class WriteAdminController {
 			BufferedImage bufferedImage = null;
 			
 			try {
+				System.out.println(new URL(pm.get("web_url")+"/mdn-image/thumb/"+post.getImageSource().getId()+"?w=200&t=ratio"));
 				bufferedImage = ImageIO.read(new URL(pm.get("web_url")+"/mdn-image/thumb/"+post.getImageSource().getId()+"?w=200&t=ratio"));
 				
 			} catch (IOException e) {
