@@ -155,21 +155,26 @@ public class WriteAdminController {
 		Post post = postService.getPostById(postId);
 		
 		//본인이 올린 사진이 아닐경우 해당 메세지 리턴.
-		if(post.getAccount().getId() != account.getId()) {
+		//skullacy modified : 계정이 어드민인 경우는 그냥 진행 가능하게 코드 변동.
+		if( (post.getAccount().getId() == account.getId()) || "ROLE_ADMIN".equals(account.getRole()) ) {
+			//포스트 삭제시 한번 더 유효성 체크(권한검사)를 실행한다.
+			Boolean result = postService.deletePost(postId);
+			
+			if(result) {
+				document.put("success", true);
+				document.put("message", "1");
+			}
+			else {
+				document.put("message", 13);
+			}
+		}
+		else {
 			document.put("message", "12");
 			return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.FORBIDDEN);
 		}
 		
-		//포스트 삭제시 한번 더 유효성 체크(권한검사)를 실행한다.
-		Boolean result = postService.deletePost(postId);
 		
-		if(result) {
-			document.put("success", true);
-			document.put("message", "1");
-		}
-		else {
-			document.put("message", 13);
-		}
+		
 		return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.OK);
 	}
 	
