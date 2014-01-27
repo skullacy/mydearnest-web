@@ -768,7 +768,7 @@ public class PostServiceImpl implements PostService {
 						result = iter.next();
 						
 						//현재 수정중인 포스트가 아닌경우에 루프 탈출.
-						if(DetailModifyStatus.checkModifyStatus(result)) break;
+						if(DetailModifyStatus.checkModifyStatus(account, result)) break;
 					}
 				} else {
 					//Detail수정이 아닌경우 첫번째 객체 반환.

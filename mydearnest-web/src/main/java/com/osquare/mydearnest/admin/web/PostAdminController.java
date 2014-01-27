@@ -50,6 +50,8 @@ public class PostAdminController {
 		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 		Account account = accountService.findAccountById(principal.getAccountId());
 		
+		model.addAttribute("account", account);
+		
 		if (page == null) page = 1;
 		if (order == null) order = "createdAt";
 		

@@ -14,7 +14,7 @@ public class DetailModifyStatus {
 	
 	//현재 Account가 수정하고 있는 Post 갱신
 	public static Boolean updateModifyStatus(Account account, Post post) {
-		if(checkModifyStatus(post)) 
+		if(checkModifyStatus(account, post)) 
 			return setCurrentModify(account, post);
 		
 		return false;
@@ -41,16 +41,17 @@ public class DetailModifyStatus {
 		return false;
 	}
 	
-	public static Boolean checkModifyStatus(Post post) {
-		return checkModifyStatus(post.getId());
+	public static Boolean checkModifyStatus(Account account, Post post) {
+		return checkModifyStatus(account.getId(), post.getId());
 	}
 	
 	//해당 포스트를 수정하고 있는 계정이 있는지 체크
-	public static Boolean checkModifyStatus(long postId) {
+	public static Boolean checkModifyStatus(long accountId, long postId) {
 		HashMap<String, String> currentModify = getCurrentModify();
 		if(currentModify != null) {
 			for(String currentAccountId : currentModify.keySet()) {
-				if(currentModify.get(currentAccountId).equals(String.valueOf(postId))) return false;
+				if (String.valueOf(postId).equals(currentModify.get(String.valueOf(accountId)))) return true;
+				else if(currentModify.get(currentAccountId).equals(String.valueOf(postId))) return false;
 			}
 		}
 		return true;
