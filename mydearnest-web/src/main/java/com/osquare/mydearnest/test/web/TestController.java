@@ -3,14 +3,8 @@ package com.osquare.mydearnest.test.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -32,15 +26,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.junglebird.webframe.common.PropertiesManager;
 import com.junglebird.webframe.vo.SignedDetails;
 import com.osquare.mydearnest.account.service.AccountService;
+import com.osquare.mydearnest.admin.service.AdminPostService;
 import com.osquare.mydearnest.admin.service.AdminTagCateService;
 import com.osquare.mydearnest.entity.Account;
 import com.osquare.mydearnest.entity.Post;
 import com.osquare.mydearnest.entity.PostTag;
-import com.osquare.mydearnest.entity.TagCategory;
+import com.osquare.mydearnest.post.service.FileServiceImpl;
 import com.osquare.mydearnest.post.service.PostService;
 import com.osquare.mydearnest.post.vo.PostVO;
-import com.osquare.mydearnest.test.service.ColorTagUpdate;
-import com.osquare.mydearnest.util.DetailModifyStatus;
 import com.osquare.mydearnest.util.image.dominant.DominantColor;
 import com.osquare.mydearnest.util.image.dominant.DominantColors;
 
@@ -50,9 +43,9 @@ public class TestController {
 
 	@Autowired private PostService postService;
 	@Autowired private AccountService accountService;
-	@Autowired private ColorTagUpdate colorTagUpdate;
 	@Autowired private AdminTagCateService adminTagCateService;
 	@Autowired private PropertiesManager pm;
+	@Autowired private AdminPostService adminPostService;
 	
 	public static final double minDiff1 = 0.1;
 	public static final double minDiff2 = 0.9;
@@ -86,10 +79,7 @@ public class TestController {
 		return "test/index";
 	}
 
-	/**
-	 * @brief
-	 * 사진 평가 입력 화면
-	 */
+// post user grade
 /*	@RequestMapping(value = "/grade/{postId}", method = RequestMethod.GET)
 	public String insertPostUserGrade(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("postId") long postId) {
@@ -129,10 +119,7 @@ public class TestController {
 		return "test/grade";
 	}*/
 	
-	/**
-	 * @brief
-	 * 사진 평가 입력 처리
-	 */
+// 미작성 파트
 /*	@RequestMapping(value = "/grade/{postId}", method = RequestMethod.POST)
 	public String insertPostUserGrade(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("postId") Long postId,
@@ -174,114 +161,17 @@ public class TestController {
 		return "redirect:/grade/" +  post.getId();
 	}*/
 
-	private static Set<Long> postIdSet;
-	
-	@RequestMapping(value = "/posts" , method = RequestMethod.GET)
-	public String getWrongColorTags(Model model, HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/update/avgColor" , method = RequestMethod.GET)
+	public String updateAvgColor(Model model, HttpServletRequest request, HttpServletResponse response) {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
 		
-		List<PostTag> list = colorTagUpdate.getWrongColorTags();
-		postIdSet = new HashSet<Long>();
+		FileServiceImpl fileServiceImpl = new FileServiceImpl();
+		//fileServiceImpl.getAveColor(img);
 		
-		int listSize = list.size();
-		for (int i = 0; i < listSize-1 ; i++) {
-			long postId = list.get(i).getPost().getId();
-			if (postId == list.get(i+1).getPost().getId()) postIdSet.add(postId);
-		}
-				
-		System.out.println("Wrong post's id(" + postIdSet.size() + "): " + postIdSet);
-		
-		if (postIdSet.isEmpty()) {
-			return "redirect:/";
-		}
-		else {
-			return "redirect:/test/detail/"+postIdSet.iterator().next();			
-		}
+		return null;
 	}
 	
-	@RequestMapping(value = "/detail/{postId}" , method = RequestMethod.GET)
-	public String updateWorngColorTags(Model model, HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("postId") Long postId) {
-		
-		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Expires", "0");
-		
-		Post post = postService.getPostById(postId);
-		
-		Collection<TagCategory> tagCate = adminTagCateService.getTagCategories();
-		
-		model.addAttribute("tagcate", tagCate);
-		model.addAttribute("post", post);
-		model.addAttribute("postSetSize", postIdSet.size());
-
-		BufferedImage bufferedImage = null;
-		
-		try {
-			bufferedImage = ImageIO.read(new URL(pm.get("web_url")+"/mdn-image/thumb/"+post.getImageSource().getId()+"?w=200&t=ratio"));
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		DominantColor[] colors = DominantColors.getDominantColor(bufferedImage, 3, 0.1);
-		
-		TreeMap<Float, String> hexTree = new TreeMap<Float, String>();
-		List<String> hexes = new ArrayList<String>();
-		int colorsLength = colors.length;
-		for (int i = 0; i < colorsLength; i++) {
-			hexTree.put(colors[i].getPercentage(), colors[i].getRGBHex());
-		}
-		for (int i = 0; i < colorsLength; i++) {
-			hexes.add(hexTree.pollLastEntry().getValue());
-		}
-		
-		model.addAttribute("hexes", hexes);
-		
-		model.addAttribute("layout", "./shared/layout.admin.vm");
-		
-		return "test/post_detail";
-	}
-	
-	@RequestMapping(value = "/detail/{postId}" , method = RequestMethod.POST)
-	public String updateWorngColorTags(Model model, HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "redirectType", required = false) String redirectType,
-			@PathVariable("postId") Long postId,
-			@ModelAttribute("command") PostVO postVO,
-			BindingResult result) {
-		
-		model.addAttribute("success", false);
-		
-		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
-		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
-
-		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
-		Account account = accountService.findAccountById(principal.getAccountId());
-		
-		Post post = postService.getPostById(postId);
-
-		model.addAttribute("account", account);
-		model.addAttribute("command", postVO);
-		
-		if (result.hasErrors()) {
-			System.out.println("Write ERRORaslgdk;jasdl;fkasf");
-			System.out.println(result.getAllErrors());
-			model.addAttribute("errors", result.getAllErrors());
-		}
-		else {
-			// null check 하지 않음: 수정용이니 Tag가 이미 달려있을거라 생각.
-			Post postResult = postService.createPostDetail(post, post.getPostTag().iterator().next().getAccount(), postVO);
-			if ( postResult == null) {
-				model.addAttribute("success", false);
-			}
-			else {
-				model.addAttribute("success", true);
-			}
-		}
-		
-		return "redirect:/test/posts";
-	}
 }
