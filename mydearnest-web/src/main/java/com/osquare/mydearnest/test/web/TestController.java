@@ -1,39 +1,35 @@
 package com.osquare.mydearnest.test.web;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.junglebird.webframe.common.PropertiesManager;
-import com.junglebird.webframe.vo.SignedDetails;
-import com.osquare.mydearnest.account.service.AccountService;
-import com.osquare.mydearnest.admin.service.AdminPostService;
-import com.osquare.mydearnest.admin.service.AdminTagCateService;
-import com.osquare.mydearnest.entity.Account;
+import com.mortennobel.imagescaling.AdvancedResizeOp;
+import com.mortennobel.imagescaling.ResampleOp;
+import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
-import com.osquare.mydearnest.entity.PostTag;
-import com.osquare.mydearnest.post.service.FileServiceImpl;
-import com.osquare.mydearnest.post.service.PostService;
-import com.osquare.mydearnest.post.vo.PostVO;
 import com.osquare.mydearnest.util.image.dominant.DominantColor;
 import com.osquare.mydearnest.util.image.dominant.DominantColors;
 
@@ -41,11 +37,12 @@ import com.osquare.mydearnest.util.image.dominant.DominantColors;
 @RequestMapping("/test")
 public class TestController {
 
-	@Autowired private PostService postService;
-	@Autowired private AccountService accountService;
-	@Autowired private AdminTagCateService adminTagCateService;
+	//@Autowired private PostService postService;
+	//@Autowired private AccountService accountService;
+	//@Autowired private AdminTagCateService adminTagCateService;
+	//@Autowired private AdminPostService adminPostService;
+	@Resource private SessionFactory sessionFactory;
 	@Autowired private PropertiesManager pm;
-	@Autowired private AdminPostService adminPostService;
 	
 	public static final double minDiff1 = 0.1;
 	public static final double minDiff2 = 0.9;
@@ -161,17 +158,108 @@ public class TestController {
 		return "redirect:/grade/" +  post.getId();
 	}*/
 
-	@RequestMapping(value = "/update/avgColor" , method = RequestMethod.GET)
-	public String updateAvgColor(Model model, HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/updateAvgColor" , method = RequestMethod.GET)
+	public void updateAvgColor(Model model, HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("========= start updateAvgColor() ============================");
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
 		
-		FileServiceImpl fileServiceImpl = new FileServiceImpl();
-		//fileServiceImpl.getAveColor(img);
+		List<Long> imageIdList =  getImageIdList();
 		
-		return null;
+		Iterator<Long> iterator = imageIdList.iterator();
+		
+		while (iterator.hasNext()) {
+			updateAvgColor(iterator.next());			
+		}
+		
+		System.out.println("========= end of updateAvgColor() ============================");
 	}
 	
+	public List<Long> getImageIdList() {
+		List<Post> postList = null; 
+		List<Long> imageIdList = new ArrayList<Long>();
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria criteria = session.createCriteria(Post.class);
+			
+			postList = criteria.list();
+			
+			Iterator<Post> iterator = postList.iterator();
+			
+			while (iterator.hasNext()) {
+				imageIdList.add(iterator.next().getImageSource().getId());
+			}
+			
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+		return imageIdList;
+	}
+	
+	public void updateAvgColor(long imageId) {
+		TestController testController = new TestController();
+		StringBuilder builder = new StringBuilder();
+		ImageSource imageSource = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.getTransaction().begin();
+		
+		try {
+			Criteria criteria = session.createCriteria(ImageSource.class).add(Restrictions.eq("id", imageId));
+			imageSource = (ImageSource) criteria.uniqueResult();
+			
+			builder.append(pm.get("amazon.fs.serverUrl")).append("/").append(imageSource.getStoragePath())
+			.append("/").append(imageSource.getId()).append("/source");
+			
+			System.out.println("img URL: " + builder);
+			
+			imageSource.setAveColor(testController.getAveColor(new URL(builder.toString())));
+			session.update(imageSource);
+
+			session.getTransaction().commit();
+			
+		} catch(Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+		}
+	}
+	
+	public String getAveColor(URL img) {
+		String rgbHex = null;
+		
+		try {
+			ResampleOp resampleOp = new ResampleOp(3, 3);
+			resampleOp.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Normal);
+			BufferedImage tdestImg = resampleOp.filter(ImageIO.read(img), null);
+			
+			int red = 0;
+			int green = 0;
+			int blue = 0;
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					int rgbColor = tdestImg.getRGB(i, j);
+					Color color = new Color(rgbColor);
+					red += color.getRed();
+					green += color.getGreen();
+					blue += color.getBlue();
+				}
+			}
+			
+	        rgbHex = String.format("#%02x%02x%02x", red/9, green/9, blue/9);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			
+			rgbHex = "#FFFFFF";
+		}
+		
+		return rgbHex;
+        
+	}
 }
