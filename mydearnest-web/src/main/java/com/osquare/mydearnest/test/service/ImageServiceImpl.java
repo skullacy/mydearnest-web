@@ -101,34 +101,25 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public boolean deleteThumbs() {
-		/*List<ImageSource> imageSourceList = getImageSourceList();
-		Iterator<ImageSource> iterator = imageSourceList.iterator();
-		
-		while (iterator.hasNext()) {
-			deleteThumbs(iterator.next().getId());
-		}*/
-		
 		String bucketName = pm.get("amazon.fs.bucketName");
+		
 		AmazonS3Client fileStorageServer = mdnAmazonManager.getAmazonS3();
 		
 		ObjectListing listing = fileStorageServer.listObjects(bucketName);
 		List<S3ObjectSummary> keyList = listing.getObjectSummaries();
 
-		for (S3ObjectSummary s3ObjectSummary : keyList) {
-			String key = s3ObjectSummary.getKey();
-			System.out.println("Key : " + key);
-		}
+		deleteThumbObject(fileStorageServer, bucketName, keyList);
 		
 		return true;
 	}
 	
 	@Override
-	public boolean deleteThumbs(long imageId) {
-		ImageSource imageSource = fileService.getImageSource(imageId);
+	public boolean deleteThumbs(long postId) {
+		ImageSource imageSource = postService.getPostById(postId).getImageSource();
 		
 		String bucketName = pm.get("amazon.fs.bucketName");
+		
 		StringBuilder prefix = new StringBuilder();
-
 		prefix.append(imageSource.getStoragePath()).append("/").append(imageSource.getId()).append("/");
 		
 		AmazonS3Client fileStorageServer = mdnAmazonManager.getAmazonS3();
@@ -136,6 +127,12 @@ public class ImageServiceImpl implements ImageService {
 		ObjectListing listing = fileStorageServer.listObjects(bucketName, prefix.toString());
 		List<S3ObjectSummary> keyList = listing.getObjectSummaries();
 
+		deleteThumbObject(fileStorageServer, bucketName, keyList);
+
+		return true;
+	}
+
+	public void deleteThumbObject(AmazonS3Client fileStorageServer, String bucketName, List<S3ObjectSummary> keyList) {
 		for (S3ObjectSummary s3ObjectSummary : keyList) {
 			String key = s3ObjectSummary.getKey();
 			
@@ -144,8 +141,5 @@ public class ImageServiceImpl implements ImageService {
 				System.out.println("Deleted file: " + key);
 			}
 		}
-
-		return true;
 	}
-
 }

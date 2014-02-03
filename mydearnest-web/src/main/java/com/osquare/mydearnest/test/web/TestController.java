@@ -145,7 +145,7 @@ public class TestController {
 
 	@RequestMapping(value = "/updateAvgColor" , method = RequestMethod.GET)
 	public void updateAvgColor(Model model, HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("========= start modifyAvgColor() ============================");
+		System.out.println("========= start updateAvgColor() ============================");
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
@@ -159,7 +159,7 @@ public class TestController {
 			imageService.updateAvgColor(iterator.next().getId());			
 		}
 		
-		System.out.println("========= end of modifyAvgColor() ============================");
+		System.out.println("========= end of updateAvgColor() ============================");
 	}
 	
 	@RequestMapping(value = "/deleteThumbs" , method = RequestMethod.GET)
