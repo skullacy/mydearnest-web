@@ -198,7 +198,8 @@ public class FileServiceImpl implements FileService {
 			
 			result.setByteLength(filedata.getSize());
 			
-			String file_location = result.getStoragePath() + "/" + result.getId();
+			String file_location = new StringBuilder().append("source/")
+					.append(result.getStoragePath()).append("/").append(result.getId()).toString();
 			
 			final File tmpFile = File.createTempFile("mdn", ".upload");
 			
@@ -287,7 +288,8 @@ public class FileServiceImpl implements FileService {
 		else return null;
 		
 		//S3에 저장되는 경로 조합.
-		String filePath = imageSource.getStoragePath() + "/" + imageSource.getId();
+		String filePath = new StringBuilder().append(type).append("/")
+				.append(imageSource.getStoragePath()).append("/").append(imageSource.getId()).toString();
 		String fileLocation = filePath + "/" + fileName;
 		
 		//필요한 변수들
@@ -369,7 +371,8 @@ public class FileServiceImpl implements FileService {
 				//원본이미지만 있는상황이므로 썸네일을 생성한 후, S3에 저장.
 				
 				//S3에 저장되는 경로 조합.
-				String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
+				String file_location = new StringBuilder().append("thumbnail").append("/")
+						.append(imageSource.getStoragePath()).append("/").append(imageSource.getId()).toString();
 				//Thumbnail 파일명 조합.
 				String thumbFileName = width + "x" + height + "_" + thumbnail_type + ".jpg";
 				
