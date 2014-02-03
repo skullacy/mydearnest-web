@@ -1,5 +1,6 @@
 package com.osquare.mydearnest.post.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+
 
 
 
@@ -743,6 +745,7 @@ public class PostServiceImpl implements PostService {
 			
 			if("grade".equals(type) && postList != null) {
 				iterator = postList.iterator();
+				postList = new ArrayList<Post>();
 				
 				while(iterator.hasNext()) {
 					Post checkPost = iterator.next();
@@ -750,11 +753,14 @@ public class PostServiceImpl implements PostService {
 						if(getMyPostGradeByPost(account, checkPost) != null) {
 							iterator.remove();
 						}
+						else {
+							postList.add(checkPost);
+						}
 					}
 				}
 			}
 			
-			if((iterator != null && !iterator.hasNext()) || postList == null) {
+			if(postList == null) {
 				return null;
 			}
 			else {

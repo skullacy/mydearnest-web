@@ -144,8 +144,10 @@
 			$(this).siblings('input').val(ui.value);
 			syncSliderWithText();
 		}
+	});
 	
-	
+	$('.sliderVertical').each(function(){
+		$(this).slider({value: $(this).siblings('input').val()});
 	});
 	
 	$('.feelValue').keyup(syncSliderWithText);
