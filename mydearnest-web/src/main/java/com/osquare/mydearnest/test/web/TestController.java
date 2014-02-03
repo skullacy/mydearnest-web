@@ -191,4 +191,17 @@ public class TestController {
 		System.out.println("========= end of deleteThumbs() ============================");
 	}
 	
+	@RequestMapping(value = "/copySources" , method = RequestMethod.GET)
+	public void copySources(Model model, HttpServletRequest request, HttpServletResponse response) {
+		
+		System.out.println("========= start copySources() ============================");
+		
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Expires", "0");
+		
+		imageService.copySources();
+
+		System.out.println("========= end of copySources() ============================");
+	}	
 }

@@ -136,10 +136,31 @@ public class ImageServiceImpl implements ImageService {
 		for (S3ObjectSummary s3ObjectSummary : keyList) {
 			String key = s3ObjectSummary.getKey();
 			
-			if (!key.endsWith("source")) {
+			if (!key.startsWith("source")) {
 				fileStorageServer.deleteObject(bucketName, key);
 				System.out.println("Deleted file: " + key);
 			}
 		}
+	}
+
+	@Override
+	public boolean copySources() {
+		String bucketName = pm.get("amazon.fs.bucketName");
+		
+		AmazonS3Client fileStorageServer = mdnAmazonManager.getAmazonS3();
+		
+		ObjectListing listing = fileStorageServer.listObjects(bucketName);
+		List<S3ObjectSummary> keyList = listing.getObjectSummaries();
+
+		for (S3ObjectSummary s3ObjectSummary : keyList) {
+			String key = s3ObjectSummary.getKey();
+			
+			if (key.endsWith("source")) {
+				fileStorageServer.copyObject(bucketName, key, bucketName, "source/" + key);
+				System.out.println("Copied file: " + key);
+			}
+		}
+		
+		return true;
 	}
 }
