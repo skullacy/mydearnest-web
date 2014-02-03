@@ -66,10 +66,15 @@ public class AdminPostServiceImpl implements AdminPostService {
 		try {
 			cr = session.createCriteria(Post.class)
 					.setFetchMode("account", FetchMode.JOIN)
-					.addOrder(Order.desc(order))
-					.addOrder(Order.desc("createdAt"))
 					.add(Restrictions.isNull("deletedOn"))
 					.setMaxResults(10).setFirstResult((page - 1) * 10);
+			
+			if (order != null && order != "") {
+				cr.addOrder(Order.desc(order));
+			}
+
+			cr.addOrder(Order.desc("createdAt"));
+			
 					
 			if(checksum == 1) {
 				cr.add(Restrictions.eq("checkSum", checksum == 1 ? true : false));
@@ -85,7 +90,6 @@ public class AdminPostServiceImpl implements AdminPostService {
 				if(tmpPost.getPostTagCount() > 0) Hibernate.initialize(tmpPost.getPostTag());
 				if(tmpPost.getPhotoTagCount() > 0) Hibernate.initialize(tmpPost.getPhotoTags());
 			}
-			
 			
 			session.getTransaction().commit();
 		}
