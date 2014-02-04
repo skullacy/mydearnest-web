@@ -1640,7 +1640,7 @@ public class PostServiceImpl implements PostService {
 			SignedDetails details = (SignedDetails) authentication.getPrincipal();
 				
 			Post post = (Post) session.get(Post.class, postId);
-			if (post.getAccount().getId() != details.getAccountId()) throw new Exception();
+			
 			post.setDeletedOn(new Date());
 			session.merge(post);
 			

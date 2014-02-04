@@ -166,6 +166,7 @@ public class WriteAdminController {
 			}
 			else {
 				document.put("message", 13);
+				return new ResponseEntity<String>(document.toString(), responseHeaders, HttpStatus.FORBIDDEN);
 			}
 		}
 		else {
