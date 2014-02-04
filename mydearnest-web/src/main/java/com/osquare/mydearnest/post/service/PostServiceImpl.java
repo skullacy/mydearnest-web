@@ -221,7 +221,8 @@ public class PostServiceImpl implements PostService {
 					.setProjection(Projections.rowCount());
 			
 			Long maxGrader = (Long) cr.uniqueResult();
-			
+
+			maxGrader = maxGrader - 2;
 			
 			cr = session.createCriteria(PostTag.class)
 					.add(Restrictions.eq("post", post))
@@ -756,6 +757,9 @@ public class PostServiceImpl implements PostService {
 						else {
 							postList.add(checkPost);
 						}
+					}
+					else {
+						postList.add(checkPost);
 					}
 				}
 			}
