@@ -161,8 +161,14 @@
 	 		
 	 		#if($sec.authorType != "ROLE_UPLOADER")
 	 		<td>
-	 			#if($detailModifyStatus.containsValue("$item.id"))
-	 				$detailModifyStatusName.get("$item.id") 가 수정중입니다.
+	 			#if ($detailModifyStatus.get("$account.id") == $item.id)
+	 				$detailModifyStatusName.get("$item.id") 이(가) 수정중입니다.<br/>
+	 				<a class="btn btn-success" href="/admin/write/detail/$item.id">수정</a>
+	 				#if($sec.authorType == "ROLE_ADMIN")
+	 					<a class="btn btn-warning deletePost" href="#" data-itemid="$item.id">삭제</a>
+	 				#end
+	 			#elseif($detailModifyStatus.containsValue("$item.id"))
+	 				$detailModifyStatusName.get("$item.id") 이(가) 수정중입니다.
 	 			#else
 	 				<a class="btn btn-success" href="/admin/write/detail/$item.id">수정</a>
 	 				#if($sec.authorType == "ROLE_ADMIN")

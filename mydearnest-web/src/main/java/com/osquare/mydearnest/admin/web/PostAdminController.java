@@ -50,8 +50,9 @@ public class PostAdminController {
 		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
 		Account account = accountService.findAccountById(principal.getAccountId());
 		
+		model.addAttribute("account", account);
+		
 		if (page == null) page = 1;
-		if (order == null) order = "createdAt";
 		
 		//1 : 모든 조건 충족된 포스트, 0: 아직 게시조건에 충족안되는 포스트, 2: 모든 포스
 		if (checksum == null) checksum = 2;

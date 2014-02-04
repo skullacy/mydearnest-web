@@ -1,5 +1,6 @@
 package com.osquare.mydearnest.post.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+
 
 
 
@@ -219,7 +221,8 @@ public class PostServiceImpl implements PostService {
 					.setProjection(Projections.rowCount());
 			
 			Long maxGrader = (Long) cr.uniqueResult();
-			
+
+			maxGrader = maxGrader - 2;
 			
 			cr = session.createCriteria(PostTag.class)
 					.add(Restrictions.eq("post", post))
@@ -743,6 +746,7 @@ public class PostServiceImpl implements PostService {
 			
 			if("grade".equals(type) && postList != null) {
 				iterator = postList.iterator();
+				postList = new ArrayList<Post>();
 				
 				while(iterator.hasNext()) {
 					Post checkPost = iterator.next();
@@ -750,11 +754,17 @@ public class PostServiceImpl implements PostService {
 						if(getMyPostGradeByPost(account, checkPost) != null) {
 							iterator.remove();
 						}
+						else {
+							postList.add(checkPost);
+						}
+					}
+					else {
+						postList.add(checkPost);
 					}
 				}
 			}
 			
-			if((iterator != null && !iterator.hasNext()) || postList == null) {
+			if(postList == null) {
 				return null;
 			}
 			else {
@@ -768,7 +778,7 @@ public class PostServiceImpl implements PostService {
 						result = iter.next();
 						
 						//현재 수정중인 포스트가 아닌경우에 루프 탈출.
-						if(DetailModifyStatus.checkModifyStatus(result)) break;
+						if(DetailModifyStatus.checkModifyStatus(account, result)) break;
 					}
 				} else {
 					//Detail수정이 아닌경우 첫번째 객체 반환.
@@ -1630,7 +1640,7 @@ public class PostServiceImpl implements PostService {
 			SignedDetails details = (SignedDetails) authentication.getPrincipal();
 				
 			Post post = (Post) session.get(Post.class, postId);
-			if (post.getAccount().getId() != details.getAccountId()) throw new Exception();
+			
 			post.setDeletedOn(new Date());
 			session.merge(post);
 			

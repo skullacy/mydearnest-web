@@ -42,6 +42,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.junglebird.webframe.common.PropertiesManager;
+import com.mortennobel.imagescaling.AdvancedResizeOp;
+import com.mortennobel.imagescaling.ResampleOp;
 import com.osquare.mydearnest.entity.Folder;
 import com.osquare.mydearnest.entity.ImageSource;
 import com.osquare.mydearnest.entity.Post;
@@ -196,7 +198,8 @@ public class FileServiceImpl implements FileService {
 			
 			result.setByteLength(filedata.getSize());
 			
-			String file_location = result.getStoragePath() + "/" + result.getId();
+			String file_location = new StringBuilder().append("source/")
+					.append(result.getStoragePath()).append("/").append(result.getId()).toString();
 			
 			final File tmpFile = File.createTempFile("mdn", ".upload");
 			
@@ -285,7 +288,8 @@ public class FileServiceImpl implements FileService {
 		else return null;
 		
 		//S3에 저장되는 경로 조합.
-		String filePath = imageSource.getStoragePath() + "/" + imageSource.getId();
+		String filePath = new StringBuilder().append(type).append("/")
+				.append(imageSource.getStoragePath()).append("/").append(imageSource.getId()).toString();
 		String fileLocation = filePath + "/" + fileName;
 		
 		//필요한 변수들
@@ -367,7 +371,8 @@ public class FileServiceImpl implements FileService {
 				//원본이미지만 있는상황이므로 썸네일을 생성한 후, S3에 저장.
 				
 				//S3에 저장되는 경로 조합.
-				String file_location = imageSource.getStoragePath() + "/" + imageSource.getId();
+				String file_location = new StringBuilder().append("thumbnail").append("/")
+						.append(imageSource.getStoragePath()).append("/").append(imageSource.getId()).toString();
 				//Thumbnail 파일명 조합.
 				String thumbFileName = width + "x" + height + "_" + thumbnail_type + ".jpg";
 				
@@ -615,14 +620,24 @@ public class FileServiceImpl implements FileService {
 		
 		String rgbHex;
 		try {
-			BufferedImage bufferedImg = ImageIO.read(img.toURI().toURL());
+			ResampleOp resampleOp = new ResampleOp(3, 3);
+			resampleOp.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Normal);
+			BufferedImage tdestImg = resampleOp.filter(ImageIO.read(img.toURI().toURL()), null);
 			
-			BufferedImage tdestImg = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
-
-			Graphics2D g = tdestImg.createGraphics();
-			g.drawImage(bufferedImg, 0, 0, 1, 1, null);
+			int red = 0;
+			int green = 0;
+			int blue = 0;
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					int rgbColor = tdestImg.getRGB(i, j);
+					Color color = new Color(rgbColor);
+					red += color.getRed();
+					green += color.getGreen();
+					blue += color.getBlue();
+				}
+			}
 			
-	        rgbHex = "#"+Integer.toHexString(tdestImg.getRGB(0, 0)).substring(2);
+	        rgbHex = String.format("#%02x%02x%02x", red/9, green/9, blue/9);
 		}
 		catch(Exception e) {
 			e.printStackTrace();

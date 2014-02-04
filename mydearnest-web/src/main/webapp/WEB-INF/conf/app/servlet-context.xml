@@ -9,6 +9,11 @@
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
+	<bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView">
+		<property name="contentType" value="application/json;charset=UTF-8"/>
+	</bean>
+	<bean id="beanNameResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+	
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 	
 	<bean id="propertiesManager" class="com.junglebird.webframe.common.PropertiesManager">
@@ -85,6 +90,7 @@
 						<value>/images/**</value>
 						<value>/mdn-image/**</value>
 						<value>/test/**</value>
+						<value>/json/**</value>
 					</list>
 				</property>
 			</bean>
