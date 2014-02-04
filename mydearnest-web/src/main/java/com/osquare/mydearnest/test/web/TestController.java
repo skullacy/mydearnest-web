@@ -33,7 +33,7 @@ public class TestController {
 	//@Autowired private AdminPostService adminPostService;
 	@Autowired private ImageService imageService;
 	
-	public static final double minDiff1 = 0.1;
+	/*public static final double minDiff1 = 0.1;
 	public static final double minDiff2 = 0.9;
 	
 	@RequestMapping("/index/{testId}")
@@ -59,7 +59,7 @@ public class TestController {
 		model.addAttribute("file", "/images/test/"+aFile.getName());
 		
 		return "test/index";
-	}
+	}*/
 
 // post user grade
 /*	@RequestMapping(value = "/grade/{postId}", method = RequestMethod.GET)
@@ -143,7 +143,7 @@ public class TestController {
 		return "redirect:/grade/" +  post.getId();
 	}*/
 
-	@RequestMapping(value = "/updateAvgColor" , method = RequestMethod.GET)
+	/*@RequestMapping(value = "/updateAvgColor" , method = RequestMethod.GET)
 	public void updateAvgColor(Model model, HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("========= start updateAvgColor() ============================");
 		
@@ -160,7 +160,7 @@ public class TestController {
 		}
 		
 		System.out.println("========= end of updateAvgColor() ============================");
-	}
+	}*/
 	
 	@RequestMapping(value = "/deleteThumbs" , method = RequestMethod.GET)
 	public void deleteThumbs(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -176,7 +176,7 @@ public class TestController {
 		System.out.println("========= end of deleteThumbs() ============================");
 	}
 	
-	@RequestMapping(value = "/deleteThumbs/{postId}" , method = RequestMethod.GET)
+	/*@RequestMapping(value = "/deleteThumbs/{postId}" , method = RequestMethod.GET)
 	public void deleteThumbs(Model model, HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("postId") Long postId) {
 		
@@ -189,9 +189,9 @@ public class TestController {
 		imageService.deleteThumbs(postId);
 
 		System.out.println("========= end of deleteThumbs() ============================");
-	}
+	}*/
 	
-	@RequestMapping(value = "/copySources" , method = RequestMethod.GET)
+	/*@RequestMapping(value = "/copySources" , method = RequestMethod.GET)
 	public void copySources(Model model, HttpServletRequest request, HttpServletResponse response) {
 		
 		System.out.println("========= start copySources() ============================");
@@ -203,5 +203,5 @@ public class TestController {
 		imageService.copySources();
 
 		System.out.println("========= end of copySources() ============================");
-	}	
+	}*/
 }

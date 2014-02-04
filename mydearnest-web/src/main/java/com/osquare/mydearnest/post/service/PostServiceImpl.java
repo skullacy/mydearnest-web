@@ -221,8 +221,6 @@ public class PostServiceImpl implements PostService {
 					.setProjection(Projections.rowCount());
 			
 			Long maxGrader = (Long) cr.uniqueResult();
-
-			maxGrader = maxGrader - 2;
 			
 			cr = session.createCriteria(PostTag.class)
 					.add(Restrictions.eq("post", post))
@@ -231,7 +229,7 @@ public class PostServiceImpl implements PostService {
 			Long postTagCount = (Long) cr.uniqueResult();
 			
 			Boolean checkSum = (
-						post.getGradeCount() == maxGrader &&
+						post.getGradeCount() >= maxGrader - 2 &&
 						post.getSpaceType() >= 0 &&
 						post.getTagSize() >= 0 &&
 						post.getTagTone() >= 0 &&
@@ -746,20 +744,16 @@ public class PostServiceImpl implements PostService {
 			
 			if("grade".equals(type) && postList != null) {
 				iterator = postList.iterator();
-				postList = new ArrayList<Post>();
 				
 				while(iterator.hasNext()) {
 					Post checkPost = iterator.next();
 					if(checkPost.getGradeCount() > 0) {
-						if(getMyPostGradeByPost(account, checkPost) != null) {
-							iterator.remove();
-						}
-						else {
-							postList.add(checkPost);
+						if(getMyPostGradeByPost(account, checkPost) == null) {
+							return checkPost;
 						}
 					}
 					else {
-						postList.add(checkPost);
+						return checkPost;
 					}
 				}
 			}

@@ -113,7 +113,7 @@ public class ImageServiceImpl implements ImageService {
 		return true;
 	}
 	
-	@Override
+	/*@Override
 	public boolean deleteThumbs(long postId) {
 		ImageSource imageSource = postService.getPostById(postId).getImageSource();
 		
@@ -130,20 +130,20 @@ public class ImageServiceImpl implements ImageService {
 		deleteThumbObject(fileStorageServer, bucketName, keyList);
 
 		return true;
-	}
+	}*/
 
 	public void deleteThumbObject(AmazonS3Client fileStorageServer, String bucketName, List<S3ObjectSummary> keyList) {
 		for (S3ObjectSummary s3ObjectSummary : keyList) {
 			String key = s3ObjectSummary.getKey();
 			
-			if (!key.startsWith("source")) {
+			if (key.startsWith("source") && !key.endsWith("source")) {
 				fileStorageServer.deleteObject(bucketName, key);
 				System.out.println("Deleted file: " + key);
 			}
 		}
 	}
 
-	@Override
+	/*@Override
 	public boolean copySources() {
 		String bucketName = pm.get("amazon.fs.bucketName");
 		
@@ -162,5 +162,5 @@ public class ImageServiceImpl implements ImageService {
 		}
 		
 		return true;
-	}
+	}*/
 }

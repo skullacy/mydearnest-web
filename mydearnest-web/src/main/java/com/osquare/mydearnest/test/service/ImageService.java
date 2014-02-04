@@ -10,6 +10,6 @@ public interface ImageService {
 	boolean updateAvgColor(long imageId);
 	String getAvgColor(URL img);
 	boolean deleteThumbs();
-	boolean deleteThumbs(long postId);
-	boolean copySources();
+	//boolean deleteThumbs(long postId);
+	//boolean copySources();
 }
