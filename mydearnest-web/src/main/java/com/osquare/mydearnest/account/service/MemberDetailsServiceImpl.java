@@ -61,12 +61,7 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
 			authorities.add(new GrantedAuthorityImpl(role));
 		}
 
-		JSONObject userData = new JSONObject();
-		userData.put("user_pk", account.getId());
-		userData.put("user_name", account.getName());
-		userData.put("user_image", account.getImageId());
-		
-		SignedDetails user = new SignedDetails(account.getEmail(), account.getPassword(), authorities, userData);
+		SignedDetails user = new SignedDetails(authorities, account);
 		return user;
 		
 	}
