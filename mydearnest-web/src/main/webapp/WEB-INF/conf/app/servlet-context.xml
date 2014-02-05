@@ -78,8 +78,8 @@
 						<value>*.html</value>
 						<value>*.json</value>
 						<value>*.do</value>
-						<value>/admin*</value>
 						<value>/auth/*</value>
+						<value>/admin*</value>
 						<value>/social/*</value>
 						<value>/</value>
 						<value>/add-item*</value>
@@ -92,7 +92,9 @@
 						<value>/test/**</value>
 						<value>/json/**</value>
 					</list>
-				</property>
+				</property><!-- 
+				<property name="specifiedPathes">
+				</property> -->
 			</bean>
 		</mvc:interceptor>
     </mvc:interceptors>

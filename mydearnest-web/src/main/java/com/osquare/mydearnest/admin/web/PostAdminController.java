@@ -45,10 +45,7 @@ public class PostAdminController {
 			@RequestParam(value="order", required = false) String order) {
 		
 		Authentication authentication = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
-		if (!(authentication.getPrincipal() instanceof SignedDetails)) return "shared/required.login";
-
-		SignedDetails principal = (SignedDetails) authentication.getPrincipal();
-		Account account = accountService.findAccountById(principal.getAccountId());
+		Account account = ((SignedDetails) authentication.getPrincipal()).getAccount();
 		
 		model.addAttribute("account", account);
 		

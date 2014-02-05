@@ -41,7 +41,7 @@ public class VelocitySecUser {
 		Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (obj instanceof UserDetails) {
-			return ((SignedDetails) obj).getUserData().getString("user_name");
+			return ((SignedDetails) obj).getAccount().getName();
 		} else {
 			return "Guest";
 		}

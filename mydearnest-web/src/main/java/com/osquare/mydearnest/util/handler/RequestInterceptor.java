@@ -17,40 +17,37 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.junglebird.webframe.common.PropertiesManager;
 import com.junglebird.webframe.vo.SignedDetails;
+import com.osquare.mydearnest.entity.Account;
 
 public class RequestInterceptor extends HandlerInterceptorAdapter {
 	
 	@Autowired private PropertiesManager pm;
 
-	private List<String> excludePathes = new ArrayList<String>();
 	private Map<String, String> excludeParams = new HashMap<String, String>();
-
-	public List<String> getExcludePathes() {
-		return excludePathes;
-	}
-
-	public void setExcludePathes(List<String> excludePathes) {
-		this.excludePathes = excludePathes;
-	}
+	private List<String> excludePathes = new ArrayList<String>();
+	private List<String> specifiedPathes = new ArrayList<String>();
 	
 	public Map<String, String> getExcludeParams() {
 		return excludeParams;
 	}
-
 	public void setExcludeParams(Map<String, String> excludeParams) {
 		this.excludeParams = excludeParams;
+	}
+	public List<String> getExcludePathes() {
+		return excludePathes;
+	}
+	public void setExcludePathes(List<String> excludePathes) {
+		this.excludePathes = excludePathes;
+	}
+	public List<String> getSpecifiedPathes() {
+		return specifiedPathes;
+	}
+	public void setSpecifiedPathes(List<String> specifiedPathes) {
+		this.specifiedPathes = specifiedPathes;
 	}
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-		request.setAttribute("https_uri", pm.get("https_url"));
-		request.setAttribute("web_url", pm.get("web_url"));
-		
-		// 확장자 있으면 일단 PASS!
-		
-		if (request.getPathInfo().lastIndexOf(".ajax") >= 0) return super.preHandle(request, response, handler);
-		if (request.getPathInfo().lastIndexOf(".fb") >= 0) return super.preHandle(request, response, handler);
 		
 		boolean isExclude = false;
 
@@ -76,18 +73,18 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 		}
 		if (isExclude) return super.preHandle(request, response, handler);
 		
-		String context = request.getHeader("context");
-		Authentication authAccount = ((SecurityContext) SecurityContextHolder.getContext()).getAuthentication();
+		request.setAttribute("https_uri", pm.get("https_url"));
+		request.setAttribute("web_url", pm.get("web_url"));
 		
-		if(authAccount.getPrincipal() instanceof SignedDetails)
-		{
-			request.setAttribute("user", (SignedDetails)authAccount.getPrincipal());
-			request.setAttribute("user_id", ((SignedDetails)authAccount.getPrincipal()).getAccountId());
-		}
+		if (request.getPathInfo().lastIndexOf(".ajax") >= 0) return super.preHandle(request, response, handler);
+		if (request.getPathInfo().lastIndexOf(".fb") >= 0) return super.preHandle(request, response, handler);
 		
 		request.setCharacterEncoding("UTF-8");
+		
 		if(!request.getMethod().equals("GET")) 
 			return super.preHandle(request, response, handler);
+		
+		String context = request.getHeader("context");
 		
 		if (context != null && context.contains("application/mxb-xhtml")) {
 			request.setAttribute("layout", "shared/layout.blank.vm");
