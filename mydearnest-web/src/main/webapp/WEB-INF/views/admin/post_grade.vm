@@ -1,7 +1,7 @@
 <h2>느낌평가하기</h2>
 <style>
 	.photocontainer {
-    	width:400px;
+    	width:600px;
     	height:1000px;
     	position:relative;
     	display:inline-block;
@@ -20,7 +20,7 @@
 </style>
 
 <div class="photocontainer">
-<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="400" style="width:400px" />
+<img src="$request.contextPath/mdn-image/get/$post.imageSource.id" width="600" style="width:600px" />
 </div>		
 <div id="radarChart"></div>
 <form action="$request.contextPath/admin/write/grade/$post.id"  class="form-inline" role="form" method="post" id="data_form" onkeypress="return event.keyCode!=13" onsubmit="return checkit(this);">
