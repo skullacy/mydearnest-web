@@ -726,9 +726,6 @@ public class PostServiceImpl implements PostService {
 				cr.add(Restrictions.eq("checkSum", checksum == 1 ? true : false));
 			}
 			
-			
-			
-			
 			if("phototag".equals(type)) {
 				cr.add(Restrictions.eq("photoTagCount", Long.valueOf(0)));
 			}
@@ -743,6 +740,7 @@ public class PostServiceImpl implements PostService {
 			Iterator<Post> iterator = null;
 			
 			if("grade".equals(type) && postList != null) {
+				Collections.shuffle(postList);
 				iterator = postList.iterator();
 				
 				while(iterator.hasNext()) {
