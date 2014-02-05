@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	
+	<bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+        <property name="alwaysRemember" value="true"/>
+        <property name="parameter" value="j_remember_me"/>
+        <property name="tokenValiditySeconds" value="151221"/>
+        <property name="cookieName" value="tt"/>
+        <property name="userDetailsService" ref="userDetailsService"/>
+<!--         <property name="key" value="findfashiont"/> -->
+        <property name="key" value="mydearnest"/>
+    </bean>
+    
+	<security:http auto-config="true">
+	    <security:remember-me key="mydearnest"  services-ref="rememberMeServices" />
+	    
+	    <security:form-login login-page="/auth/failure-to-login" login-processing-url="/session/create" 
+	    	authentication-success-handler-ref="authorizeSuccessHandler"
+	    	authentication-failure-handler-ref="authorizeFailureHandler" />
+	    
+	    <security:logout logout-url="/session/destroy" invalidate-session="true" logout-success-url="/" />
+
+	    <!-- 공통 권한 -->
+	    <security:intercept-url pattern="/admin*" access="ROLE_ADMIN, ROLE_UPLOADER, ROLE_MODIFIER" requires-channel="any" />
+	    <security:intercept-url pattern="/admin/post/**" access="ROLE_ADMIN, ROLE_UPLOADER, ROLE_MODIFIER" requires-channel="any" />
+	    
+	    <!-- 업로더 권한 -->
+	    <security:intercept-url pattern="/admin/write/upload*" access="ROLE_ADMIN, ROLE_UPLOADER" requires-channel="any" />
+	    <security:intercept-url pattern="/admin/write/phototag/*" access="ROLE_ADMIN, ROLE_UPLOADER" requires-channel="any" />
+	    
+	    <!-- Modifier 권한 -->
+	    <security:intercept-url pattern="/admin/write/detail/*" access="ROLE_ADMIN, ROLE_MODIFIER" requires-channel="any" />
+	    
+	    <!-- 관리자 권한 -->
+	    <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" requires-channel="any" />
+	    
+	    	    
+	    <!-- <security:intercept-url pattern="/mypage*" access="ROLE_USER" requires-channel="any" />
+	    <security:intercept-url pattern="/mypage/*" access="ROLE_USER" requires-channel="any" />
+	    <security:intercept-url pattern="/auth/modify" access="ROLE_USER" requires-channel="any" /> -->
+	</security:http>
+
+<!-- 		<http auto-config="true"> -->
+<!-- 	        <intercept-url pattern="**" access="IS_AUTHENTICATED_ANONYMOUSLY" /> -->
+<!-- 			<form-login login-page="/login" /> -->
+<!-- 			<logout logout-success-url="/index" /> -->
+<!-- 			<remember-me /> -->
+<!-- 		</http> -->
+	
+	<bean id="authorizeSuccessHandler" class="com.junglebird.webframe.auth.handler.AuthorizeSuccessHandler">
+		<property name="defaultTargetUrl" value="/auth/success-to-redirect" />
+		<property name="alwaysUseDefaultTargetUrl" value="true" />
+	</bean>
+
+	<bean id="authorizeFailureHandler" class="com.junglebird.webframe.auth.handler.AuthorizeFailureHandler">
+		<property name="defaultFailureUrl" value="/auth/login?error=failed" />
+	</bean>
+	
+	<bean id="userDetailsService" class="com.osquare.mydearnest.account.service.MemberDetailsServiceImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<property name="userDetailsService" ref="userDetailsService"/>
+    </bean>
+
+    <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref local="daoAuthenticationProvider" />
+            </list>
+        </property>
+    </bean>
+	
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="userDetailsService">
+			<security:password-encoder hash="sha-256"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+</beans>

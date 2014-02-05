@@ -8,9 +8,9 @@
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
 		<config>src/main/webapp/WEB-INF/conf/root-context.xml</config>
-		<config>src/main/webapp/WEB-INF/conf/security.xml</config>
 		<config>src/main/webapp/WEB-INF/conf/app/controllers.xml</config>
 		<config>src/main/webapp/WEB-INF/conf/db.xml</config>
+		<config>src/main/webapp/WEB-INF/conf/security-context.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
