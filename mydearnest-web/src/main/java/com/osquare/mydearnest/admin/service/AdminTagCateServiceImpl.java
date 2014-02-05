@@ -225,6 +225,7 @@ public class AdminTagCateServiceImpl implements AdminTagCateService {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Collection<TagCategory> getTagCategories() {
 		Collection<TagCategory> result = null;
 		

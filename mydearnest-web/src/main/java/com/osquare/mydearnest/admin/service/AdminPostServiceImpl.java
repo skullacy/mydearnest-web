@@ -74,7 +74,6 @@ public class AdminPostServiceImpl implements AdminPostService {
 			}
 
 			cr.addOrder(Order.desc("createdAt"));
-			
 					
 			if(checksum == 1) {
 				cr.add(Restrictions.eq("checkSum", checksum == 1 ? true : false));

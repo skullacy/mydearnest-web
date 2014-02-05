@@ -49,7 +49,6 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
 			ex.printStackTrace();
 		}
 
-
 		if (account == null) throw new UsernameNotFoundException("user not found");		
 		
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();

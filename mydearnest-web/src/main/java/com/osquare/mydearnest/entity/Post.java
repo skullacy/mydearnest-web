@@ -1,7 +1,5 @@
 package com.osquare.mydearnest.entity;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
